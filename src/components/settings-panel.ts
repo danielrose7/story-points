@@ -46,7 +46,7 @@ class SettingsPanel extends LitElement {
 		}
 		input[type='text'] {
 			padding: 9px 10px;
-			border: 1px solid #ccd6d0;
+			border: 1px solid var(--ap-border);
 			border-radius: 8px;
 			font: inherit;
 		}
@@ -77,8 +77,8 @@ class SettingsPanel extends LitElement {
 			color: var(--ap-muted);
 		}
 		.row button {
-			border: 1px solid #ccd6d0;
-			background: #f4f7f5;
+			border: 1px solid var(--ap-border);
+			background: var(--ap-btn-bg);
 			border-radius: 8px;
 			padding: 8px 10px;
 			cursor: pointer;
@@ -86,8 +86,8 @@ class SettingsPanel extends LitElement {
 		.btn {
 			padding: 10px 16px;
 			border-radius: 10px;
-			border: 1px solid #ccd6d0;
-			background: #f4f7f5;
+			border: 1px solid var(--ap-border);
+			background: var(--ap-btn-bg);
 			font-weight: 600;
 			cursor: pointer;
 		}

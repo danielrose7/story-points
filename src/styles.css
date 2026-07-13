@@ -10,6 +10,33 @@
 	--ap-card-back: repeating-linear-gradient(45deg, #b71c1c 0 6px, #d32f2f 6px 12px);
 	--ap-radius: 14px;
 	--ap-font: 'Avenir Next', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+	/* Derived palette — components must use these, never raw hex (see CLAUDE.md) */
+	--ap-on-bg: #f2f7f4; /* text/icons directly on the page background */
+	--ap-on-bg-strong: #eaf6ef;
+	--ap-border: #ccd6d0;
+	--ap-border-soft: #e3eae6;
+	--ap-divider: #eef2ef;
+	--ap-btn-bg: #f4f7f5;
+	--ap-highlight: #fff8e6; /* accent-tinted subtle background */
+	--ap-highlight-strong: #fff4d6; /* selected cards / revealed chips */
+	--ap-chip-bg: #f1f4f2;
+	--ap-waiting: #b9c4be;
+	--ap-success: #1b5e43;
+	--ap-error-bg: #fdecea;
+	--ap-error-text: #b3261e;
+	--ap-danger-soft: #ffd9d2;
+	--ap-overlay-btn: rgba(255, 255, 255, 0.14); /* buttons sitting on the felt */
+	--ap-overlay-btn-hover: rgba(255, 255, 255, 0.28);
+	--ap-toast-bg: #2b2b2b;
+	--ap-toast-text: #ffffff;
+	--ap-timer-warn: #c8860a;
+	--ap-timer-late: #d84a4a;
+	--ap-fx-gold: #ffd54d;
+	--ap-fx-gold-stroke: #3a2b00;
+	--ap-fx-line: #37d67a;
+	--ap-code-bg: rgba(0, 0, 0, 0.07);
+	--ap-confetti: #ffb300, #37d67a, #4fa3ff, #ff5c8a, #b980ff, #fff176;
 }
 
 /* 🚀 Outer space theme — custom properties inherit into shadow DOM,
@@ -20,6 +47,18 @@
 	--ap-accent-text: #ffffff;
 	--ap-muted: #6b7490;
 	--ap-card-back: repeating-linear-gradient(45deg, #38307f 0 6px, #5646c4 6px 12px);
+	--ap-on-bg: #e8ecff;
+	--ap-on-bg-strong: #f0f3ff;
+	--ap-border: #c9cee4;
+	--ap-border-soft: #e2e5f2;
+	--ap-divider: #edeff8;
+	--ap-btn-bg: #f2f3fa;
+	--ap-highlight: #efeaff;
+	--ap-highlight-strong: #e6dcff;
+	--ap-chip-bg: #f0f1f8;
+	--ap-waiting: #b8bdd4;
+	--ap-timer-warn: #b98a1d;
+	--ap-confetti: #8f7bff, #4fa3ff, #ff5c8a, #ffe9c9, #7de3ff, #fff;
 }
 
 :root[data-theme='space'] {
@@ -76,5 +115,5 @@ html {
 body {
 	background: var(--ap-bg);
 	font-family: var(--ap-font);
-	color: #f2f7f4;
+	color: var(--ap-on-bg);
 }

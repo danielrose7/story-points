@@ -142,7 +142,7 @@ class RoomPage extends LitElement {
 		header .brand {
 			font-weight: 800;
 			font-size: 1.15rem;
-			color: #eaf6ef;
+			color: var(--ap-on-bg-strong);
 			text-decoration: none;
 			cursor: pointer;
 		}
@@ -159,7 +159,7 @@ class RoomPage extends LitElement {
 		}
 		.mute {
 			border: none;
-			background: rgba(255, 255, 255, 0.14);
+			background: var(--ap-overlay-btn);
 			border-radius: 999px;
 			padding: 4px 8px;
 			font-size: 0.95rem;
@@ -174,8 +174,8 @@ class RoomPage extends LitElement {
 			margin-bottom: 18px;
 		}
 		.error {
-			background: #fdecea;
-			color: #b3261e;
+			background: var(--ap-error-bg);
+			color: var(--ap-error-text);
 			border-radius: 8px;
 			padding: 10px 14px;
 			margin-bottom: 14px;
@@ -194,7 +194,7 @@ class RoomPage extends LitElement {
 			width: 100%;
 			padding: 12px;
 			font-size: 1.05rem;
-			border: 1px solid #ccd6d0;
+			border: 1px solid var(--ap-border);
 			border-radius: 10px;
 			margin-bottom: 14px;
 		}
@@ -207,14 +207,14 @@ class RoomPage extends LitElement {
 			flex: 1;
 			padding: 12px;
 			border-radius: 10px;
-			border: 2px solid #ccd6d0;
-			background: #fff;
+			border: 2px solid var(--ap-border);
+			background: var(--ap-surface);
 			font-size: 0.95rem;
 			cursor: pointer;
 		}
 		.roles button.active {
 			border-color: var(--ap-accent);
-			background: #fff8e6;
+			background: var(--ap-highlight);
 			font-weight: 700;
 		}
 		.join-btn {
@@ -242,8 +242,8 @@ class RoomPage extends LitElement {
 		.btn {
 			padding: 10px 16px;
 			border-radius: 10px;
-			border: 1px solid #ccd6d0;
-			background: #f4f7f5;
+			border: 1px solid var(--ap-border);
+			background: var(--ap-btn-bg);
 			font-weight: 600;
 			cursor: pointer;
 		}
@@ -261,11 +261,11 @@ class RoomPage extends LitElement {
 			color: var(--ap-muted);
 		}
 		.timer.amber {
-			color: #c8860a;
+			color: var(--ap-timer-warn);
 			font-weight: 700;
 		}
 		.timer.rabbit {
-			color: #d84a4a;
+			color: var(--ap-timer-late);
 			font-weight: 700;
 		}
 		.timer .bun {
@@ -284,7 +284,7 @@ class RoomPage extends LitElement {
 		/* Story */
 		textarea.story {
 			width: 100%;
-			border: 1px solid #ccd6d0;
+			border: 1px solid var(--ap-border);
 			border-radius: 10px;
 			padding: 10px;
 			font: inherit;
@@ -310,7 +310,7 @@ class RoomPage extends LitElement {
 			min-width: 58px;
 			height: 84px;
 			border-radius: 10px;
-			border: 2px solid #d6ded9;
+			border: 2px solid var(--ap-border);
 			background: var(--ap-card);
 			font-size: 1.25rem;
 			font-weight: 700;
@@ -324,7 +324,7 @@ class RoomPage extends LitElement {
 		}
 		.card.selected {
 			border-color: var(--ap-accent);
-			background: #fff4d6;
+			background: var(--ap-highlight-strong);
 			transform: translateY(-6px);
 		}
 		.card:disabled {
@@ -344,16 +344,16 @@ class RoomPage extends LitElement {
 			letter-spacing: 0.08em;
 			color: var(--ap-muted);
 			padding: 6px 8px;
-			border-bottom: 2px solid #e3eae6;
+			border-bottom: 2px solid var(--ap-border-soft);
 		}
 		td {
 			padding: 10px 8px;
-			border-bottom: 1px solid #eef2ef;
+			border-bottom: 1px solid var(--ap-divider);
 			font-size: 1.02rem;
 		}
 		.tag {
 			font-size: 0.72rem;
-			background: #eef2ef;
+			background: var(--ap-divider);
 			border-radius: 6px;
 			padding: 2px 7px;
 			margin-left: 8px;
@@ -375,7 +375,7 @@ class RoomPage extends LitElement {
 			color: transparent;
 		}
 		.vote-chip.shown {
-			background: #fff4d6;
+			background: var(--ap-highlight-strong);
 			border: 2px solid var(--ap-accent);
 			color: var(--ap-surface-text);
 		}
@@ -407,8 +407,8 @@ class RoomPage extends LitElement {
 			}
 		}
 		.vote-chip.waiting {
-			background: #f1f4f2;
-			color: #b9c4be;
+			background: var(--ap-chip-bg);
+			color: var(--ap-waiting);
 			font-weight: 400;
 		}
 
@@ -431,7 +431,7 @@ class RoomPage extends LitElement {
 		.consensus {
 			font-size: 1.1rem;
 			font-weight: 700;
-			color: #1b5e43;
+			color: var(--ap-success);
 		}
 
 		/* Reactions */
@@ -448,13 +448,13 @@ class RoomPage extends LitElement {
 			padding: 9px 11px;
 			border-radius: 999px;
 			border: none;
-			background: rgba(255, 255, 255, 0.14);
+			background: var(--ap-overlay-btn);
 			cursor: pointer;
 			transition: transform 0.1s ease, background 0.1s ease;
 		}
 		.react:hover {
 			transform: translateY(-3px) scale(1.15);
-			background: rgba(255, 255, 255, 0.28);
+			background: var(--ap-overlay-btn-hover);
 		}
 		.react:active {
 			transform: scale(0.92);
@@ -468,7 +468,7 @@ class RoomPage extends LitElement {
 			flex-wrap: wrap;
 		}
 		.invite code {
-			background: #f1f4f2;
+			background: var(--ap-chip-bg);
 			padding: 8px 12px;
 			border-radius: 8px;
 			font-size: 0.92rem;
@@ -668,7 +668,7 @@ class RoomPage extends LitElement {
 					${me?.role === 'voter' ? 'Switch to observer' : 'Switch to voter'}
 				</button>
 				<span class="spacer"></span>
-				<button class="btn quiet" style="color:#ffd9d2" @click=${this.leave}>Leave room</button>
+				<button class="btn quiet" style="color:var(--ap-danger-soft)" @click=${this.leave}>Leave room</button>
 			</div>
 
 			${this.showSettings && isOwner

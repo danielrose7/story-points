@@ -55,7 +55,7 @@ class HomePage extends LitElement {
 			width: 100%;
 		}
 		.panel.lost {
-			background: #fff8e6;
+			background: var(--ap-highlight);
 			border: 2px dashed var(--ap-accent);
 		}
 		.lost-code {
@@ -64,7 +64,7 @@ class HomePage extends LitElement {
 			letter-spacing: 0.1em;
 		}
 		.lost-msg code {
-			background: rgba(0, 0, 0, 0.07);
+			background: var(--ap-code-bg);
 			padding: 2px 8px;
 			border-radius: 6px;
 			word-break: break-all;
@@ -120,14 +120,14 @@ class HomePage extends LitElement {
 		input {
 			flex: 1;
 			padding: 12px;
-			border: 1px solid #ccd6d0;
+			border: 1px solid var(--ap-border);
 			border-radius: 10px;
 			font-size: 1rem;
 		}
 		form button {
 			padding: 12px 18px;
-			border: 1px solid #ccd6d0;
-			background: #f4f7f5;
+			border: 1px solid var(--ap-border);
+			background: var(--ap-btn-bg);
 			border-radius: 10px;
 			font-weight: 600;
 			cursor: pointer;

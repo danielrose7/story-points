@@ -58,7 +58,7 @@ class FxLayer extends LitElement {
 			display: block;
 			font-size: 0.65rem;
 			font-family: var(--ap-font);
-			color: #fff;
+			color: var(--ap-toast-text);
 			text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 			margin-top: -4px;
 		}
@@ -108,8 +108,8 @@ class FxLayer extends LitElement {
 			top: 18px;
 			left: 50%;
 			transform: translateX(-50%);
-			background: #2b2b2b;
-			color: #fff;
+			background: var(--ap-toast-bg);
+			color: var(--ap-toast-text);
 			font-family: var(--ap-font);
 			font-weight: 600;
 			padding: 12px 20px;
@@ -235,7 +235,7 @@ class FxLayer extends LitElement {
 		}
 		.chart polyline {
 			fill: none;
-			stroke: #37d67a;
+			stroke: var(--ap-fx-line);
 			stroke-width: 6;
 			stroke-linecap: round;
 			stroke-linejoin: round;
@@ -261,8 +261,8 @@ class FxLayer extends LitElement {
 			font-family: var(--ap-font);
 			font-size: clamp(2rem, 7vw, 4.5rem);
 			font-weight: 900;
-			color: #ffd54d;
-			-webkit-text-stroke: 2px #3a2b00;
+			color: var(--ap-fx-gold);
+			-webkit-text-stroke: 2px var(--ap-fx-gold-stroke);
 			text-align: center;
 			animation: pop-in 0.5s cubic-bezier(0.2, 2, 0.4, 1) both, fade-late 2.6s forwards;
 		}
@@ -425,7 +425,11 @@ class FxLayer extends LitElement {
 	}
 
 	private confetti(): void {
-		const colors = ['#ffb300', '#37d67a', '#4fa3ff', '#ff5c8a', '#b980ff', '#fff176'];
+		const colors = getComputedStyle(this)
+			.getPropertyValue('--ap-confetti')
+			.split(',')
+			.map((c) => c.trim())
+			.filter(Boolean);
 		for (let i = 0; i < 60; i++) {
 			const el = document.createElement('span');
 			el.className = 'confetti';
