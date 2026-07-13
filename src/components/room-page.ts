@@ -401,6 +401,27 @@ class RoomPage extends LitElement {
 			color: var(--sp-muted);
 			vertical-align: middle;
 		}
+		.make-host {
+			font-size: 0.72rem;
+			border: 1px solid var(--sp-border);
+			background: transparent;
+			border-radius: 6px;
+			padding: 2px 7px;
+			margin-left: 8px;
+			color: var(--sp-muted);
+			cursor: pointer;
+			/* dimmed, not hidden — touch screens have no hover */
+			opacity: 0.55;
+			transition: opacity 0.15s;
+		}
+		tr.seat:hover .make-host,
+		.make-host:focus-visible {
+			opacity: 1;
+		}
+		.make-host:hover {
+			border-color: var(--sp-accent);
+			color: var(--sp-surface-text);
+		}
 		.vote-chip {
 			display: inline-grid;
 			place-items: center;
@@ -501,6 +522,25 @@ class RoomPage extends LitElement {
 			transform: scale(0.92);
 		}
 
+		.btn.copied {
+			border-color: var(--sp-success);
+			color: var(--sp-success);
+			background: var(--sp-success-bg);
+			box-shadow: 0 0 0 4px var(--sp-success-ring);
+			animation: copied-pop 0.35s cubic-bezier(0.2, 2, 0.4, 1);
+		}
+		@keyframes copied-pop {
+			0% {
+				transform: scale(1);
+			}
+			45% {
+				transform: scale(1.12);
+			}
+			100% {
+				transform: scale(1);
+			}
+		}
+
 		/* Invite */
 		.invite {
 			display: flex;
@@ -513,6 +553,9 @@ class RoomPage extends LitElement {
 			padding: 8px 12px;
 			border-radius: 8px;
 			font-size: 0.92rem;
+			max-width: 100%;
+			overflow-wrap: anywhere;
+			word-break: break-all;
 		}
 		`,
 	];
@@ -681,6 +724,15 @@ class RoomPage extends LitElement {
 										${p.isOwner ? html`<span class="tag">host</span>` : nothing}
 										${p.role === 'observer' ? html`<span class="tag">observer</span>` : nothing}
 										${p.id === s.you ? html`<span class="tag">you</span>` : nothing}
+										${me?.isOwner && p.id !== s.you
+											? html`<button
+													class="make-host"
+													title="Make ${p.name} the host"
+													@click=${() => this.conn?.send({ type: 'transferHost', to: p.id })}
+												>
+													👑 make host
+												</button>`
+											: nothing}
 									</td>
 									<td>
 										${p.role === 'observer'
@@ -714,7 +766,9 @@ class RoomPage extends LitElement {
 				<label class="field">Invite your team</label>
 				<div class="invite">
 					<code>${location.href}</code>
-					<button class="btn" @click=${this.copyLink}>${this.copied ? 'Copied ✓' : 'Copy link'}</button>
+					<button class="btn ${this.copied ? 'copied' : ''}" @click=${this.copyLink}>
+						${this.copied ? 'Copied ✓' : 'Copy link'}
+					</button>
 				</div>
 			</div>
 

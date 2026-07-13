@@ -13,6 +13,7 @@ interface Participant {
 	name: string;
 	role: Role;
 	lastSeen: number;
+	joinedAt: number;
 }
 
 interface PersistedRoom {
@@ -21,7 +22,10 @@ interface PersistedRoom {
 	revealed: boolean;
 	revealedAt: number | null;
 	roundStartedAt: number;
+	/** current host */
 	ownerId: string | null;
+	/** who reclaims the host role on return (first joiner, or explicit transferee) */
+	founderId: string | null;
 	participants: Record<string, Participant>;
 	votes: Record<string, string>;
 }
@@ -45,6 +49,7 @@ export class Room extends DurableObject<Env> {
 					revealedAt: null,
 					roundStartedAt: Date.now(),
 					ownerId: null,
+					founderId: null,
 					participants: {},
 					votes: {},
 				};
@@ -105,10 +110,18 @@ export class Room extends DurableObject<Env> {
 				const name = String(msg.name ?? '').trim().slice(0, 40);
 				const role: Role = msg.role === 'observer' ? 'observer' : 'voter';
 				if (!name) return this.sendError(ws, 'Name is required');
-				room.participants[userId] = { name, role, lastSeen: Date.now() };
+				const existing = room.participants[userId];
+				room.participants[userId] = {
+					name,
+					role,
+					lastSeen: Date.now(),
+					joinedAt: existing?.joinedAt ?? Date.now(),
+				};
 				if (!room.ownerId) room.ownerId = userId;
+				room.founderId ??= room.ownerId;
 				if (role === 'observer') delete room.votes[userId];
 				this.pruneStaleSeats(room);
+				this.ensureHost(room);
 				break;
 			}
 			case 'vote': {
@@ -178,14 +191,19 @@ export class Room extends DurableObject<Env> {
 				for (const socket of this.ctx.getWebSockets()) this.send(socket, payload);
 				return;
 			}
+			case 'transferHost': {
+				if (room.ownerId !== userId) return this.sendError(ws, 'Only the host can hand off the host role');
+				const to = String(msg.to ?? '');
+				if (!room.participants[to]) return;
+				// An explicit hand-off moves the reclaim rights too.
+				room.ownerId = to;
+				room.founderId = to;
+				break;
+			}
 			case 'leave': {
 				delete room.participants[userId];
 				delete room.votes[userId];
-				if (room.ownerId === userId) {
-					// Hand ownership to the longest-seated remaining participant.
-					const next = Object.keys(room.participants)[0] ?? null;
-					room.ownerId = next;
-				}
+				this.ensureHost(room);
 				await this.save();
 				this.broadcast(room);
 				for (const socket of this.ctx.getWebSockets(userId)) socket.close(1000, 'left');
@@ -205,6 +223,7 @@ export class Room extends DurableObject<Env> {
 		const room = await this.load();
 		// A voter dropping off changes presence and can complete the round.
 		this.maybeAutoReveal(room);
+		this.ensureHost(room);
 		await this.save();
 		this.broadcast(room);
 	}
@@ -222,6 +241,24 @@ export class Room extends DurableObject<Env> {
 			if (att?.userId) ids.add(att.userId);
 		}
 		return ids;
+	}
+
+	/**
+	 * Host succession: the founder reclaims the role whenever present;
+	 * otherwise, if the current host is gone, the longest-seated connected
+	 * participant takes over.
+	 */
+	private ensureHost(room: PersistedRoom): void {
+		const connected = this.connectedIds();
+		if (room.founderId && connected.has(room.founderId) && room.participants[room.founderId]) {
+			room.ownerId = room.founderId;
+			return;
+		}
+		if (room.ownerId && connected.has(room.ownerId) && room.participants[room.ownerId]) return;
+		const candidates = Object.entries(room.participants)
+			.filter(([id]) => connected.has(id))
+			.sort((a, b) => (a[1].joinedAt ?? a[1].lastSeen ?? 0) - (b[1].joinedAt ?? b[1].lastSeen ?? 0));
+		if (candidates.length > 0) room.ownerId = candidates[0][0];
 	}
 
 	private maybeAutoReveal(room: PersistedRoom): void {

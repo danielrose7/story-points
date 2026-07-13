@@ -22,7 +22,9 @@
 	--sp-highlight-strong: #fff4d6; /* selected cards / revealed chips */
 	--sp-chip-bg: #f1f4f2;
 	--sp-waiting: #b9c4be;
-	--sp-success: #1b5e43;
+	--sp-success: #1b8e57;
+	--sp-success-bg: #e2f5e8;
+	--sp-success-ring: rgba(27, 142, 87, 0.3);
 	--sp-error-bg: #fdecea;
 	--sp-error-text: #b3261e;
 	--sp-danger-soft: #ffd9d2;

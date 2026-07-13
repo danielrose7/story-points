@@ -134,6 +134,8 @@ export type ClientMessage =
 	| { type: 'story'; text: string }
 	| { type: 'settings'; settings: RoomSettings }
 	| { type: 'reaction'; emoji: string }
+	/** host only: hand the host role (and its reclaim rights) to another participant */
+	| { type: 'transferHost'; to: string }
 	| { type: 'leave' };
 
 export type ServerMessage =
