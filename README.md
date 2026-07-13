@@ -1,4 +1,4 @@
-# 🃏 Agile Points
+# 🃏 Story Points
 
 Realtime pointing poker for agile teams. One standing URL per room; rooms keep
 their settings and can be reused cycle after cycle.
@@ -45,7 +45,7 @@ npm run deploy     # builds, then `wrangler deploy` (needs `wrangler login` once
   2. Under the **Edit Cloudflare Workers** template, click **Use template**.
   3. Under *Account Resources*, pick the `Dan@gobloom.io` account; leave the rest as-is.
   4. Click **Continue to summary** → **Create Token**, then copy the token.
-  5. In a terminal: `gh secret set CLOUDFLARE_API_TOKEN --repo danielrose7/agile-points`
+  5. In a terminal: `gh secret set CLOUDFLARE_API_TOKEN --repo danielrose7/story-points`
      and paste the token when prompted.
   6. Re-run the failed workflow (`gh run rerun --failed`) or just push to `main`.
 

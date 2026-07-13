@@ -519,7 +519,7 @@ class RoomPage extends LitElement {
 		const s = this.state;
 		return html`
 			<header>
-				<a class="brand" @click=${() => navigate('/')}>🃏 Agile Points</a>
+				<a class="brand" @click=${() => navigate('/')}>🃏 Story Points</a>
 				<span class="room-code">${this.roomId}</span>
 				<span class="conn">
 					${this.statusLabel()}

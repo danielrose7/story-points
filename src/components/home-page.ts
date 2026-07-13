@@ -140,7 +140,7 @@ class HomePage extends LitElement {
 			<div class="stack">
 				${this.lostPath ? this.renderLost() : ''}
 				<div class="panel">
-				<h1>🃏 Agile Points</h1>
+				<h1>🃏 Story Points</h1>
 				<p class="tagline">Estimate together, in realtime.</p>
 				<button class="primary" @click=${this.createRoom}>Create a room</button>
 				<div class="divider">or join an existing one</div>

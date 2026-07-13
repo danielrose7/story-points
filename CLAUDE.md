@@ -1,4 +1,4 @@
-# Agile Points — project conventions
+# Story Points — project conventions
 
 ## Colors: theme tokens only, never raw values
 
