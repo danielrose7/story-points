@@ -2,14 +2,14 @@
 
 ## Colors: theme tokens only, never raw values
 
-All colors MUST be expressed as `var(--ap-*)` tokens defined in
+All colors MUST be expressed as `var(--sp-*)` tokens defined in
 `src/styles.css` `:root`. Never write raw hex/rgb/hsl color values in
 component styles, inline styles, or JS — themes (space, surf, …) work by
 overriding these tokens, and any hardcoded color silently breaks theming.
 
 - Need a color that has no token? Add a semantic token to `:root` in
   `src/styles.css` (and consider per-theme overrides), then use the token.
-- Name tokens by role (`--ap-border`, `--ap-highlight`), not by hue.
+- Name tokens by role (`--sp-border`, `--sp-highlight`), not by hue.
 - Allowed exceptions: black-alpha `rgba(0,0,0,…)` box-shadows/text-shadows
   (depth, not palette).
 - Custom properties inherit into shadow DOM, so tokens work everywhere —

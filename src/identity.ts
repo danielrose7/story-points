@@ -1,7 +1,7 @@
 import type { Role } from '../shared/types';
 
-const USER_ID_KEY = 'ap:user-id';
-const NAME_KEY = 'ap:name';
+const USER_ID_KEY = 'sp:user-id';
+const NAME_KEY = 'sp:name';
 
 export function getUserId(): string {
 	let id = localStorage.getItem(USER_ID_KEY);

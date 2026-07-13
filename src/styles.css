@@ -1,64 +1,64 @@
 :root {
 	/* Theme hooks — post-MVP themes (surf, space, birthday, nightclub) override these. */
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #2e7d5b 0%, #1b5e43 45%, #123f2e 100%);
-	--ap-surface: #ffffff;
-	--ap-surface-text: #1c2b24;
-	--ap-muted: #5f7268;
-	--ap-accent: #ffb300;
-	--ap-accent-text: #3a2b00;
-	--ap-card: #fdfdfb;
-	--ap-card-back: repeating-linear-gradient(45deg, #b71c1c 0 6px, #d32f2f 6px 12px);
-	--ap-radius: 14px;
-	--ap-font: 'Avenir Next', 'Segoe UI', system-ui, -apple-system, sans-serif;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #2e7d5b 0%, #1b5e43 45%, #123f2e 100%);
+	--sp-surface: #ffffff;
+	--sp-surface-text: #1c2b24;
+	--sp-muted: #5f7268;
+	--sp-accent: #ffb300;
+	--sp-accent-text: #3a2b00;
+	--sp-card: #fdfdfb;
+	--sp-card-back: repeating-linear-gradient(45deg, #b71c1c 0 6px, #d32f2f 6px 12px);
+	--sp-radius: 14px;
+	--sp-font: 'Avenir Next', 'Segoe UI', system-ui, -apple-system, sans-serif;
 
 	/* Derived palette — components must use these, never raw hex (see CLAUDE.md) */
-	--ap-on-bg: #f2f7f4; /* text/icons directly on the page background */
-	--ap-on-bg-strong: #eaf6ef;
-	--ap-border: #ccd6d0;
-	--ap-border-soft: #e3eae6;
-	--ap-divider: #eef2ef;
-	--ap-btn-bg: #f4f7f5;
-	--ap-highlight: #fff8e6; /* accent-tinted subtle background */
-	--ap-highlight-strong: #fff4d6; /* selected cards / revealed chips */
-	--ap-chip-bg: #f1f4f2;
-	--ap-waiting: #b9c4be;
-	--ap-success: #1b5e43;
-	--ap-error-bg: #fdecea;
-	--ap-error-text: #b3261e;
-	--ap-danger-soft: #ffd9d2;
-	--ap-overlay-btn: rgba(255, 255, 255, 0.14); /* buttons sitting on the felt */
-	--ap-overlay-btn-hover: rgba(255, 255, 255, 0.28);
-	--ap-toast-bg: #2b2b2b;
-	--ap-toast-text: #ffffff;
-	--ap-timer-warn: #c8860a;
-	--ap-timer-late: #d84a4a;
-	--ap-fx-gold: #ffd54d;
-	--ap-fx-gold-stroke: #3a2b00;
-	--ap-fx-line: #37d67a;
-	--ap-code-bg: rgba(0, 0, 0, 0.07);
-	--ap-confetti: #ffb300, #37d67a, #4fa3ff, #ff5c8a, #b980ff, #fff176;
+	--sp-on-bg: #f2f7f4; /* text/icons directly on the page background */
+	--sp-on-bg-strong: #eaf6ef;
+	--sp-border: #ccd6d0;
+	--sp-border-soft: #e3eae6;
+	--sp-divider: #eef2ef;
+	--sp-btn-bg: #f4f7f5;
+	--sp-highlight: #fff8e6; /* accent-tinted subtle background */
+	--sp-highlight-strong: #fff4d6; /* selected cards / revealed chips */
+	--sp-chip-bg: #f1f4f2;
+	--sp-waiting: #b9c4be;
+	--sp-success: #1b5e43;
+	--sp-error-bg: #fdecea;
+	--sp-error-text: #b3261e;
+	--sp-danger-soft: #ffd9d2;
+	--sp-overlay-btn: rgba(255, 255, 255, 0.14); /* buttons sitting on the felt */
+	--sp-overlay-btn-hover: rgba(255, 255, 255, 0.28);
+	--sp-toast-bg: #2b2b2b;
+	--sp-toast-text: #ffffff;
+	--sp-timer-warn: #c8860a;
+	--sp-timer-late: #d84a4a;
+	--sp-fx-gold: #ffd54d;
+	--sp-fx-gold-stroke: #3a2b00;
+	--sp-fx-line: #37d67a;
+	--sp-code-bg: rgba(0, 0, 0, 0.07);
+	--sp-confetti: #ffb300, #37d67a, #4fa3ff, #ff5c8a, #b980ff, #fff176;
 }
 
 /* 🚀 Outer space theme — custom properties inherit into shadow DOM,
    so component styling follows automatically. */
 :root[data-theme='space'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #223061 0%, #141f45 45%, #080e24 100%);
-	--ap-accent: #8f7bff;
-	--ap-accent-text: #ffffff;
-	--ap-muted: #6b7490;
-	--ap-card-back: repeating-linear-gradient(45deg, #38307f 0 6px, #5646c4 6px 12px);
-	--ap-on-bg: #e8ecff;
-	--ap-on-bg-strong: #f0f3ff;
-	--ap-border: #c9cee4;
-	--ap-border-soft: #e2e5f2;
-	--ap-divider: #edeff8;
-	--ap-btn-bg: #f2f3fa;
-	--ap-highlight: #efeaff;
-	--ap-highlight-strong: #e6dcff;
-	--ap-chip-bg: #f0f1f8;
-	--ap-waiting: #b8bdd4;
-	--ap-timer-warn: #b98a1d;
-	--ap-confetti: #8f7bff, #4fa3ff, #ff5c8a, #ffe9c9, #7de3ff, #fff;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #223061 0%, #141f45 45%, #080e24 100%);
+	--sp-accent: #8f7bff;
+	--sp-accent-text: #ffffff;
+	--sp-muted: #6b7490;
+	--sp-card-back: repeating-linear-gradient(45deg, #38307f 0 6px, #5646c4 6px 12px);
+	--sp-on-bg: #e8ecff;
+	--sp-on-bg-strong: #f0f3ff;
+	--sp-border: #c9cee4;
+	--sp-border-soft: #e2e5f2;
+	--sp-divider: #edeff8;
+	--sp-btn-bg: #f2f3fa;
+	--sp-highlight: #efeaff;
+	--sp-highlight-strong: #e6dcff;
+	--sp-chip-bg: #f0f1f8;
+	--sp-waiting: #b8bdd4;
+	--sp-timer-warn: #b98a1d;
+	--sp-confetti: #8f7bff, #4fa3ff, #ff5c8a, #ffe9c9, #7de3ff, #fff;
 }
 
 :root[data-theme='space'] {
@@ -67,154 +67,154 @@
 
 /* ── Fun themes ── */
 :root[data-theme='surf'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #2a9d8f 0%, #1a6b61 45%, #0f4a43 100%);
-	--ap-accent: #ffb703;
-	--ap-accent-text: #3a2b00;
-	--ap-card-back: repeating-linear-gradient(45deg, #1a7f74 0 6px, #2a9d8f 6px 12px);
-	--ap-highlight: #e8fbf6;
-	--ap-highlight-strong: #d2f5ec;
-	--ap-confetti: #ffb703, #2a9d8f, #7de3ff, #fff, #ffe9c9;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #2a9d8f 0%, #1a6b61 45%, #0f4a43 100%);
+	--sp-accent: #ffb703;
+	--sp-accent-text: #3a2b00;
+	--sp-card-back: repeating-linear-gradient(45deg, #1a7f74 0 6px, #2a9d8f 6px 12px);
+	--sp-highlight: #e8fbf6;
+	--sp-highlight-strong: #d2f5ec;
+	--sp-confetti: #ffb703, #2a9d8f, #7de3ff, #fff, #ffe9c9;
 	background: #0f4a43;
 }
 :root[data-theme='birthday'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #8b3a9c 0%, #63256f 45%, #43164c 100%);
-	--ap-accent: #ff5c8a;
-	--ap-accent-text: #ffffff;
-	--ap-card-back: repeating-linear-gradient(45deg, #c2447e 0 6px, #ff5c8a 6px 12px);
-	--ap-highlight: #fff0f5;
-	--ap-highlight-strong: #ffdfe9;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #8b3a9c 0%, #63256f 45%, #43164c 100%);
+	--sp-accent: #ff5c8a;
+	--sp-accent-text: #ffffff;
+	--sp-card-back: repeating-linear-gradient(45deg, #c2447e 0 6px, #ff5c8a 6px 12px);
+	--sp-highlight: #fff0f5;
+	--sp-highlight-strong: #ffdfe9;
 	background: #43164c;
 }
 :root[data-theme='nightclub'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #2b2340 0%, #171226 45%, #0a0812 100%);
-	--ap-accent: #e930ff;
-	--ap-accent-text: #ffffff;
-	--ap-card-back: repeating-linear-gradient(45deg, #7c1c8c 0 6px, #e930ff 6px 12px);
-	--ap-highlight: #fbeaff;
-	--ap-highlight-strong: #f5d4ff;
-	--ap-confetti: #e930ff, #30e9ff, #ffe930, #fff, #7c6cff;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #2b2340 0%, #171226 45%, #0a0812 100%);
+	--sp-accent: #e930ff;
+	--sp-accent-text: #ffffff;
+	--sp-card-back: repeating-linear-gradient(45deg, #7c1c8c 0 6px, #e930ff 6px 12px);
+	--sp-highlight: #fbeaff;
+	--sp-highlight-strong: #f5d4ff;
+	--sp-confetti: #e930ff, #30e9ff, #ffe930, #fff, #7c6cff;
 	background: #0a0812;
 }
 
 /* ── Seasonal themes (palettes from Dan's seasonal pen) ── */
 :root[data-theme='newyear'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #a31d1d 0%, #741010 45%, #4a0808 100%);
-	--ap-accent: #d4a017;
-	--ap-accent-text: #3a2b00;
-	--ap-card-back: repeating-linear-gradient(45deg, #b80000 0 6px, #d4212c 6px 12px);
-	--ap-highlight: #fff8e6;
-	--ap-highlight-strong: #ffefc2;
-	--ap-confetti: #d4212c, #d4a017, #fff, #ffb300;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #a31d1d 0%, #741010 45%, #4a0808 100%);
+	--sp-accent: #d4a017;
+	--sp-accent-text: #3a2b00;
+	--sp-card-back: repeating-linear-gradient(45deg, #b80000 0 6px, #d4212c 6px 12px);
+	--sp-highlight: #fff8e6;
+	--sp-highlight-strong: #ffefc2;
+	--sp-confetti: #d4212c, #d4a017, #fff, #ffb300;
 	background: #4a0808;
 }
 :root[data-theme='valentines'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #973862 0%, #6e2545 45%, #47152b 100%);
-	--ap-accent: #e8619a;
-	--ap-accent-text: #ffffff;
-	--ap-card-back: repeating-linear-gradient(45deg, #cc4f84 0 6px, #e8619a 6px 12px);
-	--ap-highlight: #fff0f5;
-	--ap-highlight-strong: #ffe0ec;
-	--ap-confetti: #e8619a, #ff8fb8, #fff, #d4212c;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #973862 0%, #6e2545 45%, #47152b 100%);
+	--sp-accent: #e8619a;
+	--sp-accent-text: #ffffff;
+	--sp-card-back: repeating-linear-gradient(45deg, #cc4f84 0 6px, #e8619a 6px 12px);
+	--sp-highlight: #fff0f5;
+	--sp-highlight-strong: #ffe0ec;
+	--sp-confetti: #e8619a, #ff8fb8, #fff, #d4212c;
 	background: #47152b;
 }
 :root[data-theme='stpatricks'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #2e9e57 0%, #1d7440 45%, #114a28 100%);
-	--ap-accent: #d4a017;
-	--ap-accent-text: #3a2b00;
-	--ap-card-back: repeating-linear-gradient(45deg, #166534 0 6px, #2e9e57 6px 12px);
-	--ap-highlight: #eefaf1;
-	--ap-highlight-strong: #d8f3e2;
-	--ap-confetti: #2e9e57, #d4a017, #fff, #7de3a0;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #2e9e57 0%, #1d7440 45%, #114a28 100%);
+	--sp-accent: #d4a017;
+	--sp-accent-text: #3a2b00;
+	--sp-card-back: repeating-linear-gradient(45deg, #166534 0 6px, #2e9e57 6px 12px);
+	--sp-highlight: #eefaf1;
+	--sp-highlight-strong: #d8f3e2;
+	--sp-confetti: #2e9e57, #d4a017, #fff, #7de3a0;
 	background: #114a28;
 }
 :root[data-theme='easter'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #8a6cae 0%, #64488a 45%, #422e5e 100%);
-	--ap-accent: #a86fc9;
-	--ap-accent-text: #ffffff;
-	--ap-card-back: repeating-linear-gradient(45deg, #8e57ae 0 6px, #c49ee0 6px 12px);
-	--ap-highlight: #faf0ff;
-	--ap-highlight-strong: #f0dcff;
-	--ap-confetti: #a86fc9, #f9d0f0, #fff176, #b8e8c8, #fff;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #8a6cae 0%, #64488a 45%, #422e5e 100%);
+	--sp-accent: #a86fc9;
+	--sp-accent-text: #ffffff;
+	--sp-card-back: repeating-linear-gradient(45deg, #8e57ae 0 6px, #c49ee0 6px 12px);
+	--sp-highlight: #faf0ff;
+	--sp-highlight-strong: #f0dcff;
+	--sp-confetti: #a86fc9, #f9d0f0, #fff176, #b8e8c8, #fff;
 	background: #422e5e;
 }
 :root[data-theme='mothersday'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #b3552a 0%, #863d1c 45%, #572611 100%);
-	--ap-accent: #e86f3a;
-	--ap-accent-text: #ffffff;
-	--ap-card-back: repeating-linear-gradient(45deg, #cc5d2a 0 6px, #e86f3a 6px 12px);
-	--ap-highlight: #fff7f0;
-	--ap-highlight-strong: #ffe6d4;
-	--ap-confetti: #e86f3a, #ffd1b3, #e8619a, #fff;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #b3552a 0%, #863d1c 45%, #572611 100%);
+	--sp-accent: #e86f3a;
+	--sp-accent-text: #ffffff;
+	--sp-card-back: repeating-linear-gradient(45deg, #cc5d2a 0 6px, #e86f3a 6px 12px);
+	--sp-highlight: #fff7f0;
+	--sp-highlight-strong: #ffe6d4;
+	--sp-confetti: #e86f3a, #ffd1b3, #e8619a, #fff;
 	background: #572611;
 }
 :root[data-theme='summer'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #b8862a 0%, #8a621c 45%, #573d0f 100%);
-	--ap-accent: #e8a020;
-	--ap-accent-text: #3a2b00;
-	--ap-card-back: repeating-linear-gradient(45deg, #c8a03a 0 6px, #e8a020 6px 12px);
-	--ap-highlight: #fffbf0;
-	--ap-highlight-strong: #fdf0cc;
-	--ap-confetti: #e8a020, #ffe9c9, #4fa3ff, #fff176;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #b8862a 0%, #8a621c 45%, #573d0f 100%);
+	--sp-accent: #e8a020;
+	--sp-accent-text: #3a2b00;
+	--sp-card-back: repeating-linear-gradient(45deg, #c8a03a 0 6px, #e8a020 6px 12px);
+	--sp-highlight: #fffbf0;
+	--sp-highlight-strong: #fdf0cc;
+	--sp-confetti: #e8a020, #ffe9c9, #4fa3ff, #fff176;
 	background: #573d0f;
 }
 :root[data-theme='july4'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #14418a 0%, #0a3064 45%, #051d40 100%);
-	--ap-accent: #cc2936;
-	--ap-accent-text: #ffffff;
-	--ap-card-back: repeating-linear-gradient(to bottom, #cc2936 0 6px, #f5f5f5 6px 12px);
-	--ap-highlight: #fff5f5;
-	--ap-highlight-strong: #ffe0e0;
-	--ap-confetti: #cc2936, #fff, #0a3064, #4fa3ff;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #14418a 0%, #0a3064 45%, #051d40 100%);
+	--sp-accent: #cc2936;
+	--sp-accent-text: #ffffff;
+	--sp-card-back: repeating-linear-gradient(to bottom, #cc2936 0 6px, #f5f5f5 6px 12px);
+	--sp-highlight: #fff5f5;
+	--sp-highlight-strong: #ffe0e0;
+	--sp-confetti: #cc2936, #fff, #0a3064, #4fa3ff;
 	background: #051d40;
 }
 :root[data-theme='backtoschool'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #9c611c 0%, #714512 45%, #452a0a 100%);
-	--ap-accent: #e87c20;
-	--ap-accent-text: #ffffff;
-	--ap-card-back: repeating-linear-gradient(45deg, #1c1c24 0 6px, #d4a017 6px 12px);
-	--ap-highlight: #fff8f0;
-	--ap-highlight-strong: #fdead2;
-	--ap-confetti: #e87c20, #d4a017, #fff, #4fa3ff;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #9c611c 0%, #714512 45%, #452a0a 100%);
+	--sp-accent: #e87c20;
+	--sp-accent-text: #ffffff;
+	--sp-card-back: repeating-linear-gradient(45deg, #1c1c24 0 6px, #d4a017 6px 12px);
+	--sp-highlight: #fff8f0;
+	--sp-highlight-strong: #fdead2;
+	--sp-confetti: #e87c20, #d4a017, #fff, #4fa3ff;
 	background: #452a0a;
 }
 :root[data-theme='fall'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #a04d1c 0%, #753812 45%, #47220a 100%);
-	--ap-accent: #c4692a;
-	--ap-accent-text: #ffffff;
-	--ap-card-back: repeating-linear-gradient(45deg, #8b3a0f 0 6px, #c4692a 6px 12px);
-	--ap-highlight: #fdf5ef;
-	--ap-highlight-strong: #f8e4d2;
-	--ap-confetti: #c4692a, #e8a020, #8b3a0f, #ffe9c9;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #a04d1c 0%, #753812 45%, #47220a 100%);
+	--sp-accent: #c4692a;
+	--sp-accent-text: #ffffff;
+	--sp-card-back: repeating-linear-gradient(45deg, #8b3a0f 0 6px, #c4692a 6px 12px);
+	--sp-highlight: #fdf5ef;
+	--sp-highlight-strong: #f8e4d2;
+	--sp-confetti: #c4692a, #e8a020, #8b3a0f, #ffe9c9;
 	background: #47220a;
 }
 :root[data-theme='halloween'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #2a1c4a 0%, #1a1030 45%, #0f0a18 100%);
-	--ap-accent: #ff6b1a;
-	--ap-accent-text: #ffffff;
-	--ap-card-back: repeating-linear-gradient(45deg, #d4660c 0 6px, #7c3aed 6px 12px);
-	--ap-highlight: #fff3e8;
-	--ap-highlight-strong: #ffe2c8;
-	--ap-confetti: #ff6b1a, #7c3aed, #1c1c24, #ffe9c9;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #2a1c4a 0%, #1a1030 45%, #0f0a18 100%);
+	--sp-accent: #ff6b1a;
+	--sp-accent-text: #ffffff;
+	--sp-card-back: repeating-linear-gradient(45deg, #d4660c 0 6px, #7c3aed 6px 12px);
+	--sp-highlight: #fff3e8;
+	--sp-highlight-strong: #ffe2c8;
+	--sp-confetti: #ff6b1a, #7c3aed, #1c1c24, #ffe9c9;
 	background: #0f0a18;
 }
 :root[data-theme='thanksgiving'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #8a4a20 0%, #643414 45%, #3e200c 100%);
-	--ap-accent: #b85c2a;
-	--ap-accent-text: #ffffff;
-	--ap-card-back: repeating-linear-gradient(45deg, #9c4a20 0 6px, #d4a017 6px 12px);
-	--ap-highlight: #fdf6ef;
-	--ap-highlight-strong: #f6e6d0;
-	--ap-confetti: #b85c2a, #d4a017, #8b3a0f, #ffe9c9;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #8a4a20 0%, #643414 45%, #3e200c 100%);
+	--sp-accent: #b85c2a;
+	--sp-accent-text: #ffffff;
+	--sp-card-back: repeating-linear-gradient(45deg, #9c4a20 0 6px, #d4a017 6px 12px);
+	--sp-highlight: #fdf6ef;
+	--sp-highlight-strong: #f6e6d0;
+	--sp-confetti: #b85c2a, #d4a017, #8b3a0f, #ffe9c9;
 	background: #3e200c;
 }
 :root[data-theme='christmas'] {
-	--ap-bg: radial-gradient(ellipse at 50% -20%, #1e6b3e 0%, #14512d 45%, #0b331c 100%);
-	--ap-accent: #e94560;
-	--ap-accent-text: #ffffff;
-	--ap-card-back: repeating-linear-gradient(45deg, #cc2222 0 6px, #f0f0f0 6px 12px);
-	--ap-highlight: #fff5f5;
-	--ap-highlight-strong: #ffe0e4;
-	--ap-confetti: #e94560, #2e9e57, #fff, #d4a017;
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #1e6b3e 0%, #14512d 45%, #0b331c 100%);
+	--sp-accent: #e94560;
+	--sp-accent-text: #ffffff;
+	--sp-card-back: repeating-linear-gradient(45deg, #cc2222 0 6px, #f0f0f0 6px 12px);
+	--sp-highlight: #fff5f5;
+	--sp-highlight-strong: #ffe0e4;
+	--sp-confetti: #e94560, #2e9e57, #fff, #d4a017;
 	background: #0b331c;
 }
 
@@ -266,7 +266,7 @@ html {
 /* No background-attachment: fixed — iOS Safari doesn't support it and stops
    painting the gradient past the first viewport. */
 body {
-	background: var(--ap-bg);
-	font-family: var(--ap-font);
-	color: var(--ap-on-bg);
+	background: var(--sp-bg);
+	font-family: var(--sp-font);
+	color: var(--sp-on-bg);
 }

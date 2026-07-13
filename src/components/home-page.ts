@@ -55,8 +55,8 @@ class HomePage extends LitElement {
 			width: 100%;
 		}
 		.panel.lost {
-			background: var(--ap-highlight);
-			border: 2px dashed var(--ap-accent);
+			background: var(--sp-highlight);
+			border: 2px dashed var(--sp-accent);
 		}
 		.lost-code {
 			font-size: 2.6rem;
@@ -64,19 +64,19 @@ class HomePage extends LitElement {
 			letter-spacing: 0.1em;
 		}
 		.lost-msg code {
-			background: var(--ap-code-bg);
+			background: var(--sp-code-bg);
 			padding: 2px 8px;
 			border-radius: 6px;
 			word-break: break-all;
 		}
 		.lost-hint {
-			color: var(--ap-muted);
+			color: var(--sp-muted);
 			margin: 6px 0 14px;
 		}
 		.panel {
-			background: var(--ap-surface);
-			color: var(--ap-surface-text);
-			border-radius: var(--ap-radius);
+			background: var(--sp-surface);
+			color: var(--sp-surface-text);
+			border-radius: var(--sp-radius);
 			padding: 40px 44px;
 			max-width: 460px;
 			width: 100%;
@@ -88,7 +88,7 @@ class HomePage extends LitElement {
 			font-size: 2rem;
 		}
 		.tagline {
-			color: var(--ap-muted);
+			color: var(--sp-muted);
 			margin: 0 0 28px;
 		}
 		button.primary {
@@ -98,8 +98,8 @@ class HomePage extends LitElement {
 			font-weight: 700;
 			border: none;
 			border-radius: 10px;
-			background: var(--ap-accent);
-			color: var(--ap-accent-text);
+			background: var(--sp-accent);
+			color: var(--sp-accent-text);
 			cursor: pointer;
 			transition: transform 0.1s ease;
 		}
@@ -108,7 +108,7 @@ class HomePage extends LitElement {
 		}
 		.divider {
 			margin: 24px 0 16px;
-			color: var(--ap-muted);
+			color: var(--sp-muted);
 			font-size: 0.85rem;
 			text-transform: uppercase;
 			letter-spacing: 0.1em;
@@ -120,14 +120,14 @@ class HomePage extends LitElement {
 		input {
 			flex: 1;
 			padding: 12px;
-			border: 1px solid var(--ap-border);
+			border: 1px solid var(--sp-border);
 			border-radius: 10px;
 			font-size: 1rem;
 		}
 		form button {
 			padding: 12px 18px;
-			border: 1px solid var(--ap-border);
-			background: var(--ap-btn-bg);
+			border: 1px solid var(--sp-border);
+			background: var(--sp-btn-bg);
 			border-radius: 10px;
 			font-weight: 600;
 			cursor: pointer;

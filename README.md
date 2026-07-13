@@ -70,7 +70,7 @@ npm run deploy     # builds, then `wrangler deploy` (needs `wrangler login` once
 17 themes: 🃏 card table, 🚀 space, 🏄 surf, 🎂 birthday, 🪩 nightclub, and a
 full seasonal calendar (🧧 💘 🍀 🌸 🌷 ☀️ 🎆 📚 🍂 🎃 🦃 🎄). New rooms get a
 **random theme** at creation; the host can change it in room settings (synced
-to everyone, persisted with the room). A theme = a block of `--ap-*` token
+to everyone, persisted with the room). A theme = a block of `--sp-*` token
 overrides in `src/styles.css` — palette, card backs, confetti colors, plus two
 theme-flavored emoji slots in the reaction tray (`THEME_REACTIONS`).
 

@@ -151,7 +151,7 @@ class RoomPage extends LitElement {
 		header .brand {
 			font-weight: 800;
 			font-size: 1.15rem;
-			color: var(--ap-on-bg-strong);
+			color: var(--sp-on-bg-strong);
 			text-decoration: none;
 			cursor: pointer;
 		}
@@ -168,7 +168,7 @@ class RoomPage extends LitElement {
 		}
 		.mute {
 			border: none;
-			background: var(--ap-overlay-btn);
+			background: var(--sp-overlay-btn);
 			border-radius: 999px;
 			padding: 4px 8px;
 			font-size: 0.95rem;
@@ -176,20 +176,20 @@ class RoomPage extends LitElement {
 		}
 		.vol {
 			width: 72px;
-			accent-color: var(--ap-accent);
+			accent-color: var(--sp-accent);
 			cursor: pointer;
 		}
 		.panel {
-			background: var(--ap-surface);
-			color: var(--ap-surface-text);
-			border-radius: var(--ap-radius);
+			background: var(--sp-surface);
+			color: var(--sp-surface-text);
+			border-radius: var(--sp-radius);
 			padding: 22px;
 			box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
 			margin-bottom: 18px;
 		}
 		.error {
-			background: var(--ap-error-bg);
-			color: var(--ap-error-text);
+			background: var(--sp-error-bg);
+			color: var(--sp-error-text);
 			border-radius: 8px;
 			padding: 10px 14px;
 			margin-bottom: 14px;
@@ -208,7 +208,7 @@ class RoomPage extends LitElement {
 			width: 100%;
 			padding: 12px;
 			font-size: 1.05rem;
-			border: 1px solid var(--ap-border);
+			border: 1px solid var(--sp-border);
 			border-radius: 10px;
 			margin-bottom: 14px;
 		}
@@ -221,14 +221,14 @@ class RoomPage extends LitElement {
 			flex: 1;
 			padding: 12px;
 			border-radius: 10px;
-			border: 2px solid var(--ap-border);
-			background: var(--ap-surface);
+			border: 2px solid var(--sp-border);
+			background: var(--sp-surface);
 			font-size: 0.95rem;
 			cursor: pointer;
 		}
 		.roles button.active {
-			border-color: var(--ap-accent);
-			background: var(--ap-highlight);
+			border-color: var(--sp-accent);
+			background: var(--sp-highlight);
 			font-weight: 700;
 		}
 		.join-btn {
@@ -236,8 +236,8 @@ class RoomPage extends LitElement {
 			padding: 13px;
 			border: none;
 			border-radius: 10px;
-			background: var(--ap-accent);
-			color: var(--ap-accent-text);
+			background: var(--sp-accent);
+			color: var(--sp-accent-text);
 			font-size: 1.05rem;
 			font-weight: 700;
 			cursor: pointer;
@@ -256,15 +256,15 @@ class RoomPage extends LitElement {
 		.btn {
 			padding: 10px 16px;
 			border-radius: 10px;
-			border: 1px solid var(--ap-border);
-			background: var(--ap-btn-bg);
+			border: 1px solid var(--sp-border);
+			background: var(--sp-btn-bg);
 			font-weight: 600;
 			cursor: pointer;
 		}
 		.btn.primary {
-			background: var(--ap-accent);
-			border-color: var(--ap-accent);
-			color: var(--ap-accent-text);
+			background: var(--sp-accent);
+			border-color: var(--sp-accent);
+			color: var(--sp-accent-text);
 		}
 		.btn.quiet {
 			background: transparent;
@@ -272,7 +272,7 @@ class RoomPage extends LitElement {
 		.timer {
 			font-family: ui-monospace, monospace;
 			font-size: 1rem;
-			color: var(--ap-muted);
+			color: var(--sp-muted);
 			display: inline-block;
 			transition: font-size 0.4s ease;
 		}
@@ -300,11 +300,11 @@ class RoomPage extends LitElement {
 			}
 		}
 		.timer.amber {
-			color: var(--ap-timer-warn);
+			color: var(--sp-timer-warn);
 			font-weight: 700;
 		}
 		.timer.rabbit {
-			color: var(--ap-timer-late);
+			color: var(--sp-timer-late);
 			font-weight: 700;
 		}
 		.timer .bun {
@@ -323,7 +323,7 @@ class RoomPage extends LitElement {
 		/* Story */
 		textarea.story {
 			width: 100%;
-			border: 1px solid var(--ap-border);
+			border: 1px solid var(--sp-border);
 			border-radius: 10px;
 			padding: 10px;
 			font: inherit;
@@ -335,7 +335,7 @@ class RoomPage extends LitElement {
 			font-size: 0.8rem;
 			text-transform: uppercase;
 			letter-spacing: 0.08em;
-			color: var(--ap-muted);
+			color: var(--sp-muted);
 			margin-bottom: 6px;
 		}
 
@@ -349,8 +349,8 @@ class RoomPage extends LitElement {
 			min-width: 58px;
 			height: 84px;
 			border-radius: 10px;
-			border: 2px solid var(--ap-border);
-			background: var(--ap-card);
+			border: 2px solid var(--sp-border);
+			background: var(--sp-card);
 			font-size: 1.25rem;
 			font-weight: 700;
 			cursor: pointer;
@@ -362,8 +362,8 @@ class RoomPage extends LitElement {
 			box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
 		}
 		.card.selected {
-			border-color: var(--ap-accent);
-			background: var(--ap-highlight-strong);
+			border-color: var(--sp-accent);
+			background: var(--sp-highlight-strong);
 			transform: translateY(-6px);
 		}
 		.card:disabled {
@@ -381,22 +381,22 @@ class RoomPage extends LitElement {
 			font-size: 0.8rem;
 			text-transform: uppercase;
 			letter-spacing: 0.08em;
-			color: var(--ap-muted);
+			color: var(--sp-muted);
 			padding: 6px 8px;
-			border-bottom: 2px solid var(--ap-border-soft);
+			border-bottom: 2px solid var(--sp-border-soft);
 		}
 		td {
 			padding: 10px 8px;
-			border-bottom: 1px solid var(--ap-divider);
+			border-bottom: 1px solid var(--sp-divider);
 			font-size: 1.02rem;
 		}
 		.tag {
 			font-size: 0.72rem;
-			background: var(--ap-divider);
+			background: var(--sp-divider);
 			border-radius: 6px;
 			padding: 2px 7px;
 			margin-left: 8px;
-			color: var(--ap-muted);
+			color: var(--sp-muted);
 			vertical-align: middle;
 		}
 		.vote-chip {
@@ -410,13 +410,13 @@ class RoomPage extends LitElement {
 			padding: 0 8px;
 		}
 		.vote-chip.hidden-vote {
-			background: var(--ap-card-back);
+			background: var(--sp-card-back);
 			color: transparent;
 		}
 		.vote-chip.shown {
-			background: var(--ap-highlight-strong);
-			border: 2px solid var(--ap-accent);
-			color: var(--ap-surface-text);
+			background: var(--sp-highlight-strong);
+			border: 2px solid var(--sp-accent);
+			color: var(--sp-surface-text);
 		}
 		tr.seat {
 			animation: deal-in 0.35s ease-out backwards;
@@ -446,8 +446,8 @@ class RoomPage extends LitElement {
 			}
 		}
 		.vote-chip.waiting {
-			background: var(--ap-chip-bg);
-			color: var(--ap-waiting);
+			background: var(--sp-chip-bg);
+			color: var(--sp-waiting);
 			font-weight: 400;
 		}
 
@@ -465,12 +465,12 @@ class RoomPage extends LitElement {
 			font-size: 0.8rem;
 			text-transform: uppercase;
 			letter-spacing: 0.08em;
-			color: var(--ap-muted);
+			color: var(--sp-muted);
 		}
 		.consensus {
 			font-size: 1.1rem;
 			font-weight: 700;
-			color: var(--ap-success);
+			color: var(--sp-success);
 		}
 
 		/* Reactions */
@@ -487,13 +487,13 @@ class RoomPage extends LitElement {
 			padding: 9px 11px;
 			border-radius: 999px;
 			border: none;
-			background: var(--ap-overlay-btn);
+			background: var(--sp-overlay-btn);
 			cursor: pointer;
 			transition: transform 0.1s ease, background 0.1s ease;
 		}
 		.react:hover {
 			transform: translateY(-3px) scale(1.15);
-			background: var(--ap-overlay-btn-hover);
+			background: var(--sp-overlay-btn-hover);
 		}
 		.react:active {
 			transform: scale(0.92);
@@ -507,7 +507,7 @@ class RoomPage extends LitElement {
 			flex-wrap: wrap;
 		}
 		.invite code {
-			background: var(--ap-chip-bg);
+			background: var(--sp-chip-bg);
 			padding: 8px 12px;
 			border-radius: 8px;
 			font-size: 0.92rem;
@@ -726,7 +726,7 @@ class RoomPage extends LitElement {
 					${me?.role === 'voter' ? 'Switch to observer' : 'Switch to voter'}
 				</button>
 				<span class="spacer"></span>
-				<button class="btn quiet" style="color:var(--ap-danger-soft)" @click=${this.leave}>Leave room</button>
+				<button class="btn quiet" style="color:var(--sp-danger-soft)" @click=${this.leave}>Leave room</button>
 			</div>
 
 			${this.showSettings && isOwner

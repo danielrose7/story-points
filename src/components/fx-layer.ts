@@ -57,8 +57,8 @@ class FxLayer extends LitElement {
 		.hopper .who {
 			display: block;
 			font-size: 0.65rem;
-			font-family: var(--ap-font);
-			color: var(--ap-toast-text);
+			font-family: var(--sp-font);
+			color: var(--sp-toast-text);
 			text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 			margin-top: -4px;
 		}
@@ -108,9 +108,9 @@ class FxLayer extends LitElement {
 			top: 18px;
 			left: 50%;
 			transform: translateX(-50%);
-			background: var(--ap-toast-bg);
-			color: var(--ap-toast-text);
-			font-family: var(--ap-font);
+			background: var(--sp-toast-bg);
+			color: var(--sp-toast-text);
+			font-family: var(--sp-font);
 			font-weight: 600;
 			padding: 12px 20px;
 			border-radius: 999px;
@@ -235,7 +235,7 @@ class FxLayer extends LitElement {
 		}
 		.chart polyline {
 			fill: none;
-			stroke: var(--ap-fx-line);
+			stroke: var(--sp-fx-line);
 			stroke-width: 6;
 			stroke-linecap: round;
 			stroke-linejoin: round;
@@ -258,11 +258,11 @@ class FxLayer extends LitElement {
 			inset: 0;
 			display: grid;
 			place-items: center;
-			font-family: var(--ap-font);
+			font-family: var(--sp-font);
 			font-size: clamp(2rem, 7vw, 4.5rem);
 			font-weight: 900;
-			color: var(--ap-fx-gold);
-			-webkit-text-stroke: 2px var(--ap-fx-gold-stroke);
+			color: var(--sp-fx-gold);
+			-webkit-text-stroke: 2px var(--sp-fx-gold-stroke);
 			text-align: center;
 			animation: pop-in 0.5s cubic-bezier(0.2, 2, 0.4, 1) both, fade-late 2.6s forwards;
 		}
@@ -426,7 +426,7 @@ class FxLayer extends LitElement {
 
 	private confetti(): void {
 		const colors = getComputedStyle(this)
-			.getPropertyValue('--ap-confetti')
+			.getPropertyValue('--sp-confetti')
 			.split(',')
 			.map((c) => c.trim())
 			.filter(Boolean);

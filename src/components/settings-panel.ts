@@ -26,9 +26,9 @@ class SettingsPanel extends LitElement {
 			display: block;
 		}
 		.panel {
-			background: var(--ap-surface);
-			color: var(--ap-surface-text);
-			border-radius: var(--ap-radius);
+			background: var(--sp-surface);
+			color: var(--sp-surface-text);
+			border-radius: var(--sp-radius);
 			padding: 22px;
 			box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
 			margin-top: 18px;
@@ -41,12 +41,12 @@ class SettingsPanel extends LitElement {
 			font-size: 0.8rem;
 			text-transform: uppercase;
 			letter-spacing: 0.08em;
-			color: var(--ap-muted);
+			color: var(--sp-muted);
 			margin: 16px 0 6px;
 		}
 		input[type='text'] {
 			padding: 9px 10px;
-			border: 1px solid var(--ap-border);
+			border: 1px solid var(--sp-border);
 			border-radius: 8px;
 			font: inherit;
 		}
@@ -74,11 +74,11 @@ class SettingsPanel extends LitElement {
 			font-weight: 700;
 			text-transform: uppercase;
 			letter-spacing: 0.06em;
-			color: var(--ap-muted);
+			color: var(--sp-muted);
 		}
 		.row button {
-			border: 1px solid var(--ap-border);
-			background: var(--ap-btn-bg);
+			border: 1px solid var(--sp-border);
+			background: var(--sp-btn-bg);
 			border-radius: 8px;
 			padding: 8px 10px;
 			cursor: pointer;
@@ -86,15 +86,15 @@ class SettingsPanel extends LitElement {
 		.btn {
 			padding: 10px 16px;
 			border-radius: 10px;
-			border: 1px solid var(--ap-border);
-			background: var(--ap-btn-bg);
+			border: 1px solid var(--sp-border);
+			background: var(--sp-btn-bg);
 			font-weight: 600;
 			cursor: pointer;
 		}
 		.btn.primary {
-			background: var(--ap-accent);
-			border-color: var(--ap-accent);
-			color: var(--ap-accent-text);
+			background: var(--sp-accent);
+			border-color: var(--sp-accent);
+			color: var(--sp-accent-text);
 		}
 		.actions {
 			display: flex;

@@ -1,5 +1,5 @@
-const MUTE_KEY = 'ap:muted';
-const VOLUME_KEY = 'ap:volume';
+const MUTE_KEY = 'sp:muted';
+const VOLUME_KEY = 'sp:volume';
 const DEFAULT_VOLUME = 0.7;
 /** Gain at volume=1. Applied on a squared curve so the top end gets loud
  *  while the low end keeps fine control. */
