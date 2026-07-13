@@ -1,8 +1,9 @@
 const MUTE_KEY = 'ap:muted';
 const VOLUME_KEY = 'ap:volume';
 const DEFAULT_VOLUME = 0.7;
-/** Gain at volume=1. The old fixed gain (0.05) sat near today's 0.3 mark. */
-const MAX_GAIN = 0.18;
+/** Gain at volume=1. Applied on a squared curve so the top end gets loud
+ *  while the low end keeps fine control. */
+const MAX_GAIN = 0.4;
 
 export function isMuted(): boolean {
 	return localStorage.getItem(MUTE_KEY) === '1';
@@ -47,7 +48,7 @@ class Chime {
 	private beep(freq: number, at: number, duration = 0.14): void {
 		const ctx = this.ensure();
 		if (!ctx || ctx.state !== 'running') return;
-		const volume = MAX_GAIN * getVolume();
+		const volume = MAX_GAIN * getVolume() ** 2;
 		if (volume <= 0) return;
 		const osc = ctx.createOscillator();
 		const gain = ctx.createGain();
