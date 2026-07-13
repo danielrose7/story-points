@@ -36,6 +36,21 @@ npm run dev        # vite dev server with the Worker + DO running locally
 npm run deploy     # builds, then `wrangler deploy` (needs `wrangler login` once)
 ```
 
+## TODO
+
+- [ ] **Finish CI/CD: add the `CLOUDFLARE_API_TOKEN` repo secret.** GitHub Actions
+  ([deploy.yml](.github/workflows/deploy.yml)) already builds every PR and deploys
+  `main`, but the deploy job fails until this token exists:
+  1. Go to <https://dash.cloudflare.com/profile/api-tokens> and click **Create Token**.
+  2. Under the **Edit Cloudflare Workers** template, click **Use template**.
+  3. Under *Account Resources*, pick the `Dan@gobloom.io` account; leave the rest as-is.
+  4. Click **Continue to summary** → **Create Token**, then copy the token.
+  5. In a terminal: `gh secret set CLOUDFLARE_API_TOKEN --repo danielrose7/agile-points`
+     and paste the token when prompted.
+  6. Re-run the failed workflow (`gh run rerun --failed`) or just push to `main`.
+
+  (`CLOUDFLARE_ACCOUNT_ID` is already set as a repo secret.)
+
 ## Roadmap
 
 - Themes (surf 🏄, outer space 🚀, birthday 🎂, nightclub 🪩) via the
