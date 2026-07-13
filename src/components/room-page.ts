@@ -43,6 +43,8 @@ class RoomPage extends LitElement {
 	private storySendHandle: ReturnType<typeof setTimeout> | null = null;
 	private lastReactionSent = 0;
 	private storyHadYolo = false;
+	private roundKey = 0;
+	private lastStage = 0;
 
 	private get fx() {
 		return this.shadowRoot?.querySelector('points-fx') as
@@ -88,12 +90,26 @@ class RoomPage extends LitElement {
 		this.timerHandle = setInterval(() => {
 			const s = this.state;
 			if (!s) return;
-			const prevMood = this.timerMood(s);
 			this.elapsed = Math.max(0, (s.revealedAt ?? Date.now()) - s.roundStartedAt);
-			const mood = this.timerMood(s);
-			if (mood !== prevMood && (s.settings.timerSounds ?? true) && !this.muted) {
-				if (mood === 'amber') chime.amber();
-				else if (mood === 'rabbit') chime.rabbit();
+
+			// New round (or first sight of one, e.g. after refresh): sync the
+			// stage without firing catch-up chimes at whoever just walked in.
+			if (s.roundStartedAt !== this.roundKey) {
+				this.roundKey = s.roundStartedAt;
+				this.lastStage = this.timerStage(s);
+				return;
+			}
+			const stage = this.timerStage(s);
+			if (stage > this.lastStage) {
+				const crossed15 = this.lastStage < 3 && stage >= 3;
+				if ((s.settings.timerSounds ?? true) && !this.muted && stage <= 4) {
+					if (stage === 1) chime.amber();
+					else chime.rabbit();
+				}
+				if (crossed15) {
+					this.fx?.toast('⏳ 15 minutes on this one — split the ticket, park it, or timebox 5 more?');
+				}
+				this.lastStage = stage;
 			}
 		}, 1000);
 	}
@@ -554,7 +570,10 @@ class RoomPage extends LitElement {
 							`}
 					<span class="spacer"></span>
 					<span class="timer ${this.timerMood(s)}">
-						${this.timerMood(s) === 'rabbit' ? html`<span class="bun">🐇</span>` : nothing}
+						${Array.from(
+							{ length: this.rabbitCount(s) },
+							(_, i) => html`<span class="bun" style="animation-delay:${i * 120}ms">🐇</span>`,
+						)}
 						${s.revealedAt !== null ? '⏸' : '⏱'} ${this.formatElapsed()}
 					</span>
 				</div>
@@ -696,12 +715,21 @@ class RoomPage extends LitElement {
 		return s.settings.deck.find((c) => c.value === value)?.label ?? value;
 	}
 
-	/** Timer personality: calm → amber at 5 min → red with a hopping rabbit at 10 min. */
+	/** Escalation stage: 0 calm, 1 = >5min, 2 = >10min, … one more per 5 min. */
+	private timerStage(s: RoomStateView): number {
+		if (s.revealedAt !== null) return 0;
+		return [5, 10, 15, 20, 25].filter((min) => this.elapsed > min * 60_000).length;
+	}
+
+	/** Timer personality: calm → amber at 5 min → red with hopping rabbits from 10 min. */
 	private timerMood(s: RoomStateView): '' | 'amber' | 'rabbit' {
-		if (s.revealedAt !== null) return '';
-		if (this.elapsed > 10 * 60_000) return 'rabbit';
-		if (this.elapsed > 5 * 60_000) return 'amber';
-		return '';
+		const stage = this.timerStage(s);
+		return stage >= 2 ? 'rabbit' : stage === 1 ? 'amber' : '';
+	}
+
+	/** One rabbit at 10 min, another every 5 min after, capped at 4. */
+	private rabbitCount(s: RoomStateView): number {
+		return Math.min(Math.max(this.timerStage(s) - 1, 0), 4);
 	}
 
 	private formatElapsed(): string {
