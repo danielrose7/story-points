@@ -7,7 +7,7 @@ import type {
 	RoomStateView,
 	ServerMessage,
 } from '../shared/types';
-import { ALL_REACTION_EMOJI, defaultSettings, THEMES } from '../shared/types';
+import { ALL_REACTION_EMOJI, defaultSettings, seasonalTheme, THEMES } from '../shared/types';
 
 interface Participant {
 	name: string;
@@ -38,8 +38,8 @@ export class Room extends DurableObject<Env> {
 		if (!this.room) {
 			this.room =
 				(await this.ctx.storage.get<PersistedRoom>(ROOM_KEY)) ?? {
-					// Fresh room = surprise theme; the host can change it in settings.
-					settings: { ...defaultSettings(), theme: THEMES[Math.floor(Math.random() * THEMES.length)].id },
+					// Fresh room = the season's theme; the host can change it in settings.
+					settings: { ...defaultSettings(), theme: seasonalTheme(new Date()) },
 					story: '',
 					revealed: false,
 					revealedAt: null,

@@ -89,6 +89,42 @@ export const ALL_REACTION_EMOJI: string[] = [
 	...new Set([...REACTION_EMOJI, ...Object.values(THEME_REACTIONS).flat()]),
 ];
 
+/** Calendar anchors for seasonal themes ([month 1-12, day]). Non-seasonal
+ *  themes have no anchor — they're manual picks in room settings. */
+const THEME_ANCHORS: Array<{ id: ThemeId; month: number; day: number }> = [
+	{ id: 'newyear', month: 2, day: 1 },
+	{ id: 'valentines', month: 2, day: 14 },
+	{ id: 'stpatricks', month: 3, day: 17 },
+	{ id: 'easter', month: 4, day: 5 },
+	{ id: 'mothersday', month: 5, day: 10 },
+	{ id: 'summer', month: 6, day: 21 },
+	{ id: 'july4', month: 7, day: 4 },
+	{ id: 'backtoschool', month: 8, day: 25 },
+	{ id: 'fall', month: 9, day: 22 },
+	{ id: 'halloween', month: 10, day: 31 },
+	{ id: 'thanksgiving', month: 11, day: 26 },
+	{ id: 'christmas', month: 12, day: 25 },
+];
+
+/** Theme whose anchor date is nearest to `date`, wrapping around the year. */
+export function seasonalTheme(date: Date): ThemeId {
+	const dayOfYear = (d: Date) =>
+		Math.floor((d.getTime() - Date.UTC(d.getUTCFullYear(), 0, 0)) / 86_400_000);
+	const today = dayOfYear(date);
+	let best: ThemeId = 'classic';
+	let bestDist = Infinity;
+	for (const a of THEME_ANCHORS) {
+		const anchorDay = dayOfYear(new Date(Date.UTC(date.getUTCFullYear(), a.month - 1, a.day)));
+		const raw = Math.abs(anchorDay - today);
+		const dist = Math.min(raw, 365 - raw);
+		if (dist < bestDist) {
+			bestDist = dist;
+			best = a.id;
+		}
+	}
+	return best;
+}
+
 export type ClientMessage =
 	| { type: 'join'; name: string; role: Role }
 	| { type: 'vote'; value: string | null }
