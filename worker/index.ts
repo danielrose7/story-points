@@ -1,6 +1,6 @@
 export { Room } from './room';
 
-const ROOM_ID_RE = /^\/api\/room\/([a-z0-9-]{1,64})\/ws$/;
+const ROOM_ID_RE = /^\/api\/room\/([a-z0-9-]{1,64})\/(ws|peek)$/;
 
 export default {
 	async fetch(request, env): Promise<Response> {

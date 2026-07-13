@@ -56,6 +56,11 @@ export class Room extends DurableObject<Env> {
 	}
 
 	async fetch(request: Request): Promise<Response> {
+		if (new URL(request.url).pathname.endsWith('/peek')) {
+			// Rooms are created lazily, so "exists" = someone has been here before.
+			const exists = (await this.ctx.storage.get(ROOM_KEY)) !== undefined;
+			return Response.json({ exists });
+		}
 		if (request.headers.get('Upgrade') !== 'websocket') {
 			return new Response('Expected WebSocket', { status: 426 });
 		}

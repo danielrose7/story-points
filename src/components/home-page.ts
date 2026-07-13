@@ -6,9 +6,38 @@ import { navigate } from '../main';
 class HomePage extends LitElement {
 	static properties = {
 		joinCode: { state: true },
+		lostPath: { attribute: false },
+		lostRoomExists: { state: true },
 	};
 
 	joinCode = '';
+	lostPath = '';
+	lostRoomExists: boolean | null = null;
+
+	/** Turn a lost URL into a plausible room slug: /Team%20Alpha! → team-alpha */
+	private get lostSlug(): string {
+		try {
+			return decodeURIComponent(this.lostPath)
+				.replace(/^\/(room\/)?/, '')
+				.toLowerCase()
+				.replace(/[^a-z0-9-]+/g, '-')
+				.replace(/-+/g, '-')
+				.replace(/^-|-$/g, '')
+				.slice(0, 64);
+		} catch {
+			return '';
+		}
+	}
+
+	willUpdate(changed: Map<string, unknown>): void {
+		if (changed.has('lostPath') && this.lostSlug) {
+			this.lostRoomExists = null;
+			fetch(`/api/room/${this.lostSlug}/peek`)
+				.then((r) => r.json() as Promise<{ exists: boolean }>)
+				.then(({ exists }) => (this.lostRoomExists = exists))
+				.catch(() => (this.lostRoomExists = false));
+		}
+	}
 
 	static styles = [
 		baseStyles,
@@ -18,6 +47,31 @@ class HomePage extends LitElement {
 			place-items: center;
 			min-height: 100vh;
 			padding: 24px;
+		}
+		.stack {
+			display: grid;
+			gap: 16px;
+			max-width: 460px;
+			width: 100%;
+		}
+		.panel.lost {
+			background: #fff8e6;
+			border: 2px dashed var(--ap-accent);
+		}
+		.lost-code {
+			font-size: 2.6rem;
+			font-weight: 900;
+			letter-spacing: 0.1em;
+		}
+		.lost-msg code {
+			background: rgba(0, 0, 0, 0.07);
+			padding: 2px 8px;
+			border-radius: 6px;
+			word-break: break-all;
+		}
+		.lost-hint {
+			color: var(--ap-muted);
+			margin: 6px 0 14px;
 		}
 		.panel {
 			background: var(--ap-surface);
@@ -83,7 +137,9 @@ class HomePage extends LitElement {
 
 	render() {
 		return html`
-			<div class="panel">
+			<div class="stack">
+				${this.lostPath ? this.renderLost() : ''}
+				<div class="panel">
 				<h1>🃏 Agile Points</h1>
 				<p class="tagline">Estimate together, in realtime.</p>
 				<button class="primary" @click=${this.createRoom}>Create a room</button>
@@ -96,6 +152,32 @@ class HomePage extends LitElement {
 					/>
 					<button type="submit">Join</button>
 				</form>
+				</div>
+			</div>
+		`;
+	}
+
+	private renderLost() {
+		const slug = this.lostSlug;
+		return html`
+			<div class="panel lost">
+				<div class="lost-code">4🂠4</div>
+				<p class="lost-msg"><code>${this.lostPath}</code> isn't a page here.</p>
+				${slug
+					? this.lostRoomExists === null
+						? html`<p class="lost-hint">Checking if “${slug}” is a room…</p>`
+						: this.lostRoomExists
+							? html`
+									<p class="lost-hint">But <strong>${slug}</strong> is an existing room!</p>
+									<button class="primary" @click=${() => navigate(`/room/${slug}`)}>Join “${slug}”</button>
+								`
+							: html`
+									<p class="lost-hint">It could be a room, though — nobody has claimed it yet.</p>
+									<button class="primary" @click=${() => navigate(`/room/${slug}`)}>
+										Create room “${slug}”
+									</button>
+								`
+					: html`<p class="lost-hint">Pick a room below instead.</p>`}
 			</div>
 		`;
 	}
