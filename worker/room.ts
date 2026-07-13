@@ -7,7 +7,7 @@ import type {
 	RoomStateView,
 	ServerMessage,
 } from '../shared/types';
-import { defaultSettings } from '../shared/types';
+import { defaultSettings, REACTION_EMOJI, THEMES } from '../shared/types';
 
 interface Participant {
 	name: string;
@@ -153,12 +153,22 @@ export class Room extends DurableObject<Env> {
 					roomName: String(s?.roomName ?? '').trim().slice(0, 60),
 					deck,
 					autoReveal: Boolean(s?.autoReveal),
+					theme: THEMES.some((t) => t.id === s?.theme) ? s.theme : 'classic',
 				};
 				// Drop votes for values no longer in the deck.
 				for (const [id, v] of Object.entries(room.votes)) {
 					if (!deck.some((c) => c.value === v)) delete room.votes[id];
 				}
 				break;
+			}
+			case 'reaction': {
+				const sender = room.participants[userId];
+				if (!sender) return;
+				if (!(REACTION_EMOJI as readonly string[]).includes(msg.emoji)) return;
+				// Ephemeral: fan out and forget — no storage write, no state broadcast.
+				const payload: ServerMessage = { type: 'reaction', emoji: msg.emoji, from: userId, name: sender.name };
+				for (const socket of this.ctx.getWebSockets()) this.send(socket, payload);
+				return;
 			}
 			case 'leave': {
 				delete room.participants[userId];

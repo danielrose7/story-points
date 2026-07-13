@@ -5,11 +5,19 @@ export interface DeckCard {
 	value: string;
 }
 
+export const THEMES = [
+	{ id: 'classic', label: '🃏 Card table' },
+	{ id: 'space', label: '🚀 Outer space' },
+] as const;
+
+export type ThemeId = (typeof THEMES)[number]['id'];
+
 export interface RoomSettings {
 	roomName: string;
 	deck: DeckCard[];
 	/** Reveal votes automatically once every connected voter has voted */
 	autoReveal: boolean;
+	theme: ThemeId;
 }
 
 export interface ParticipantView {
@@ -36,6 +44,8 @@ export interface RoomStateView {
 	youJoined: boolean;
 }
 
+export const REACTION_EMOJI = ['👍', '🔥', '🤔', '😂', '🎉', '👏', '☕', '🐇'] as const;
+
 export type ClientMessage =
 	| { type: 'join'; name: string; role: Role }
 	| { type: 'vote'; value: string | null }
@@ -44,10 +54,13 @@ export type ClientMessage =
 	| { type: 'clear'; clearStory?: boolean }
 	| { type: 'story'; text: string }
 	| { type: 'settings'; settings: RoomSettings }
+	| { type: 'reaction'; emoji: string }
 	| { type: 'leave' };
 
 export type ServerMessage =
 	| { type: 'state'; state: RoomStateView }
+	/** ephemeral — rendered and forgotten, never stored */
+	| { type: 'reaction'; emoji: string; from: string; name: string }
 	| { type: 'error'; message: string };
 
 export const DECK_PRESETS: Record<string, DeckCard[]> = {
@@ -89,5 +102,6 @@ export function defaultSettings(): RoomSettings {
 		roomName: '',
 		deck: DECK_PRESETS.fibonacci.map((c) => ({ ...c })),
 		autoReveal: true,
+		theme: 'classic',
 	};
 }

@@ -12,6 +12,49 @@
 	--ap-font: 'Avenir Next', 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
+/* 🚀 Outer space theme — custom properties inherit into shadow DOM,
+   so component styling follows automatically. */
+:root[data-theme='space'] {
+	--ap-bg: radial-gradient(ellipse at 50% -20%, #223061 0%, #141f45 45%, #080e24 100%);
+	--ap-accent: #8f7bff;
+	--ap-accent-text: #ffffff;
+	--ap-muted: #6b7490;
+	--ap-card-back: repeating-linear-gradient(45deg, #38307f 0 6px, #5646c4 6px 12px);
+}
+
+:root[data-theme='space'] {
+	background: #080e24;
+}
+
+/* Twinkling starfield */
+:root[data-theme='space'] body::after {
+	content: '';
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	background-image:
+		radial-gradient(1.5px 1.5px at 12% 22%, #fff, transparent),
+		radial-gradient(2px 2px at 28% 64%, #cfe0ff, transparent),
+		radial-gradient(1.5px 1.5px at 41% 12%, #fff, transparent),
+		radial-gradient(1px 1px at 55% 44%, #ffe9c9, transparent),
+		radial-gradient(2px 2px at 67% 78%, #fff, transparent),
+		radial-gradient(1.5px 1.5px at 78% 18%, #cfe0ff, transparent),
+		radial-gradient(1px 1px at 88% 55%, #fff, transparent),
+		radial-gradient(1.5px 1.5px at 94% 84%, #ffe9c9, transparent),
+		radial-gradient(1px 1px at 6% 82%, #fff, transparent),
+		radial-gradient(1.5px 1.5px at 35% 91%, #cfe0ff, transparent);
+	animation: twinkle 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+	from {
+		opacity: 0.45;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
 * {
 	box-sizing: border-box;
 }

@@ -16,6 +16,7 @@ export class RoomConnection {
 	onState: (state: RoomStateView) => void = () => {};
 	onStatus: (status: ConnectionStatus) => void = () => {};
 	onError: (message: string) => void = () => {};
+	onReaction: (emoji: string, from: string, name: string) => void = () => {};
 
 	constructor(
 		private roomId: string,
@@ -37,6 +38,7 @@ export class RoomConnection {
 		ws.addEventListener('message', (e) => {
 			const msg = JSON.parse(e.data as string) as ServerMessage;
 			if (msg.type === 'state') this.onState(msg.state);
+			else if (msg.type === 'reaction') this.onReaction(msg.emoji, msg.from, msg.name);
 			else if (msg.type === 'error') this.onError(msg.message);
 		});
 		ws.addEventListener('close', () => {

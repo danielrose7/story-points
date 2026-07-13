@@ -51,9 +51,30 @@ npm run deploy     # builds, then `wrangler deploy` (needs `wrangler login` once
 
   (`CLOUDFLARE_ACCOUNT_ID` is already set as a repo secret.)
 
+## Joy layer
+
+- **Emoji reactions** — ephemeral, FigJam-style; broadcast over the socket,
+  never stored. 🐇 = "we're going down a rabbit hole"; 3 rabbits in a minute
+  triggers a *side quest detected* toast.
+- **Celebrations** — reveal outcomes draw from shuffle-bag pools (no repeats
+  until a pool is exhausted): consensus 🎉/🚀/📈/🎰, big split 🥊, all-"?" ☕.
+  ~2% of celebrations are replaced by a rare drop. 🦖
+- **Rabbit-hole timer** — round clock goes amber at 5 min, red with a hopping
+  🐇 at 10 min.
+- **Micro-interactions** — 3D card flips with per-player stagger on reveal,
+  deal-in player rows, same-emoji-within-2s collision high-fives 💥, and at
+  least one hidden trigger word. 🔥
+
+## Themes
+
+Set per-room by the host in room settings; synced to everyone. Built on the
+`--ap-*` custom properties in `src/styles.css` (they inherit into shadow DOM).
+Available: 🃏 Card table, 🚀 Outer space. Planned: surf 🏄, birthday 🎂,
+nightclub 🪩.
+
 ## Roadmap
 
-- Themes (surf 🏄, outer space 🚀, birthday 🎂, nightclub 🪩) via the
-  `--ap-*` CSS custom properties in `src/styles.css`
+- Remaining themes (surf 🏄, birthday 🎂, nightclub 🪩)
+- Round history (story + result + duration per round)
 - Vote distribution chart on reveal
 - Optional room-idle cleanup via DO alarms

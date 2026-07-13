@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { baseStyles } from './base-styles';
 import type { DeckCard, RoomSettings } from '../../shared/types';
-import { DECK_PRESETS } from '../../shared/types';
+import { DECK_PRESETS, THEMES } from '../../shared/types';
 
 /** Owner-only settings editor. Edits a local draft; emits `save` with the result. */
 class SettingsPanel extends LitElement {
@@ -163,6 +163,17 @@ class SettingsPanel extends LitElement {
 						`,
 					)}
 					<button class="btn" @click=${this.addCard}>+ Add value</button>
+				</div>
+
+				<label class="field">Theme</label>
+				<div class="presets">
+					${THEMES.map(
+						(t) => html`
+							<button class="btn ${d.theme === t.id ? 'primary' : ''}" @click=${() => this.patch({ theme: t.id })}>
+								${t.label}
+							</button>
+						`,
+					)}
 				</div>
 
 				<label class="check">

@@ -1,10 +1,13 @@
 import { LitElement, html, css, nothing } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
 import { baseStyles } from './base-styles';
 import type { Role, RoomStateView } from '../../shared/types';
 import { RoomConnection, type ConnectionStatus } from '../connection';
 import { clearRoomSession, getSavedName, getSavedRole, getUserId, saveName, saveRole } from '../identity';
 import { navigate } from '../main';
+import { REACTION_EMOJI } from '../../shared/types';
 import './settings-panel';
+import './fx-layer';
 
 class RoomPage extends LitElement {
 	static properties = {
@@ -35,20 +38,40 @@ class RoomPage extends LitElement {
 	private timerHandle: ReturnType<typeof setInterval> | null = null;
 	private storyEditing = false;
 	private storySendHandle: ReturnType<typeof setTimeout> | null = null;
+	private lastReactionSent = 0;
+	private storyHadYolo = false;
+
+	private get fx() {
+		return this.shadowRoot?.querySelector('points-fx') as
+			| (HTMLElement & {
+					spawnReaction(e: string, n: string): void;
+					celebrate(k: string, d?: object): void;
+					toast(m: string): void;
+					flames(): void;
+			  })
+			| null;
+	}
 
 	connectedCallback(): void {
 		super.connectedCallback();
 		const conn = new RoomConnection(this.roomId, getUserId());
 		this.conn = conn;
 		conn.onState = (state) => {
+			const justRevealed = !(this.state?.revealed ?? false) && state.revealed;
 			this.state = state;
 			this.error = '';
+			if (justRevealed) this.celebrateReveal(state);
+			document.documentElement.dataset.theme = state.settings.theme ?? 'classic';
+			const yolo = /\byolo\b/i.test(state.story);
+			if (yolo && !this.storyHadYolo) this.fx?.flames();
+			this.storyHadYolo = yolo;
 			// While you're typing, your draft wins over server echoes; remote
 			// edits land once you leave the field.
 			if (!this.storyEditing) this.storyDraft = state.story;
 		};
 		conn.onStatus = (status) => (this.status = status);
 		conn.onError = (message) => (this.error = message);
+		conn.onReaction = (emoji, _from, name) => this.fx?.spawnReaction(emoji, name);
 
 		// Reclaim a previous seat in this room without showing the join gate.
 		const savedRole = getSavedRole(this.roomId);
@@ -67,6 +90,7 @@ class RoomPage extends LitElement {
 
 	disconnectedCallback(): void {
 		super.disconnectedCallback();
+		delete document.documentElement.dataset.theme;
 		this.conn?.close();
 		this.conn = null;
 		if (this.timerHandle) clearInterval(this.timerHandle);
@@ -199,6 +223,26 @@ class RoomPage extends LitElement {
 			font-size: 1rem;
 			color: var(--ap-muted);
 		}
+		.timer.amber {
+			color: #c8860a;
+			font-weight: 700;
+		}
+		.timer.rabbit {
+			color: #d84a4a;
+			font-weight: 700;
+		}
+		.timer .bun {
+			display: inline-block;
+			animation: bun-hop 0.5s ease-in-out infinite alternate;
+		}
+		@keyframes bun-hop {
+			from {
+				transform: translateY(0);
+			}
+			to {
+				transform: translateY(-5px);
+			}
+		}
 
 		/* Story */
 		textarea.story {
@@ -298,6 +342,33 @@ class RoomPage extends LitElement {
 			border: 2px solid var(--ap-accent);
 			color: var(--ap-surface-text);
 		}
+		tr.seat {
+			animation: deal-in 0.35s ease-out backwards;
+		}
+		@keyframes deal-in {
+			from {
+				opacity: 0;
+				transform: translateX(-24px);
+			}
+			to {
+				opacity: 1;
+				transform: translateX(0);
+			}
+		}
+		.vote-chip.shown.flip {
+			animation: flip-in 0.5s ease-out backwards;
+		}
+		@keyframes flip-in {
+			0% {
+				transform: perspective(400px) rotateY(90deg) scale(0.8);
+			}
+			60% {
+				transform: perspective(400px) rotateY(-18deg) scale(1.05);
+			}
+			100% {
+				transform: perspective(400px) rotateY(0deg) scale(1);
+			}
+		}
 		.vote-chip.waiting {
 			background: #f1f4f2;
 			color: #b9c4be;
@@ -326,6 +397,32 @@ class RoomPage extends LitElement {
 			color: #1b5e43;
 		}
 
+		/* Reactions */
+		.reactions {
+			display: flex;
+			gap: 6px;
+			flex-wrap: wrap;
+			justify-content: center;
+			margin-bottom: 18px;
+		}
+		.react {
+			font-size: 1.3rem;
+			line-height: 1;
+			padding: 9px 11px;
+			border-radius: 999px;
+			border: none;
+			background: rgba(255, 255, 255, 0.14);
+			cursor: pointer;
+			transition: transform 0.1s ease, background 0.1s ease;
+		}
+		.react:hover {
+			transform: translateY(-3px) scale(1.15);
+			background: rgba(255, 255, 255, 0.28);
+		}
+		.react:active {
+			transform: scale(0.92);
+		}
+
 		/* Invite */
 		.invite {
 			display: flex;
@@ -352,6 +449,7 @@ class RoomPage extends LitElement {
 			</header>
 			${this.error ? html`<div class="error">${this.error}</div>` : nothing}
 			${!s || !s.youJoined ? this.renderGate() : this.renderTable(s)}
+			<points-fx></points-fx>
 		`;
 	}
 
@@ -425,7 +523,10 @@ class RoomPage extends LitElement {
 								<button class="btn" @click=${this.revote}>Re-vote</button>
 							`}
 					<span class="spacer"></span>
-					<span class="timer">${s.revealedAt !== null ? '⏸' : '⏱'} ${this.formatElapsed()}</span>
+					<span class="timer ${this.timerMood(s)}">
+						${this.timerMood(s) === 'rabbit' ? html`<span class="bun">🐇</span>` : nothing}
+						${s.revealedAt !== null ? '⏸' : '⏱'} ${this.formatElapsed()}
+					</span>
 				</div>
 			</div>
 
@@ -461,9 +562,11 @@ class RoomPage extends LitElement {
 						</tr>
 					</thead>
 					<tbody>
-						${s.participants.map(
-							(p) => html`
-								<tr>
+						${repeat(
+							s.participants,
+							(p) => p.id,
+							(p, i) => html`
+								<tr class="seat">
 									<td>
 										${p.name}
 										${p.isOwner ? html`<span class="tag">host</span>` : nothing}
@@ -474,7 +577,11 @@ class RoomPage extends LitElement {
 										${p.role === 'observer'
 											? html`—`
 											: p.vote !== null
-												? html`<span class="vote-chip shown">${this.labelFor(s, p.vote)}</span>`
+												? html`<span
+														class="vote-chip shown ${s.revealed ? 'flip' : ''}"
+														style="animation-delay:${i * 90}ms"
+														>${this.labelFor(s, p.vote)}</span
+													>`
 												: p.hasVoted
 													? html`<span class="vote-chip hidden-vote">?</span>`
 													: html`<span class="vote-chip waiting">…</span>`}
@@ -487,6 +594,12 @@ class RoomPage extends LitElement {
 			</div>
 
 			${s.revealed && voters.length ? this.renderStats(s) : nothing}
+
+			<div class="reactions" title="React — 🐇 = we're going down a rabbit hole">
+				${REACTION_EMOJI.map(
+					(e) => html`<button class="react" @click=${() => this.sendReaction(e)}>${e}</button>`,
+				)}
+			</div>
 
 			<div class="panel">
 				<label class="field">Invite your team</label>
@@ -553,6 +666,14 @@ class RoomPage extends LitElement {
 		return s.settings.deck.find((c) => c.value === value)?.label ?? value;
 	}
 
+	/** Timer personality: calm → amber at 5 min → red with a hopping rabbit at 10 min. */
+	private timerMood(s: RoomStateView): '' | 'amber' | 'rabbit' {
+		if (s.revealedAt !== null) return '';
+		if (this.elapsed > 10 * 60_000) return 'rabbit';
+		if (this.elapsed > 5 * 60_000) return 'amber';
+		return '';
+	}
+
 	private formatElapsed(): string {
 		const total = Math.floor(this.elapsed / 1000);
 		const h = Math.floor(total / 3600);
@@ -560,6 +681,33 @@ class RoomPage extends LitElement {
 		const sec = total % 60;
 		const pad = (n: number) => String(n).padStart(2, '0');
 		return `${pad(h)}:${pad(m)}:${pad(sec)}`;
+	}
+
+	/** Pick a celebration based on how the vote landed. */
+	private celebrateReveal(s: RoomStateView): void {
+		const votes = s.participants.filter((p) => p.role === 'voter' && p.vote !== null).map((p) => p.vote as string);
+		if (votes.length < 2) return;
+		if (votes.every((v) => v === '?')) return this.fx?.celebrate('allq');
+		if (votes.every((v) => v === votes[0])) return this.fx?.celebrate('consensus');
+		// "Big split" = far apart in deck order (works for numbers and t-shirts alike).
+		const indices = votes
+			.map((v) => s.settings.deck.findIndex((c) => c.value === v))
+			.filter((i) => i >= 0);
+		const lo = Math.min(...indices);
+		const hi = Math.max(...indices);
+		if (hi - lo >= 4) {
+			this.fx?.celebrate('split', {
+				min: s.settings.deck[lo]?.label,
+				max: s.settings.deck[hi]?.label,
+			});
+		}
+	}
+
+	private sendReaction(emoji: string): void {
+		const now = Date.now();
+		if (now - this.lastReactionSent < 300) return;
+		this.lastReactionSent = now;
+		this.conn?.send({ type: 'reaction', emoji });
 	}
 
 	/** Re-vote the same ticket: clears votes and timer, keeps the description. */
