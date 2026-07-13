@@ -18,6 +18,8 @@ export interface RoomSettings {
 	/** Reveal votes automatically once every connected voter has voted */
 	autoReveal: boolean;
 	theme: ThemeId;
+	/** Room-wide switch for timer chimes (individuals can still mute locally) */
+	timerSounds: boolean;
 }
 
 export interface ParticipantView {
@@ -103,5 +105,6 @@ export function defaultSettings(): RoomSettings {
 		deck: DECK_PRESETS.fibonacci.map((c) => ({ ...c })),
 		autoReveal: true,
 		theme: 'classic',
+		timerSounds: true,
 	};
 }

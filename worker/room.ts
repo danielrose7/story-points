@@ -154,6 +154,8 @@ export class Room extends DurableObject<Env> {
 					deck,
 					autoReveal: Boolean(s?.autoReveal),
 					theme: THEMES.some((t) => t.id === s?.theme) ? s.theme : 'classic',
+					// default on; only an explicit false turns it off (old clients omit it)
+					timerSounds: s?.timerSounds !== false,
 				};
 				// Drop votes for values no longer in the deck.
 				for (const [id, v] of Object.entries(room.votes)) {

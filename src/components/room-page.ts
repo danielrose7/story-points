@@ -6,6 +6,7 @@ import { RoomConnection, type ConnectionStatus } from '../connection';
 import { clearRoomSession, getSavedName, getSavedRole, getUserId, saveName, saveRole } from '../identity';
 import { navigate } from '../main';
 import { REACTION_EMOJI } from '../../shared/types';
+import { chime, isMuted, setMuted } from '../sound';
 import './settings-panel';
 import './fx-layer';
 
@@ -21,6 +22,7 @@ class RoomPage extends LitElement {
 		elapsed: { state: true },
 		copied: { state: true },
 		storyDraft: { state: true },
+		muted: { state: true },
 	};
 
 	roomId = '';
@@ -33,6 +35,7 @@ class RoomPage extends LitElement {
 	elapsed = 0;
 	copied = false;
 	storyDraft = '';
+	muted = isMuted();
 
 	private conn: RoomConnection | null = null;
 	private timerHandle: ReturnType<typeof setInterval> | null = null;
@@ -84,7 +87,14 @@ class RoomPage extends LitElement {
 
 		this.timerHandle = setInterval(() => {
 			const s = this.state;
-			if (s) this.elapsed = Math.max(0, (s.revealedAt ?? Date.now()) - s.roundStartedAt);
+			if (!s) return;
+			const prevMood = this.timerMood(s);
+			this.elapsed = Math.max(0, (s.revealedAt ?? Date.now()) - s.roundStartedAt);
+			const mood = this.timerMood(s);
+			if (mood !== prevMood && (s.settings.timerSounds ?? true) && !this.muted) {
+				if (mood === 'amber') chime.amber();
+				else if (mood === 'rabbit') chime.rabbit();
+			}
 		}, 1000);
 	}
 
@@ -127,6 +137,17 @@ class RoomPage extends LitElement {
 		.conn {
 			font-size: 0.8rem;
 			opacity: 0.8;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+		}
+		.mute {
+			border: none;
+			background: rgba(255, 255, 255, 0.14);
+			border-radius: 999px;
+			padding: 4px 8px;
+			font-size: 0.95rem;
+			cursor: pointer;
 		}
 		.panel {
 			background: var(--ap-surface);
@@ -445,7 +466,16 @@ class RoomPage extends LitElement {
 			<header>
 				<a class="brand" @click=${() => navigate('/')}>🃏 Agile Points</a>
 				<span class="room-code">${this.roomId}</span>
-				<span class="conn">${this.statusLabel()}</span>
+				<span class="conn">
+					${this.statusLabel()}
+					<button
+						class="mute"
+						title=${this.muted ? 'Unmute timer sounds (just for you)' : 'Mute timer sounds (just for you)'}
+						@click=${this.toggleMute}
+					>
+						${this.muted ? '🔇' : '🔊'}
+					</button>
+				</span>
 			</header>
 			${this.error ? html`<div class="error">${this.error}</div>` : nothing}
 			${!s || !s.youJoined ? this.renderGate() : this.renderTable(s)}
@@ -702,6 +732,11 @@ class RoomPage extends LitElement {
 			});
 		}
 	}
+
+	private toggleMute = () => {
+		this.muted = !this.muted;
+		setMuted(this.muted);
+	};
 
 	private sendReaction(emoji: string): void {
 		const now = Date.now();

@@ -185,6 +185,15 @@ class SettingsPanel extends LitElement {
 					Reveal automatically when everyone has voted
 				</label>
 
+				<label class="check">
+					<input
+						type="checkbox"
+						.checked=${d.timerSounds ?? true}
+						@change=${(e: Event) => this.patch({ timerSounds: (e.target as HTMLInputElement).checked })}
+					/>
+					Timer chimes at 5 &amp; 10 minutes (room-wide; anyone can mute for themselves)
+				</label>
+
 				<div class="actions">
 					<button class="btn primary" @click=${this.save}>Save settings</button>
 					<button class="btn" @click=${() => this.dispatchEvent(new CustomEvent('close'))}>Cancel</button>
