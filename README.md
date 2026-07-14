@@ -169,30 +169,22 @@ cost nothing forever.
 
 ## Roadmap
 
-Candidates from a July 2026 survey of what competing tools (Kollabe,
-PlanningPokerOnline, Agile Poker, Async Poker, Parabol) offer, ranked by fit
-for this app's ethos (no accounts, zero deps, free tier, joy):
+Everything from the July 2026 competitive survey shipped: ticket queue +
+export, deck grouping, voting countdown, agreement %, anonymous voting, away
+votes (async-ish estimation), settings tabs, feature toggles for every
+optional feature, room-creation presets, fresh round clock, docs + llms.txt,
+and the one-step agent setup (`/agent-setup/prompt.md`).
 
-1. ~~**Ticket queue + results export**~~ — shipped July 2026 (see "Ticket
-   queue & the import/export API" above).
-2. **Deck layout & grouping** — hosts already fake groups with label prefixes
-   (e.g. a triage room with `TD Creep / TD Urgent`, `US Urgent / US High /
-   US Medium`, `OD Medium / OD Low`); let room settings express that for real:
-   named groups or row breaks in the deck editor, rendered as separated card
-   clusters in the voting hand.
-3. **Voting countdown** — host starts an N-second countdown that auto-reveals
-   at zero. Pairs with the existing timer, chimes, and rabbit escalation.
-4. **Agreement % on reveal** — one derived stat next to average: how tightly
-   the votes clustered.
-5. **Anonymous voting mode** — room setting; reveal shows counts only, never
-   who voted what. Server-side masking already exists.
-6. **Fresh round clock on return** — today the round timer keeps counting
-   from when a round started even if everyone left the room days ago, so
-   returning teams see a monster elapsed time (and instant rabbits). Add a
-   default-on setting that restarts the clock at 0 when the first person
-   returns to an empty, unrevealed room.
-7. **Async estimation UX** — votes already persist between connections;
-   needs "3 of 5 have voted — reveal when ready" affordances.
+Remaining (on hold, July 2026 — the one-step agent prompt is the integration
+for now; revisit when real usage hits friction):
 
-Deliberately skipped: Jira/GitHub/Linear write-back, video-call embeds, AI
-insights — all account/API-heavy, against the no-accounts zero-dep grain.
+1. **Packaged agent integration** — either (a) a `story-points-skills` repo
+   (Claude Code plugin marketplace; an `/estimate-session` skill driving the
+   HTTP API with tracker credentials staying local), and/or (b) a remote MCP
+   endpoint on the Worker (`import_tickets` / `export_session` / `peek_room`
+   tools) for claude.ai and Claude Desktop. Lives outside this repo per the
+   no-integrations rule either way.
+
+Deliberately skipped: in-app Jira/GitHub/Linear write-back, video-call
+embeds, AI insights — all account/API-heavy, against the no-accounts
+zero-dep grain.
