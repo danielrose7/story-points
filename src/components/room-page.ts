@@ -1,7 +1,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { baseStyles } from './base-styles';
-import type { Role, RoomStateView } from '../../shared/types';
+import type { DeckCard, Role, RoomStateView } from '../../shared/types';
 import { RoomConnection, type ConnectionStatus } from '../connection';
 import { clearRoomSession, getSavedName, getSavedRole, getUserId, saveName, saveRole } from '../identity';
 import { navigate } from '../main';
@@ -354,6 +354,18 @@ class RoomPage extends LitElement {
 			display: flex;
 			flex-wrap: wrap;
 			gap: 10px;
+		}
+		.deck + .deck-group-label,
+		.deck + .deck {
+			margin-top: 14px;
+		}
+		.deck-group-label {
+			font-size: 0.78rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+			color: var(--sp-muted);
+			margin-bottom: 6px;
 		}
 		.card {
 			min-width: 58px;
@@ -830,20 +842,25 @@ class RoomPage extends LitElement {
 				? html`
 						<div class="panel">
 							<label class="field">Your vote</label>
-							<div class="deck">
-								${s.settings.deck.map((c) => {
-									const selected = me.vote === c.value;
-									return html`
-										<button
-											class="card ${selected ? 'selected' : ''}"
-											?disabled=${s.revealed}
-											@click=${() => this.conn?.send({ type: 'vote', value: selected ? null : c.value })}
-										>
-											${c.label}
-										</button>
-									`;
-								})}
-							</div>
+							${this.deckClusters(s).map(
+								([group, cards]) => html`
+									${group ? html`<div class="deck-group-label">${group}</div>` : nothing}
+									<div class="deck">
+										${cards.map((c) => {
+											const selected = me.vote === c.value;
+											return html`
+												<button
+													class="card ${selected ? 'selected' : ''}"
+													?disabled=${s.revealed}
+													@click=${() => this.conn?.send({ type: 'vote', value: selected ? null : c.value })}
+												>
+													${c.label}
+												</button>
+											`;
+										})}
+									</div>
+								`,
+							)}
 						</div>
 					`
 				: nothing}
@@ -1131,6 +1148,18 @@ class RoomPage extends LitElement {
 		const hours = Math.round(mins / 60);
 		if (hours < 24) return `${hours}h ago`;
 		return `${Math.round(hours / 24)}d ago`;
+	}
+
+	/** Deck split into [group, cards] clusters, groups in first-appearance order. */
+	private deckClusters(s: RoomStateView): Array<[string, DeckCard[]]> {
+		const clusters: Array<[string, DeckCard[]]> = [];
+		for (const c of s.settings.deck) {
+			const g = c.group ?? '';
+			const cluster = clusters.find(([name]) => name === g);
+			if (cluster) cluster[1].push(c);
+			else clusters.push([g, [c]]);
+		}
+		return clusters;
 	}
 
 	private labelFor(s: RoomStateView, value: string): string {

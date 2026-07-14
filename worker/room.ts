@@ -306,6 +306,7 @@ export class Room extends DurableObject<Env> {
 					.map((c) => ({
 						label: String(c?.label ?? '').trim().slice(0, 20),
 						value: String(c?.value ?? '').trim().slice(0, 20),
+						group: String(c?.group ?? '').trim().slice(0, 20) || undefined,
 					}))
 					.filter((c) => c.label && c.value)
 					.slice(0, 30);

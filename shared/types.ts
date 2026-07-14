@@ -3,6 +3,8 @@ export type Role = 'voter' | 'observer';
 export interface DeckCard {
 	label: string;
 	value: string;
+	/** cards sharing a group render as a labeled cluster in the voting hand */
+	group?: string;
 }
 
 export const THEMES = [
