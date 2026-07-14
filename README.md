@@ -193,6 +193,12 @@ Future ideas (not committed):
   with reveal-when-ready and an optional day-scale deadline via the room
   alarm. Deliberately without the notification/reasoning machinery — that's
   accounts-and-integrations territory.
+- **Outbound room webhook** — one optional host setting (a webhook URL); the
+  room POSTs Slack-compatible `{"text": …}` on round-recorded/reveal. Covers
+  Slack natively, Discord (`/slack` endpoint), Teams (Workflows) with zero
+  accounts or app review — and lets Slack's own toolchain (Workflow Builder,
+  reminders, threads) provide the async-notification layer instead of us
+  building it. Pairs with vote-ahead to complete the async loop.
 
 Deliberately skipped: in-app Jira/GitHub/Linear write-back, video-call
 embeds, AI insights, async notifications/per-vote comments — all
