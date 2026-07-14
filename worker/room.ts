@@ -33,6 +33,8 @@ interface PersistedRoom {
 	history?: RoundRecord[];
 	/** stories waiting their turn (may be undefined in pre-queue rooms) */
 	queue?: string[];
+	/** epoch ms when the running countdown auto-reveals; null/undefined = none */
+	countdownEndsAt?: number | null;
 	/** current host */
 	ownerId: string | null;
 	/** who reclaims the host role on return (first joiner, or explicit transferee) */
@@ -89,13 +91,24 @@ export class Room extends DurableObject<Env> {
 	private async save(): Promise<void> {
 		if (!this.room) return;
 		await this.ctx.storage.put(ROOM_KEY, this.room);
-		// Every write pushes the self-destruct out; it only ever fires on
-		// rooms nobody has touched in IDLE_TTL_MS.
-		await this.ctx.storage.setAlarm(Date.now() + IDLE_TTL_MS);
+		// One alarm serves two jobs: a running countdown (seconds away) wins;
+		// otherwise every write pushes the idle self-destruct out.
+		await this.ctx.storage.setAlarm(this.room.countdownEndsAt ?? Date.now() + IDLE_TTL_MS);
 	}
 
-	/** Idle cleanup: an abandoned room deletes its storage and evaporates. */
+	/** Countdown auto-reveal when one is running; idle cleanup otherwise. */
 	async alarm(): Promise<void> {
+		const room = await this.load();
+		if (room.countdownEndsAt != null) {
+			if (Date.now() >= room.countdownEndsAt - 250) {
+				room.countdownEndsAt = null;
+				room.revealed = true;
+				room.revealedAt ??= Date.now();
+			}
+			await this.save(); // re-arms: next countdown tick or idle TTL
+			this.broadcast(room);
+			return;
+		}
 		if (this.ctx.getWebSockets().length > 0) {
 			// Someone is connected (just quietly) — check back later.
 			await this.ctx.storage.setAlarm(Date.now() + IDLE_TTL_MS);
@@ -270,6 +283,16 @@ export class Room extends DurableObject<Env> {
 				if (!room.participants[userId]) return;
 				room.revealed = true;
 				room.revealedAt ??= Date.now();
+				room.countdownEndsAt = null;
+				break;
+			}
+			case 'countdown': {
+				if (!room.participants[userId] || room.revealed) return;
+				if (room.settings.countdown === false) return;
+				room.countdownEndsAt =
+					msg.action === 'start'
+						? Date.now() + (room.settings.countdownSeconds ?? 60) * 1000
+						: null;
 				break;
 			}
 			case 'clear': {
@@ -280,6 +303,7 @@ export class Room extends DurableObject<Env> {
 				room.votes = {};
 				room.revealed = false;
 				room.revealedAt = null;
+				room.countdownEndsAt = null;
 				room.roundStartedAt = Date.now();
 				// "Next ticket" pulls the next queued story; blank if none
 				// (or if the queue feature is switched off).
@@ -320,6 +344,8 @@ export class Room extends DurableObject<Env> {
 					timerSounds: s?.timerSounds !== false,
 					keepHistory: s?.keepHistory !== false,
 					ticketQueue: s?.ticketQueue !== false,
+					countdown: s?.countdown !== false,
+					countdownSeconds: Math.min(600, Math.max(5, Math.round(Number(s?.countdownSeconds)) || 60)),
 				};
 				// Drop votes for values no longer in the deck.
 				for (const [id, v] of Object.entries(room.votes)) {
@@ -442,6 +468,7 @@ export class Room extends DurableObject<Env> {
 		if (voters.length > 0 && voters.every(([id]) => room.votes[id] !== undefined)) {
 			room.revealed = true;
 			room.revealedAt ??= Date.now();
+			room.countdownEndsAt = null;
 		}
 	}
 
@@ -484,6 +511,7 @@ export class Room extends DurableObject<Env> {
 			history: room.settings.keepHistory === false ? [] : (room.history ?? []),
 			queue: room.settings.ticketQueue === false ? [] : (room.queue ?? []),
 			theme: resolveTheme(room.settings.theme),
+			countdownEndsAt: room.countdownEndsAt ?? null,
 		};
 	}
 

@@ -155,6 +155,18 @@ class SettingsPanel extends LitElement {
 			font-size: 0.85rem;
 			padding: 7px 12px;
 		}
+		.check.sub {
+			margin: 6px 0 0 26px;
+			color: var(--sp-muted);
+			font-size: 0.9rem;
+		}
+		input.seconds {
+			width: 76px;
+			padding: 6px 8px;
+			border: 1px solid var(--sp-border);
+			border-radius: 8px;
+			font: inherit;
+		}
 		`,
 	];
 
@@ -298,6 +310,31 @@ class SettingsPanel extends LitElement {
 				/>
 				Timer chimes at 5 &amp; 10 minutes (room-wide; anyone can mute for themselves)
 			</label>
+
+			<label class="check">
+				<input
+					type="checkbox"
+					.checked=${d.countdown ?? true}
+					@change=${(e: Event) => this.patch({ countdown: (e.target as HTMLInputElement).checked })}
+				/>
+				Voting countdown button (votes reveal automatically at zero)
+			</label>
+			${(d.countdown ?? true)
+				? html`
+						<label class="check sub">
+							<input
+								type="number"
+								class="seconds"
+								min="5"
+								max="600"
+								.value=${String(d.countdownSeconds ?? 60)}
+								@input=${(e: InputEvent) =>
+									this.patch({ countdownSeconds: Number((e.target as HTMLInputElement).value) || 60 })}
+							/>
+							seconds
+						</label>
+					`
+				: ''}
 
 			<label class="check">
 				<input

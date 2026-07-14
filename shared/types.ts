@@ -47,6 +47,10 @@ export interface RoomSettings {
 	/** "Up next" ticket queue. Off = hide the panel and reject API imports;
 	 *  queued items survive until re-enabled. */
 	ticketQueue: boolean;
+	/** Voting countdown button (auto-reveals when it hits zero). */
+	countdown: boolean;
+	/** Countdown length in seconds (5–600). */
+	countdownSeconds: number;
 }
 
 /** One finished round ("Next ticket →" after a reveal). Aggregate counts
@@ -89,6 +93,8 @@ export interface RoomStateView {
 	queue: string[];
 	/** settings.theme resolved to a concrete theme ('seasonal' → today's) */
 	theme: ThemeId;
+	/** epoch ms when the running countdown auto-reveals; null = none */
+	countdownEndsAt: number | null;
 }
 
 /** Response of GET /api/room/<slug>/peek — 404 check + social-preview tags. */
@@ -171,6 +177,8 @@ export type ClientMessage =
 	| { type: 'story'; text: string }
 	/** replace the ticket queue (client sends its full edited list) */
 	| { type: 'queue'; items: string[] }
+	/** start or cancel the auto-reveal countdown for the current round */
+	| { type: 'countdown'; action: 'start' | 'cancel' }
 	| { type: 'settings'; settings: RoomSettings }
 	| { type: 'reaction'; emoji: string }
 	/** host only: hand the host role (and its reclaim rights) to another participant */
@@ -228,5 +236,7 @@ export function defaultSettings(): RoomSettings {
 		timerSounds: true,
 		keepHistory: true,
 		ticketQueue: true,
+		countdown: true,
+		countdownSeconds: 60,
 	};
 }

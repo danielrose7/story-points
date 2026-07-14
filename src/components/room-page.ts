@@ -703,6 +703,16 @@ class RoomPage extends LitElement {
 			padding: 6px 12px;
 			font-size: 0.85rem;
 		}
+		.btn.countdown.running {
+			border-color: var(--sp-timer-warn);
+			color: var(--sp-timer-warn);
+			animation: countdown-pulse 1s ease-in-out infinite;
+		}
+		@keyframes countdown-pulse {
+			50% {
+				transform: scale(1.06);
+			}
+		}
 		a.btn {
 			text-decoration: none;
 			color: inherit;
@@ -821,6 +831,27 @@ class RoomPage extends LitElement {
 						: html`
 								<button class="btn primary" @click=${() => this.conn?.send({ type: 'reveal' })}>Show votes</button>
 								<button class="btn" @click=${this.revote}>Re-vote</button>
+								${s.settings.countdown !== false
+									? s.countdownEndsAt !== null
+										? html`
+												<button
+													class="btn countdown running"
+													title="Cancel the countdown"
+													@click=${() => this.conn?.send({ type: 'countdown', action: 'cancel' })}
+												>
+													⏳ ${this.countdownRemaining(s)}s ✕
+												</button>
+											`
+										: html`
+												<button
+													class="btn countdown"
+													title="Start a countdown — votes reveal automatically at zero"
+													@click=${() => this.conn?.send({ type: 'countdown', action: 'start' })}
+												>
+													⏳ ${s.settings.countdownSeconds ?? 60}s
+												</button>
+											`
+									: nothing}
 							`}
 					<span class="spacer"></span>
 					<span
@@ -1148,6 +1179,11 @@ class RoomPage extends LitElement {
 		const hours = Math.round(mins / 60);
 		if (hours < 24) return `${hours}h ago`;
 		return `${Math.round(hours / 24)}d ago`;
+	}
+
+	/** Seconds until the running countdown reveals (never below 0). */
+	private countdownRemaining(s: RoomStateView): number {
+		return Math.max(0, Math.ceil(((s.countdownEndsAt ?? 0) - Date.now()) / 1000));
 	}
 
 	/** Deck split into [group, cards] clusters, groups in first-appearance order. */
