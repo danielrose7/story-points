@@ -185,6 +185,15 @@ for now; revisit when real usage hits friction):
    tools) for claude.ai and Claude Desktop. Lives outside this repo per the
    no-integrations rule either way.
 
+Future ideas (not committed):
+
+- **Vote ahead on the queue** — the Story-Points-shaped async model
+  (researched July 2026 vs Async Poker / SprintPoker / Parabol): voters flip
+  through "Up next" items and bank votes early; per-item "3 of 5 have voted"
+  with reveal-when-ready and an optional day-scale deadline via the room
+  alarm. Deliberately without the notification/reasoning machinery — that's
+  accounts-and-integrations territory.
+
 Deliberately skipped: in-app Jira/GitHub/Linear write-back, video-call
-embeds, AI insights — all account/API-heavy, against the no-accounts
-zero-dep grain.
+embeds, AI insights, async notifications/per-vote comments — all
+account/API-heavy, against the no-accounts zero-dep grain.
