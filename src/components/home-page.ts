@@ -56,7 +56,16 @@ class HomePage extends LitElement {
 			display: grid;
 			place-items: center;
 			min-height: 100vh;
+			min-height: 100dvh;
 			padding: 24px;
+		}
+		.stack {
+			min-width: 0;
+		}
+		/* grid tracks size to item min-content; without this a long room name
+		   in the recents list pushes every panel wider than the viewport */
+		.stack > * {
+			min-width: 0;
 		}
 		.stack {
 			display: grid;
@@ -93,11 +102,19 @@ class HomePage extends LitElement {
 		}
 		.recent-name {
 			font-weight: 700;
+			min-width: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 		.recent-slug {
 			font-family: ui-monospace, monospace;
 			font-size: 0.8rem;
 			color: var(--sp-muted);
+			min-width: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 		.recent-when {
 			margin-left: auto;
@@ -170,6 +187,9 @@ class HomePage extends LitElement {
 		}
 		input {
 			flex: 1;
+			/* flex min-width:auto would force the panel wider than its
+			   container on small screens (placeholder's intrinsic width) */
+			min-width: 0;
 			padding: 12px;
 			border: 1px solid var(--sp-border);
 			border-radius: 10px;
@@ -272,7 +292,10 @@ class HomePage extends LitElement {
 
 	private joinRoom = (e: SubmitEvent) => {
 		e.preventDefault();
-		const code = this.joinCode.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+		// Read the live input value: autofill/dictation can set it without
+		// ever firing input events, leaving component state stale until blur.
+		const raw = (e.currentTarget as HTMLFormElement).querySelector('input')?.value ?? this.joinCode;
+		const code = raw.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
 		if (code) navigate(`/room/${code}`);
 	};
 }

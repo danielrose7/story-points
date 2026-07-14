@@ -6,6 +6,11 @@ import { css } from 'lit';
  * styles.css never reaches in here.
  */
 export const baseStyles = css`
+	/* \`*\` never matches the shadow host itself — reset it explicitly, or
+	   host padding stacks on top of 100vh-style sizing and causes overflow. */
+	:host {
+		box-sizing: border-box;
+	}
 	*,
 	*::before,
 	*::after {

@@ -923,7 +923,9 @@ class RoomPage extends LitElement {
 	}
 
 	private join = () => {
-		const name = this.nameDraft.trim();
+		// Prefer the live input value — autofill can set it without input events.
+		const live = this.shadowRoot?.querySelector<HTMLInputElement>('.gate input')?.value;
+		const name = (live ?? this.nameDraft).trim();
 		if (!name) return;
 		saveName(name);
 		saveRole(this.roomId, this.roleDraft);
