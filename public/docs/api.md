@@ -59,7 +59,13 @@ if you want to script a bot; see `shared/types.ts` in the
 
 ## Agent setup
 
-Point your coding agent or MCP tool at
+One step for any agent — see the [Agent setup guide](/docs/agent-setup):
+
+```
+Fetch https://story-points.danielrose7.workers.dev/agent-setup/prompt.md and follow it
+```
+
+Or point your coding agent or MCP tool at
 [`/llms.txt`](https://story-points.danielrose7.workers.dev/llms.txt) — it
 indexes these docs in Markdown. Every docs page also serves a raw Markdown
 twin at the same URL with `.md` appended (e.g. `/docs/api.md`), and

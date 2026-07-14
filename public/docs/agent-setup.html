@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Story Points docs — Story Points</title>
-<meta name="description" content="What Story Points is and where to find everything" />
-<meta property="og:title" content="Story Points docs — Story Points" />
-<meta property="og:description" content="What Story Points is and where to find everything" />
+<title>Agent setup — Story Points</title>
+<meta name="description" content="Teach any AI coding agent to drive Story Points in one step" />
+<meta property="og:title" content="Agent setup — Story Points" />
+<meta property="og:description" content="Teach any AI coding agent to drive Story Points in one step" />
 <meta property="og:image" content="https://story-points.danielrose7.workers.dev/og/classic.png?v=1" />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🃏</text></svg>" />
@@ -107,54 +107,64 @@ blockquote {
 <div class="page">
 	<nav class="docs">
 		<a class="app" href="/">🃏 Story Points</a>
-		<a href="/docs/" class="active">Docs</a>
+		<a href="/docs/">Docs</a>
 		<a href="/docs/getting-started">Getting started</a>
 		<a href="/docs/features">Features</a>
 		<a href="/docs/themes">Themes</a>
 		<a href="/docs/api">API</a>
-		<a href="/docs/agent-setup">Agent setup</a>
+		<a href="/docs/agent-setup" class="active">Agent setup</a>
 	</nav>
 	<div class="toolbar">
 		<span>🕐 Last updated 2026-07-14</span>
 		<span class="sep">|</span>
 		<button id="copy-md">⧉ Copy as Markdown</button>
 		<span class="sep">|</span>
-		<a href="/docs/index.md">Ⓜ️ View as Markdown</a>
+		<a href="/docs/agent-setup.md">Ⓜ️ View as Markdown</a>
 		<span class="sep">|</span>
 		<a href="/docs/agent-setup" title="Set up your agent to drive Story Points">🤖 Agent setup</a>
 	</div>
-	<h1 id="story-points">Story Points</h1>
-<p>Realtime pointing poker for agile teams. No accounts, no install — one
-standing URL per room, reusable sprint after sprint.</p>
-<p><strong>App:</strong> <a href="https://story-points.danielrose7.workers.dev">story-points.danielrose7.workers.dev</a></p>
-<h2 id="how-it-works-in-one-paragraph">How it works, in one paragraph</h2>
-<p>Create a room (or claim any URL like <code>/room/your-team</code>), share the link,
-and everyone joins with just a name — as a voter or an observer. Votes stay
-hidden until everyone has voted (auto-reveal, configurable), then the spread,
-average, agreement %, and a distribution chart appear. The room keeps its
-settings, deck, theme, and history between sessions; refreshing the page
-reclaims your seat.</p>
-<h2 id="guides">Guides</h2>
+	<h1 id="agent-setup">Agent setup</h1>
+<p>Set up your agent to import backlogs, follow estimation sessions, and export
+results. One step, any agent:</p>
+<pre><code>Fetch https://story-points.danielrose7.workers.dev/agent-setup/prompt.md and follow it
+</code></pre>
+<p>Paste that into Claude Code, Cursor, Windsurf, Copilot, or any agent that can
+fetch a URL. The prompt teaches it the whole surface — no install, no keys.</p>
+<h2 id="what-your-agent-can-do-afterwards">What your agent can do afterwards</h2>
 <ul>
-<li><a href="/docs/getting-started">Getting started</a> — create, invite, vote, reveal</li>
-<li><a href="/docs/features">Features</a> — queue, history, countdown, anonymous voting, away votes, presets, and the toggles for all of them</li>
-<li><a href="/docs/themes">Themes</a> — 17 themes plus seasonal auto-theming</li>
-<li><a href="/docs/api">API</a> — plain-HTTP import/export for scripts, CLIs, and agents</li>
+<li><strong>Import a backlog</strong> — pipe stories from your tracker&#39;s CLI (Jira, Linear,
+GitHub, a text file) into a room&#39;s &quot;Up next&quot; queue.</li>
+<li><strong>Follow a session</strong> — check what&#39;s queued and what&#39;s been estimated.</li>
+<li><strong>Export results</strong> — pull the round history (stories, vote spreads,
+durations) as JSON or CSV and write story points back to your tracker
+with your own tooling.</li>
 </ul>
-<h2 id="principles">Principles</h2>
+<p>Your tracker credentials never touch Story Points: the agent bridges
+locally, using CLIs and MCP tools you already have.</p>
+<h2 id="key-concepts">Key concepts</h2>
 <ul>
-<li><strong>No accounts.</strong> A room URL is the invitation and the capability.</li>
-<li><strong>Zero runtime dependencies beyond Lit.</strong> ~20 KB of gzipped JavaScript.</li>
-<li><strong>No tracker integrations in the app.</strong> A small HTTP API is the bridge;
-anything that can run <code>curl</code> can import a backlog and export results.</li>
-<li><strong>Free to run.</strong> Cloudflare Workers + one Durable Object per room, within
-the free plan.</li>
+<li><strong>The room slug is the capability.</strong> There are no accounts or API keys;
+anyone with the room URL can use its API — same trust model as the app.</li>
+<li><strong>Two endpoints do everything.</strong> <code>POST /api/room/&lt;room&gt;/queue</code> imports,
+<code>GET /api/room/&lt;room&gt;/export</code> exports. Details in the <a href="/docs/api">API docs</a>.</li>
+<li><strong>Markdown-native docs.</strong> Agents can read <a href="/llms.txt"><code>/llms.txt</code></a> (index),
+<a href="/llms-full.txt"><code>/llms-full.txt</code></a> (everything in one fetch), or any docs
+page with <code>.md</code> appended.</li>
+</ul>
+<h2 id="per-agent-notes">Per-agent notes</h2>
+<ul>
+<li><strong>Claude Code</strong> — paste the one-liner above, or add it to your project&#39;s
+<code>CLAUDE.md</code> so every session knows the surface.</li>
+<li><strong>Cursor / Windsurf / Copilot</strong> — paste the one-liner in chat, or add the
+fetched contents to your rules/instructions file.</li>
+<li><strong>Anything else</strong> — if it can <code>curl</code>, it can integrate; hand it
+<a href="/docs/api.md">/docs/api.md</a>.</li>
 </ul>
 
 </div>
 <script>
 document.getElementById('copy-md').addEventListener('click', async (e) => {
-	const res = await fetch('/docs/index.md');
+	const res = await fetch('/docs/agent-setup.md');
 	await navigator.clipboard.writeText(await res.text());
 	e.target.textContent = '✓ Copied';
 	setTimeout(() => (e.target.textContent = '⧉ Copy as Markdown'), 1500);

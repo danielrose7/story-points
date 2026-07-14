@@ -28,7 +28,7 @@ const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const SITE = 'https://story-points.danielrose7.workers.dev';
 const OUT = path.join(root, 'public');
 // Fixed order — drives the nav, llms.txt sections, and llms-full.txt.
-const PAGES = ['index', 'getting-started', 'features', 'themes', 'api'];
+const PAGES = ['index', 'getting-started', 'features', 'themes', 'api', 'agent-setup'];
 
 fs.mkdirSync(path.join(OUT, 'docs'), { recursive: true });
 
@@ -189,7 +189,7 @@ blockquote {
 		<span class="sep">|</span>
 		<a href="/docs/${page.name}.md">Ⓜ️ View as Markdown</a>
 		<span class="sep">|</span>
-		<a href="/docs/api#agent-setup" title="Point your agent at /llms.txt">🤖 Agent setup</a>
+		<a href="/docs/agent-setup" title="Set up your agent to drive Story Points">🤖 Agent setup</a>
 	</div>
 	${html}
 </div>
@@ -247,6 +247,57 @@ ${guides}
 `,
 );
 console.log('✓ llms.txt');
+
+// /agent-setup/prompt.md — the one-step setup prompt (Cloudflare-style):
+// an instruction file agents fetch and execute. Self-contained; no install.
+fs.mkdirSync(path.join(OUT, 'agent-setup'), { recursive: true });
+fs.writeFileSync(
+	path.join(OUT, 'agent-setup', 'prompt.md'),
+	`# Story Points agent setup
+
+You are setting yourself up to drive Story Points (${SITE}), a realtime
+pointing-poker app, on the user's behalf. Complete these steps yourself.
+
+## 1. Learn the surface
+
+Fetch and read:
+
+- ${SITE}/llms.txt — documentation index
+- ${SITE}/docs/api.md — the full API reference
+
+## 2. Remember these facts
+
+- Base URL: ${SITE}
+- A room lives at ${SITE}/room/<slug> (lowercase letters, digits, dashes).
+  The slug is the only credential — treat room URLs the user gives you as
+  capabilities, and don't post their contents elsewhere.
+- Import stories into a room's queue:
+  POST ${SITE}/api/room/<slug>/queue
+  (body: plain text one story per line, or JSON {"items": ["…"]};
+  append by default, ?mode=replace to swap; 403 = host disabled the queue)
+- Export session results (queue + round history with vote counts):
+  GET ${SITE}/api/room/<slug>/export        (JSON)
+  GET ${SITE}/api/room/<slug>/export?format=csv
+- Check whether a room exists: GET ${SITE}/api/room/<slug>/peek
+
+## 3. Typical workflows
+
+- "Queue up these tickets for estimation" → gather stories from the user's
+  tracker (their CLI/MCP tools — Jira, Linear, gh) or a file, then POST them
+  to the room's queue. Confirm with the {"queued": N} response.
+- "What did we estimate?" → GET the export, summarize story → points.
+- "Write the estimates back" → GET the export, then update the user's
+  tracker using their own tooling. Story Points holds no tracker
+  credentials, by design.
+
+## 4. Confirm to the user
+
+Tell the user you're set up, name the room you're pointed at (if any), and
+list the three things you can now do: import a backlog, report session
+results, write estimates back to their tracker.
+`,
+);
+console.log('✓ agent-setup/prompt.md');
 
 // Leads with plain text — starting with an HTML comment makes content-type
 // sniffing serve it as text/html.

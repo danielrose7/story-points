@@ -15,6 +15,7 @@ room slug in the URL is the only credential; the API base is https://story-point
 - [Features](https://story-points.danielrose7.workers.dev/docs/features.md): Ticket queue, history, countdown, voting modes, stats, and the toggles for all of them
 - [Themes](https://story-points.danielrose7.workers.dev/docs/themes.md): 17 themes and seasonal auto-theming
 - [API](https://story-points.danielrose7.workers.dev/docs/api.md): Plain-HTTP import/export — the integration surface for scripts, CLIs, and agents
+- [Agent setup](https://story-points.danielrose7.workers.dev/docs/agent-setup.md): Teach any AI coding agent to drive Story Points in one step
 
 ## API quick reference
 

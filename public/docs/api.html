@@ -112,6 +112,7 @@ blockquote {
 		<a href="/docs/features">Features</a>
 		<a href="/docs/themes">Themes</a>
 		<a href="/docs/api" class="active">API</a>
+		<a href="/docs/agent-setup">Agent setup</a>
 	</nav>
 	<div class="toolbar">
 		<span>🕐 Last updated 2026-07-14</span>
@@ -120,7 +121,7 @@ blockquote {
 		<span class="sep">|</span>
 		<a href="/docs/api.md">Ⓜ️ View as Markdown</a>
 		<span class="sep">|</span>
-		<a href="/docs/api#agent-setup" title="Point your agent at /llms.txt">🤖 Agent setup</a>
+		<a href="/docs/agent-setup" title="Set up your agent to drive Story Points">🤖 Agent setup</a>
 	</div>
 	<h1 id="api">API</h1>
 <p>Story Points deliberately ships <strong>no tracker-specific integrations</strong>.
@@ -163,7 +164,10 @@ It&#39;s an internal protocol — no compatibility promises — but it&#39;s pla
 if you want to script a bot; see <code>shared/types.ts</code> in the
 <a href="https://github.com/danielrose7/story-points">repo</a> for message shapes.</p>
 <h2 id="agent-setup">Agent setup</h2>
-<p>Point your coding agent or MCP tool at
+<p>One step for any agent — see the <a href="/docs/agent-setup">Agent setup guide</a>:</p>
+<pre><code>Fetch https://story-points.danielrose7.workers.dev/agent-setup/prompt.md and follow it
+</code></pre>
+<p>Or point your coding agent or MCP tool at
 <a href="https://story-points.danielrose7.workers.dev/llms.txt"><code>/llms.txt</code></a> — it
 indexes these docs in Markdown. Every docs page also serves a raw Markdown
 twin at the same URL with <code>.md</code> appended (e.g. <code>/docs/api.md</code>), and
