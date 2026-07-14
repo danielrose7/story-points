@@ -17,14 +17,9 @@ export function getRecentRooms(): RecentRoom[] {
 	}
 }
 
-/** Upsert a room to the top of the recents list (called while seated). */
+/** Upsert a room to the top of the recents list (while seated, and on leave). */
 export function touchRecentRoom(id: string, name: string): void {
 	const list = getRecentRooms().filter((r) => r.id !== id);
 	list.unshift({ id, name: name ?? '', lastSeen: Date.now() });
 	localStorage.setItem(KEY, JSON.stringify(list.slice(0, MAX)));
-}
-
-/** Explicitly leaving a room removes it — "I'm done here". */
-export function removeRecentRoom(id: string): void {
-	localStorage.setItem(KEY, JSON.stringify(getRecentRooms().filter((r) => r.id !== id)));
 }

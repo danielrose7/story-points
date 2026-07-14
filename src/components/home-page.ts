@@ -23,7 +23,21 @@ class HomePage extends LitElement {
 		super.connectedCallback();
 		// Home wears the season's colors (the head script painted them already).
 		applyTheme(todaysTheme());
+		// Keep "Jump back in" live: another tab touching a room fires
+		// `storage`; returning via the back/forward cache fires `pageshow`.
+		window.addEventListener('storage', this.refreshRecents);
+		window.addEventListener('pageshow', this.refreshRecents);
 	}
+
+	disconnectedCallback(): void {
+		super.disconnectedCallback();
+		window.removeEventListener('storage', this.refreshRecents);
+		window.removeEventListener('pageshow', this.refreshRecents);
+	}
+
+	private refreshRecents = () => {
+		this.recents = getRecentRooms();
+	};
 
 	/** Turn a lost URL into a plausible room slug: /Team%20Alpha! → team-alpha */
 	private get lostSlug(): string {

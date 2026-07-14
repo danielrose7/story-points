@@ -8,7 +8,7 @@ import { navigate } from '../main';
 import { REACTION_EMOJI, THEME_REACTIONS } from '../../shared/types';
 import { chime, getVolume, isMuted, setMuted, setVolume } from '../sound';
 import { applyTheme } from '../theme';
-import { removeRecentRoom, touchRecentRoom } from '../recents';
+import { touchRecentRoom } from '../recents';
 import './settings-panel';
 import './fx-layer';
 
@@ -1097,7 +1097,9 @@ class RoomPage extends LitElement {
 	private leave = () => {
 		this.conn?.send({ type: 'leave' });
 		clearRoomSession(this.roomId);
-		removeRecentRoom(this.roomId);
+		// Leaving frees the seat but keeps the room in "Jump back in" — the
+		// room you just left is the one you're most likely to want back.
+		touchRecentRoom(this.roomId, this.state?.settings.roomName ?? '');
 		navigate('/');
 	};
 
