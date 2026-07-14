@@ -180,6 +180,13 @@ class SettingsPanel extends LitElement {
 
 				<label class="field">Theme</label>
 				<div class="presets">
+					<button
+						class="btn ${d.theme === 'seasonal' ? 'primary' : ''}"
+						title="Follows the calendar — the room re-themes itself as holidays approach"
+						@click=${() => this.patch({ theme: 'seasonal' })}
+					>
+						🗓 Seasonal (auto)
+					</button>
 					${THEMES.map(
 						(t) => html`
 							<button class="btn ${d.theme === t.id ? 'primary' : ''}" @click=${() => this.patch({ theme: t.id })}>

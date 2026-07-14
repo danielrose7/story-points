@@ -27,12 +27,16 @@ export const THEMES = [
 
 export type ThemeId = (typeof THEMES)[number]['id'];
 
+/** What the host picked: a pinned theme, or 'seasonal' = follow the calendar
+ *  (the default; resolved to a concrete theme server-side on every view). */
+export type ThemeChoice = ThemeId | 'seasonal';
+
 export interface RoomSettings {
 	roomName: string;
 	deck: DeckCard[];
 	/** Reveal votes automatically once every connected voter has voted */
 	autoReveal: boolean;
-	theme: ThemeId;
+	theme: ThemeChoice;
 	/** Room-wide switch for timer chimes (individuals can still mute locally) */
 	timerSounds: boolean;
 	/** Record finished rounds (story, votes, duration). Off = stop recording
@@ -76,6 +80,8 @@ export interface RoomStateView {
 	youJoined: boolean;
 	/** finished rounds, newest first; empty when keepHistory is off */
 	history: RoundRecord[];
+	/** settings.theme resolved to a concrete theme ('seasonal' → today's) */
+	theme: ThemeId;
 }
 
 /** Response of GET /api/room/<slug>/peek — 404 check + social-preview tags. */
@@ -209,7 +215,7 @@ export function defaultSettings(): RoomSettings {
 		roomName: '',
 		deck: DECK_PRESETS.fibonacci.map((c) => ({ ...c })),
 		autoReveal: true,
-		theme: 'classic',
+		theme: 'seasonal',
 		timerSounds: true,
 		keepHistory: true,
 	};

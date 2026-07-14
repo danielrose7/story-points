@@ -9,6 +9,12 @@ import type {
 	ServerMessage,
 } from '../shared/types';
 import { ALL_REACTION_EMOJI, defaultSettings, seasonalTheme, THEMES } from '../shared/types';
+import type { ThemeChoice, ThemeId } from '../shared/types';
+
+/** 'seasonal' rooms follow the calendar; resolved fresh on every view. */
+function resolveTheme(choice: ThemeChoice): ThemeId {
+	return choice === 'seasonal' ? seasonalTheme(new Date()) : choice;
+}
 
 interface Participant {
 	name: string;
@@ -51,8 +57,9 @@ export class Room extends DurableObject<Env> {
 		if (!this.room) {
 			this.room =
 				(await this.ctx.storage.get<PersistedRoom>(ROOM_KEY)) ?? {
-					// Fresh room = the season's theme; the host can change it in settings.
-					settings: { ...defaultSettings(), theme: seasonalTheme(new Date()) },
+					// Fresh rooms default to theme 'seasonal' — it tracks the
+					// calendar until the host pins one in settings.
+					settings: defaultSettings(),
 					story: '',
 					revealed: false,
 					revealedAt: null,
@@ -97,7 +104,7 @@ export class Room extends DurableObject<Env> {
 			return Response.json({
 				exists: true,
 				name: stored.settings.roomName,
-				theme: stored.settings.theme,
+				theme: resolveTheme(stored.settings.theme),
 			});
 		}
 		if (request.headers.get('Upgrade') !== 'websocket') {
@@ -208,7 +215,7 @@ export class Room extends DurableObject<Env> {
 					roomName: String(s?.roomName ?? '').trim().slice(0, 60),
 					deck,
 					autoReveal: Boolean(s?.autoReveal),
-					theme: THEMES.some((t) => t.id === s?.theme) ? s.theme : 'classic',
+					theme: s?.theme === 'seasonal' || THEMES.some((t) => t.id === s?.theme) ? s.theme : 'classic',
 					// default on; only an explicit false turns it off (old clients omit it)
 					timerSounds: s?.timerSounds !== false,
 					keepHistory: s?.keepHistory !== false,
@@ -374,6 +381,7 @@ export class Room extends DurableObject<Env> {
 			you: userId,
 			youJoined: room.participants[userId] !== undefined && connected.has(userId),
 			history: room.settings.keepHistory === false ? [] : (room.history ?? []),
+			theme: resolveTheme(room.settings.theme),
 		};
 	}
 

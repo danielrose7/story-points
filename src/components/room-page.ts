@@ -72,7 +72,8 @@ class RoomPage extends LitElement {
 			this.state = state;
 			this.error = '';
 			if (justRevealed) this.celebrateReveal(state);
-			applyTheme(state.settings.theme ?? 'classic', this.roomId);
+			// state.theme is the resolved theme ('seasonal' → today's holiday).
+			applyTheme(state.theme ?? state.settings.theme ?? 'classic', this.roomId);
 			if (state.youJoined) touchRecentRoom(this.roomId, state.settings.roomName);
 			const yolo = /\byolo\b/i.test(state.story);
 			if (yolo && !this.storyHadYolo) this.fx?.flames();
@@ -843,7 +844,7 @@ class RoomPage extends LitElement {
 			${s.settings.keepHistory !== false && s.history?.length ? this.renderHistory(s) : nothing}
 
 			<div class="reactions" title="React — 🐇 = we're going down a rabbit hole">
-				${[...REACTION_EMOJI, ...(THEME_REACTIONS[s.settings.theme] ?? [])].map(
+				${[...REACTION_EMOJI, ...(THEME_REACTIONS[s.theme] ?? [])].map(
 					(e) => html`<button class="react" @click=${() => this.sendReaction(e)}>${e}</button>`,
 				)}
 			</div>
