@@ -578,21 +578,23 @@ class RoomPage extends LitElement {
 			word-break: break-all;
 		}
 
-		/* Vote distribution (revealed rounds with a spread) */
+		/* Vote distribution (revealed rounds with a spread). One grid for the
+		   whole chart — the label column sizes to the longest label and stays
+		   aligned across rows (each row is display: contents). */
 		.dist {
 			margin-top: 18px;
 			display: grid;
-			gap: 7px;
+			grid-template-columns: minmax(52px, auto) 1fr auto;
+			gap: 7px 10px;
+			align-items: center;
 		}
 		.dist-row {
-			display: grid;
-			grid-template-columns: 52px 1fr 30px;
-			align-items: center;
-			gap: 10px;
+			display: contents;
 		}
 		.dist-label {
 			font-weight: 700;
 			text-align: right;
+			white-space: nowrap;
 		}
 		.dist-track {
 			background: var(--sp-chip-bg);
