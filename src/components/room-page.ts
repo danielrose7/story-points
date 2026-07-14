@@ -703,6 +703,9 @@ class RoomPage extends LitElement {
 			padding: 6px 12px;
 			font-size: 0.85rem;
 		}
+		tr.seat.away {
+			opacity: 0.6;
+		}
 		.btn.countdown.running {
 			border-color: var(--sp-timer-warn);
 			color: var(--sp-timer-warn);
@@ -910,9 +913,10 @@ class RoomPage extends LitElement {
 							s.participants,
 							(p) => p.id,
 							(p, i) => html`
-								<tr class="seat">
+								<tr class="seat ${p.away ? 'away' : ''}">
 									<td>
 										${p.name}
+										${p.away ? html`<span class="tag">💤 away</span>` : nothing}
 										${p.isOwner ? html`<span class="tag">host</span>` : nothing}
 										${p.role === 'observer' ? html`<span class="tag">observer</span>` : nothing}
 										${p.id === s.you ? html`<span class="tag">you</span>` : nothing}

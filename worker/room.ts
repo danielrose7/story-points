@@ -348,6 +348,7 @@ export class Room extends DurableObject<Env> {
 					countdownSeconds: Math.min(600, Math.max(5, Math.round(Number(s?.countdownSeconds)) || 60)),
 					voteStats: s?.voteStats !== false,
 					anonymousVotes: s?.anonymousVotes === true,
+					awayVotes: s?.awayVotes !== false,
 				};
 				// Drop votes for values no longer in the deck.
 				for (const [id, v] of Object.entries(room.votes)) {
@@ -439,10 +440,16 @@ export class Room extends DurableObject<Env> {
 		if (candidates.length > 0) room.ownerId = candidates[0][0];
 	}
 
-	/** Aggregate votes into deck-ordered counts (history + reveal stats). */
+	/** Aggregate votes into deck-ordered counts (history + reveal stats).
+	 *  Away votes (voter disconnected) count unless the room opted out. */
 	private voteCounts(room: PersistedRoom): Array<{ label: string; value: string; count: number }> {
+		const includeAway = room.settings.awayVotes !== false;
+		const connected = this.connectedIds();
 		const counts = new Map<string, number>();
-		for (const v of Object.values(room.votes)) counts.set(v, (counts.get(v) ?? 0) + 1);
+		for (const [id, v] of Object.entries(room.votes)) {
+			if (!includeAway && !connected.has(id)) continue;
+			counts.set(v, (counts.get(v) ?? 0) + 1);
+		}
 		return room.settings.deck
 			.filter((c) => counts.has(c.value))
 			.map((c) => ({ label: c.label, value: c.value, count: counts.get(c.value)! }));
@@ -492,8 +499,11 @@ export class Room extends DurableObject<Env> {
 
 	private viewFor(room: PersistedRoom, userId: string): RoomStateView {
 		const connected = this.connectedIds();
+		// Away seats (voted this round, then disconnected) stay visible so the
+		// table matches the counts — unless the room opted out of away votes.
+		const includeAway = room.settings.awayVotes !== false;
 		const participants: ParticipantView[] = Object.entries(room.participants)
-			.filter(([id]) => connected.has(id))
+			.filter(([id]) => connected.has(id) || (includeAway && room.votes[id] !== undefined))
 			.map(([id, p]) => {
 				const vote = room.votes[id];
 				// Anonymous rooms never attribute votes to seats — reveal or
@@ -506,6 +516,7 @@ export class Room extends DurableObject<Env> {
 					hasVoted: vote !== undefined,
 					vote: vote !== undefined && visible ? vote : null,
 					isOwner: id === room.ownerId,
+					away: connected.has(id) ? undefined : true,
 				};
 			})
 			.sort((a, b) => a.name.localeCompare(b.name));

@@ -55,6 +55,9 @@ export interface RoomSettings {
 	voteStats: boolean;
 	/** Reveal shows aggregate counts only — never who voted what. */
 	anonymousVotes: boolean;
+	/** Keep votes from people who voted then disconnected in the round
+	 *  (shown as 💤 away seats). Off = only live connections count. */
+	awayVotes: boolean;
 }
 
 /** One finished round ("Next ticket →" after a reveal). Aggregate counts
@@ -77,6 +80,8 @@ export interface ParticipantView {
 	/** null while votes are hidden (except your own vote) */
 	vote: string | null;
 	isOwner: boolean;
+	/** voted this round but currently disconnected */
+	away?: boolean;
 }
 
 export interface RoomStateView {
@@ -246,5 +251,6 @@ export function defaultSettings(): RoomSettings {
 		countdownSeconds: 60,
 		voteStats: true,
 		anonymousVotes: false,
+		awayVotes: true,
 	};
 }
