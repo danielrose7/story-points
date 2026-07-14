@@ -53,6 +53,9 @@ const MAX_HISTORY = 50;
 // via the alarm below. Longer than SEAT_TTL so reusable rooms never vanish
 // while anyone's seat is still worth keeping.
 const IDLE_TTL_MS = 120 * 24 * 60 * 60 * 1000;
+// A room empty this long is "everyone left" (vs a quick refresh); returning
+// to it mid-round restarts the clock when freshClock is on.
+const FRESH_CLOCK_AFTER_MS = 5 * 60 * 1000;
 // Ticket-queue bounds — enough for a hefty backlog-refinement session.
 const MAX_QUEUE_ITEMS = 100;
 const MAX_QUEUE_ITEM_LEN = 500;
@@ -165,11 +168,23 @@ export class Room extends DurableObject<Env> {
 		server.serializeAttachment({ userId });
 
 		const room = await this.load();
+		// Fresh clock: this is the first connection into a room everyone left
+		// mid-round a while ago — restart the timer instead of resuming a
+		// days-old count. Checked before lastSeen updates below.
+		let dirty = false;
+		if (room.settings.freshClock !== false && !room.revealed && this.connectedIds().size <= 1) {
+			const lastActive = Math.max(0, ...Object.values(room.participants).map((p) => p.lastSeen));
+			if (Date.now() - lastActive > FRESH_CLOCK_AFTER_MS) {
+				room.roundStartedAt = Date.now();
+				dirty = true;
+			}
+		}
 		const participant = room.participants[userId];
 		if (participant) {
 			participant.lastSeen = Date.now();
-			await this.save();
+			dirty = true;
 		}
+		if (dirty) await this.save();
 		// Presence may have changed for everyone; sockets aren't sendable until
 		// after we return, so let hibernation deliver the first state via a
 		// microtask-safe broadcast on the next event. Send eagerly instead:
@@ -359,6 +374,7 @@ export class Room extends DurableObject<Env> {
 					voteStats: s?.voteStats !== false,
 					anonymousVotes: s?.anonymousVotes === true,
 					awayVotes: s?.awayVotes !== false,
+					freshClock: s?.freshClock !== false,
 				};
 				// Drop votes for values no longer in the deck.
 				for (const [id, v] of Object.entries(room.votes)) {

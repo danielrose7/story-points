@@ -58,6 +58,9 @@ export interface RoomSettings {
 	/** Keep votes from people who voted then disconnected in the round
 	 *  (shown as 💤 away seats). Off = only live connections count. */
 	awayVotes: boolean;
+	/** Restart the round clock when the first person returns to a room
+	 *  everyone left mid-round (prevents day-old timers full of rabbits). */
+	freshClock: boolean;
 }
 
 /** One finished round ("Next ticket →" after a reveal). Aggregate counts
@@ -305,5 +308,6 @@ export function defaultSettings(): RoomSettings {
 		voteStats: true,
 		anonymousVotes: false,
 		awayVotes: true,
+		freshClock: true,
 	};
 }

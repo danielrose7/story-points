@@ -348,6 +348,15 @@ class SettingsPanel extends LitElement {
 			<label class="check">
 				<input
 					type="checkbox"
+					.checked=${d.freshClock ?? true}
+					@change=${(e: Event) => this.patch({ freshClock: (e.target as HTMLInputElement).checked })}
+				/>
+				Restart the round clock when the first person returns to an empty room
+			</label>
+
+			<label class="check">
+				<input
+					type="checkbox"
 					.checked=${d.awayVotes ?? true}
 					@change=${(e: Event) => this.patch({ awayVotes: (e.target as HTMLInputElement).checked })}
 				/>
