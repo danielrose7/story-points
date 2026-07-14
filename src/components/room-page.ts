@@ -12,6 +12,9 @@ import { touchRecentRoom } from '../recents';
 import './settings-panel';
 import './fx-layer';
 
+/** How long "Copied ✓" feedback lingers on any copy button. */
+const COPIED_RESET_MS = 1500;
+
 class RoomPage extends LitElement {
 	static properties = {
 		roomId: { type: String },
@@ -1058,8 +1061,8 @@ class RoomPage extends LitElement {
 						<button class="btn small" @click=${() => this.copyExport('csv')}>
 							${this.copiedExport === 'csv' ? 'Copied ✓' : 'Copy CSV'}
 						</button>
-						<a class="btn small" href="/api/room/${this.roomId}/export" download>JSON</a>
-						<a class="btn small" href="/api/room/${this.roomId}/export?format=csv" download>CSV</a>
+						<a class="btn small" href="/api/room/${this.roomId}/export" download>Download JSON</a>
+						<a class="btn small" href="/api/room/${this.roomId}/export?format=csv" download>Download CSV</a>
 					</div>
 					<div class="hist">
 						${s.history.map(
@@ -1111,7 +1114,7 @@ class RoomPage extends LitElement {
 		}
 		await navigator.clipboard.writeText(text);
 		this.copiedExport = kind;
-		setTimeout(() => (this.copiedExport = null), 1500);
+		setTimeout(() => (this.copiedExport = null), COPIED_RESET_MS);
 	};
 
 	private formatDuration(ms: number): string {
@@ -1259,7 +1262,7 @@ class RoomPage extends LitElement {
 	private copyLink = async () => {
 		await navigator.clipboard.writeText(location.href);
 		this.copied = true;
-		setTimeout(() => (this.copied = false), 1500);
+		setTimeout(() => (this.copied = false), COPIED_RESET_MS);
 	};
 }
 
