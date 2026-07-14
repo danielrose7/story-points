@@ -3,6 +3,24 @@
 Realtime pointing poker for agile teams. One standing URL per room; rooms keep
 their settings and can be reused cycle after cycle.
 
+**Live at <https://story-points.danielrose7.workers.dev>** — no accounts, no install.
+
+## Using it
+
+1. Open the site and hit **Create a room** (or claim any URL you like:
+   `/room/your-team-name`).
+2. Share the room URL with your team — it's the invite.
+3. Everyone enters a name and joins as a **voter** or an **observer**.
+4. Type the story being estimated, pick cards; votes stay hidden until everyone
+   has voted (auto-reveal, configurable), then the spread, average, and a
+   distribution chart appear.
+5. **Next ticket →** records the round to history and starts the next one;
+   **Re-vote** re-runs the same story.
+
+The same URL works sprint after sprint: your seat, the room's settings, deck,
+theme, and history are all waiting when you come back. Refreshing mid-session
+reclaims your seat automatically.
+
 ## Stack
 
 - **Frontend**: [Vite](https://vite.dev) + [Lit](https://lit.dev) web components (no framework lock-in, ~12 KB gzipped)
