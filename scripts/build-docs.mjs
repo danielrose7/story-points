@@ -290,7 +290,20 @@ Fetch and read:
   tracker using their own tooling. Story Points holds no tracker
   credentials, by design.
 
-## 4. Confirm to the user
+## 4. When you can't reach the tracker
+
+If a scope the user gives you (a URL, a view name) isn't resolvable with
+your available tools after a try or two, STOP and ask. Do not escalate into
+browser automation or reverse-engineering private APIs. Good fallbacks to
+offer the user:
+
+- an API-resolvable filter instead (Linear: project/cycle/team/label/search;
+  Jira: JQL; GitHub: repo/milestone/label)
+- a CSV export from their tracker's UI (Linear: any view's ⋯ menu →
+  "Export issues as CSV") — they can import it in the room directly, or you
+  can parse it and POST the "ID Title" lines yourself
+
+## 5. Confirm to the user
 
 Tell the user you're set up, name the room you're pointed at (if any), and
 list the three things you can now do: import a backlog, report session

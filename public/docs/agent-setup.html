@@ -170,22 +170,35 @@ fetched contents to your rules/instructions file.</li>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <p>Things an agent (or you) can check when a workflow misbehaves:</p>
 <ul>
-<li><strong><code>403</code> on <code>POST /queue</code></strong> — the room&#39;s host switched the ticket queue off
-in <strong>Room settings → Features</strong>. Ask them to re-enable it.</li>
-<li><strong><code>404</code> on <code>/export</code></strong> — the room doesn&#39;t exist yet; rooms are created the
-first time someone joins. <code>GET /api/room/&lt;room&gt;/peek</code> is the cheap check.</li>
-<li><strong>Empty <code>history</code> in the export</strong> — rounds are only recorded when someone
+<li><p><strong>Linear custom views</strong> — Linear&#39;s API and MCP can filter by project,
+cycle, team, label, or search, but <strong>custom views are UI-only</strong>. Don&#39;t
+point an agent at a view URL; either give it an equivalent filter, or use
+the view&#39;s ⋯ menu → <strong>Export issues as CSV</strong> and import the file straight
+into the room&#39;s queue (📎 Import CSV — ticket links come along for free).</p>
+</li>
+<li><p><strong><code>403</code> on <code>POST /queue</code></strong> — the room&#39;s host switched the ticket queue off
+in <strong>Room settings → Features</strong>. Ask them to re-enable it.</p>
+</li>
+<li><p><strong><code>404</code> on <code>/export</code></strong> — the room doesn&#39;t exist yet; rooms are created the
+first time someone joins. <code>GET /api/room/&lt;room&gt;/peek</code> is the cheap check.</p>
+</li>
+<li><p><strong>Empty <code>history</code> in the export</strong> — rounds are only recorded when someone
 clicks <strong>Next ticket →</strong> after a reveal (Re-vote records nothing), and the
-host may have round history switched off.</li>
-<li><strong><code>400</code> on JSON imports</strong> — send <code>Content-Type: application/json</code> with a
+host may have round history switched off.</p>
+</li>
+<li><p><strong><code>400</code> on JSON imports</strong> — send <code>Content-Type: application/json</code> with a
 body shaped <code>{&quot;items&quot;: [&quot;…&quot;]}</code>. Without that header the body is treated as
-plain text, one story per line.</li>
-<li><strong>Import seemed to vanish</strong> — queues cap at 100 items × 500 chars each;
-overflow is trimmed. The response <code>{&quot;queued&quot;: N}</code> is the source of truth.</li>
-<li><strong>Nothing updates live</strong> — connected clients update over WebSocket on
+plain text, one story per line.</p>
+</li>
+<li><p><strong>Import seemed to vanish</strong> — queues cap at 100 items × 500 chars each;
+overflow is trimmed. The response <code>{&quot;queued&quot;: N}</code> is the source of truth.</p>
+</li>
+<li><p><strong>Nothing updates live</strong> — connected clients update over WebSocket on
 every import; a page that&#39;s been asleep reconnects with fresh state within
-a few seconds. Refreshing always resyncs (and reclaims your seat).</li>
-<li><strong>Sanity-check from a shell:</strong></li>
+a few seconds. Refreshing always resyncs (and reclaims your seat).</p>
+</li>
+<li><p><strong>Sanity-check from a shell:</strong></p>
+</li>
 </ul>
 <pre><code class="language-sh">curl -i https://story-points.danielrose7.workers.dev/api/room/&lt;room&gt;/peek
 printf &#39;test ticket\n&#39; | curl -i -X POST --data-binary @- \

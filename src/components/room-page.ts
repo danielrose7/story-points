@@ -10,6 +10,13 @@ import { chime, getVolume, isMuted, setMuted, setVolume } from '../sound';
 import { applyTheme } from '../theme';
 import { touchRecentRoom } from '../recents';
 import { getScope, getTracker, importPrompt, setScope, setTracker, TRACKERS, writebackPrompt } from '../agent-prompts';
+import {
+	extractTickets,
+	getLinearWorkspace,
+	linearLinkFor,
+	linearWorkspaceFromText,
+	setLinearWorkspace,
+} from '../ticket-import';
 import './settings-panel';
 import './fx-layer';
 
@@ -700,6 +707,29 @@ class RoomPage extends LitElement {
 			background: var(--sp-error-bg);
 			color: var(--sp-error-text);
 		}
+		.ticket-link {
+			color: var(--sp-accent-text);
+			background: var(--sp-highlight-strong);
+			border-radius: 6px;
+			padding: 1px 7px;
+			text-decoration: none;
+			font-weight: 700;
+			font-size: 0.85em;
+			white-space: nowrap;
+		}
+		.ticket-link:hover {
+			background: var(--sp-accent);
+		}
+		.story-ticket {
+			margin-left: 10px;
+			text-transform: none;
+			letter-spacing: normal;
+		}
+		.csv-import {
+			display: inline-flex;
+			align-items: center;
+			cursor: pointer;
+		}
 		.queue-add {
 			width: 100%;
 			padding: 10px;
@@ -780,6 +810,10 @@ class RoomPage extends LitElement {
 			border-radius: 8px;
 			font: inherit;
 			font-size: 0.9rem;
+		}
+		.agent-hint {
+			font-size: 0.8rem;
+			color: var(--sp-muted);
 		}
 		.agent-prompt {
 			width: 100%;
@@ -899,7 +933,10 @@ class RoomPage extends LitElement {
 			${s.settings.roomName ? html`<div class="panel"><strong>${s.settings.roomName}</strong></div>` : nothing}
 
 			<div class="panel">
-				<label class="field">Story description</label>
+				<label class="field">
+					Story description
+					${this.storyTicketLink(s.story)}
+				</label>
 				<textarea
 					class="story"
 					placeholder="What are we estimating?"
@@ -1154,11 +1191,15 @@ class RoomPage extends LitElement {
 				<details class="hist-details">
 					<summary>🗂 Up next (${queue.length})</summary>
 					<div class="hist">
-						${queue.map(
-							(item, i) => html`
+						${queue.map((item, i) => {
+							const { text, url } = this.ticketParts(item);
+							return html`
 								<div class="hist-row queue-row">
 									<span class="queue-pos">${i + 1}</span>
-									<span class="queue-text">${item}</span>
+									<span class="queue-text">
+										${text}
+										${url ? html`<a class="ticket-link" href=${url} target="_blank" rel="noopener">↗</a>` : nothing}
+									</span>
 									<button
 										class="queue-remove"
 										title="Remove from queue"
@@ -1167,19 +1208,29 @@ class RoomPage extends LitElement {
 										✕
 									</button>
 								</div>
-							`,
-						)}
+							`;
+						})}
 						<textarea
 							class="queue-add"
 							rows="3"
-							placeholder="Add tickets — one per line"
+							placeholder="Add tickets — one per line, or paste a tracker CSV export"
 							.value=${this.queueDraft}
+							@paste=${this.onQueuePaste}
 							@input=${(e: InputEvent) => (this.queueDraft = (e.target as HTMLTextAreaElement).value)}
 						></textarea>
 						<div class="toolbar">
 							<button class="btn" ?disabled=${!this.queueDraft.trim()} @click=${this.addToQueue}>
 								Add to queue
 							</button>
+							<label class="btn csv-import">
+								📎 Import CSV
+								<input
+									type="file"
+									accept=".csv,.tsv,.txt"
+									hidden
+									@change=${this.onQueueFile}
+								/>
+							</label>
 						</div>
 						${s.settings.agentPrompts !== false ? this.renderAgentPrompt('import') : nothing}
 					</div>
@@ -1215,15 +1266,23 @@ class RoomPage extends LitElement {
 					)}
 				</div>
 				${kind === 'import'
-					? html`<input
-							class="agent-scope"
-							placeholder=${t.scopePlaceholder}
-							.value=${this.trackerScope}
-							@input=${(e: InputEvent) => {
-								this.trackerScope = (e.target as HTMLInputElement).value;
-								setScope(this.tracker, this.trackerScope);
-							}}
-						/>`
+					? html`
+							<input
+								class="agent-scope"
+								placeholder=${t.scopePlaceholder}
+								.value=${this.trackerScope}
+								@input=${(e: InputEvent) => {
+									this.trackerScope = (e.target as HTMLInputElement).value;
+									setScope(this.tracker, this.trackerScope);
+								}}
+							/>
+							${this.tracker === 'linear'
+								? html`<div class="agent-hint">
+										Custom view? Agents can’t read those — use the view’s ⋯ menu →
+										<strong>Export issues as CSV</strong> and 📎 import it above (ticket links included).
+									</div>`
+								: nothing}
+						`
 					: nothing}
 				<pre class="agent-prompt">${prompt}</pre>
 				<button class="btn small ${this.copiedPrompt === kind ? 'copied' : ''}" @click=${() => this.copyPrompt(kind, prompt)}>
@@ -1250,11 +1309,55 @@ class RoomPage extends LitElement {
 	}
 
 	private addToQueue = (): void => {
-		const items = this.queueDraft.split('\n').map((l) => l.trim()).filter(Boolean);
+		const items = this.normalizeTickets(this.queueDraft);
 		if (items.length === 0) return;
 		this.setQueue([...(this.state?.queue ?? []), ...items]);
 		this.queueDraft = '';
 	};
+
+	/** Draft/paste/file text → queue lines, with Linear links when we can
+	 *  build them (workspace learned from the scope field or a past import). */
+	private normalizeTickets(text: string): string[] {
+		const ws = linearWorkspaceFromText(this.trackerScope) ?? getLinearWorkspace();
+		if (ws) setLinearWorkspace(ws);
+		return extractTickets(text, linearLinkFor(ws));
+	}
+
+	private onQueuePaste = (e: ClipboardEvent): void => {
+		const text = e.clipboardData?.getData('text') ?? '';
+		const items = this.normalizeTickets(text);
+		// Only take over the paste when it was structured (a tracker export);
+		// plain text pastes behave like typing.
+		if (items.length > 1 && items.join('\n') !== text.trim()) {
+			e.preventDefault();
+			this.queueDraft = [this.queueDraft.trim(), ...items].filter(Boolean).join('\n');
+		}
+	};
+
+	private onQueueFile = async (e: Event): Promise<void> => {
+		const input = e.target as HTMLInputElement;
+		const file = input.files?.[0];
+		if (!file) return;
+		const items = this.normalizeTickets(await file.text());
+		this.queueDraft = [this.queueDraft.trim(), ...items].filter(Boolean).join('\n');
+		input.value = '';
+	};
+
+	/** "PLNT-123 Fix the thing https://…" → text + trailing ↗ link. */
+	private ticketParts(item: string): { text: string; url: string | null } {
+		const m = item.match(/\s*(https?:\/\/\S+)\s*$/);
+		return m ? { text: item.slice(0, m.index).trim(), url: m[1] } : { text: item, url: null };
+	}
+
+	/** When the current story carries a ticket URL, offer it next to the label. */
+	private storyTicketLink(story: string) {
+		const { text, url } = this.ticketParts(story);
+		if (!url) return nothing;
+		const id = text.match(/^[A-Z][A-Z0-9]*-\d+/)?.[0];
+		return html`<a class="ticket-link story-ticket" href=${url} target="_blank" rel="noopener">
+			↗ ${id ?? 'open ticket'}
+		</a>`;
+	}
 
 	private renderHistory(s: RoomStateView) {
 		return html`

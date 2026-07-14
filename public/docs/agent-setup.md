@@ -54,6 +54,12 @@ are remembered on your device. Hosts can hide these prompts in
 
 Things an agent (or you) can check when a workflow misbehaves:
 
+- **Linear custom views** — Linear's API and MCP can filter by project,
+  cycle, team, label, or search, but **custom views are UI-only**. Don't
+  point an agent at a view URL; either give it an equivalent filter, or use
+  the view's ⋯ menu → **Export issues as CSV** and import the file straight
+  into the room's queue (📎 Import CSV — ticket links come along for free).
+
 - **`403` on `POST /queue`** — the room's host switched the ticket queue off
   in **Room settings → Features**. Ask them to re-enable it.
 - **`404` on `/export`** — the room doesn't exist yet; rooms are created the

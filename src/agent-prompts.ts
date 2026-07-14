@@ -24,9 +24,11 @@ export const TRACKERS: Tracker[] = [
 	{
 		id: 'linear',
 		label: 'Linear',
-		gather: 'using my Linear MCP tool or `linear` CLI, list the issues in my current cycle (title + identifier)',
-		scoped: (s) => `using my Linear MCP tool or \`linear\` CLI, list the issues in “${s}” (a view, cycle, or project — title + identifier)`,
-		scopePlaceholder: 'view / cycle / project name or URL',
+		gather: 'using my Linear MCP tool, list the issues in my current cycle (identifier + title)',
+		// Linear's API/MCP filters by project/cycle/team/label/search — custom
+		// views are UI-only (use their ⋯ → Export issues as CSV instead).
+		scoped: (s) => `using my Linear MCP tool, list the issues in “${s}” (a project, cycle, team, label, or search — identifier + title). Note: custom views aren’t API-accessible; if that’s what this is, ask me for an equivalent filter or a CSV export instead`,
+		scopePlaceholder: 'project / cycle / team / label / search',
 		writeBack: 'set each matching Linear issue’s estimate',
 	},
 	{
