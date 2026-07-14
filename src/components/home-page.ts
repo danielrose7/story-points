@@ -207,6 +207,15 @@ class HomePage extends LitElement {
 			background: var(--sp-btn-bg);
 			color: var(--sp-surface-text);
 		}
+		.foot {
+			text-align: center;
+			font-size: 0.85rem;
+			color: var(--sp-on-bg);
+			opacity: 0.75;
+		}
+		.foot a {
+			color: inherit;
+		}
 		.divider {
 			margin: 24px 0 16px;
 			color: var(--sp-muted);
@@ -268,6 +277,10 @@ class HomePage extends LitElement {
 				</form>
 				</div>
 				${this.recents.length ? this.renderRecents() : ''}
+				<div class="foot">
+					<a href="/docs/">📚 Docs</a> · <a href="/docs/api">API</a> ·
+					<a href="https://github.com/danielrose7/story-points">GitHub</a>
+				</div>
 			</div>
 		`;
 	}

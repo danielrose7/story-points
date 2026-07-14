@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Themes — Story Points</title>
+<meta name="description" content="17 themes and seasonal auto-theming" />
+<meta property="og:title" content="Themes — Story Points" />
+<meta property="og:description" content="17 themes and seasonal auto-theming" />
+<meta property="og:image" content="https://story-points.danielrose7.workers.dev/og/classic.png?v=1" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🃏</text></svg>" />
+<style>
+:root {
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #2e7d5b 0%, #1b5e43 45%, #123f2e 100%);
+	--sp-surface: #ffffff;
+	--sp-surface-text: #1c2b24;
+	--sp-muted: #5f7268;
+	--sp-accent: #ffb300;
+	--sp-accent-text: #3a2b00;
+	--sp-border: #ccd6d0;
+	--sp-divider: #eef2ef;
+	--sp-btn-bg: #f4f7f5;
+	--sp-code-bg: rgba(0, 0, 0, 0.07);
+	--sp-radius: 14px;
+	--sp-font: 'Avenir Next', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; }
+html { background: #123f2e; }
+body {
+	margin: 0;
+	min-height: 100dvh;
+	background: var(--sp-bg);
+	font-family: var(--sp-font);
+	padding: 24px 16px 48px;
+}
+.page {
+	max-width: 760px;
+	margin: 0 auto;
+	background: var(--sp-surface);
+	color: var(--sp-surface-text);
+	border-radius: var(--sp-radius);
+	box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+	padding: 36px 40px 44px;
+}
+@media (max-width: 560px) { .page { padding: 24px 20px 32px; } }
+nav.docs {
+	display: flex;
+	gap: 4px 14px;
+	flex-wrap: wrap;
+	font-size: 0.9rem;
+	font-weight: 600;
+	margin-bottom: 18px;
+	padding-bottom: 14px;
+	border-bottom: 1px solid var(--sp-divider);
+}
+nav.docs a { color: var(--sp-muted); text-decoration: none; }
+nav.docs a:hover { color: var(--sp-surface-text); }
+nav.docs a.active { color: var(--sp-surface-text); border-bottom: 2px solid var(--sp-accent); }
+nav.docs a.app { margin-right: auto; color: var(--sp-surface-text); }
+.toolbar {
+	display: flex;
+	gap: 4px 14px;
+	flex-wrap: wrap;
+	align-items: center;
+	font-size: 0.82rem;
+	color: var(--sp-muted);
+	margin: 0 0 6px;
+}
+.toolbar a, .toolbar button {
+	color: var(--sp-muted);
+	background: none;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	text-decoration: none;
+}
+.toolbar a:hover, .toolbar button:hover { color: var(--sp-surface-text); }
+.toolbar .sep { opacity: 0.5; }
+h1 { margin: 6px 0 12px; font-size: 2rem; }
+h2 { margin: 28px 0 8px; font-size: 1.25rem; }
+p, li { line-height: 1.55; }
+a { color: inherit; }
+code {
+	background: var(--sp-code-bg);
+	padding: 2px 6px;
+	border-radius: 6px;
+	font-size: 0.9em;
+}
+pre {
+	background: var(--sp-code-bg);
+	padding: 14px 16px;
+	border-radius: 10px;
+	overflow-x: auto;
+}
+pre code { background: none; padding: 0; }
+blockquote {
+	margin: 0;
+	padding: 2px 16px;
+	border-left: 3px solid var(--sp-accent);
+	color: var(--sp-muted);
+}
+</style>
+</head>
+<body>
+<div class="page">
+	<nav class="docs">
+		<a class="app" href="/">🃏 Story Points</a>
+		<a href="/docs/">Docs</a>
+		<a href="/docs/getting-started">Getting started</a>
+		<a href="/docs/features">Features</a>
+		<a href="/docs/themes" class="active">Themes</a>
+		<a href="/docs/api">API</a>
+	</nav>
+	<div class="toolbar">
+		<span>🕐 Last updated 2026-07-14</span>
+		<span class="sep">|</span>
+		<button id="copy-md">⧉ Copy as Markdown</button>
+		<span class="sep">|</span>
+		<a href="/docs/themes.md">Ⓜ️ View as Markdown</a>
+		<span class="sep">|</span>
+		<a href="/docs/api#agent-setup" title="Point your agent at /llms.txt">🤖 Agent setup</a>
+	</div>
+	<h1 id="themes">Themes</h1>
+<p>17 themes: 🃏 card table, 🚀 outer space, 🏄 surf, 🎂 birthday, 🪩 nightclub,
+and a full seasonal calendar — 🧧 Lunar New Year, 💘 Valentine&#39;s,
+🍀 St. Patrick&#39;s, 🌸 Easter, 🌷 Mother&#39;s Day, ☀️ Summer, 🎆 4th of July,
+📚 Back to School, 🍂 Fall, 🎃 Halloween, 🦃 Thanksgiving, 🎄 Christmas.</p>
+<h2 id="seasonal-auto">Seasonal (auto)</h2>
+<p>New rooms default to <strong>🗓 Seasonal (auto)</strong>: the theme follows the calendar,
+resolving to the nearest holiday anchor every time the room is viewed — a
+standing room re-themes itself as holidays approach. The host can pin any
+specific theme in <strong>Room settings → Theme</strong>; picking &quot;Seasonal (auto)&quot; again
+unpins it. The home page always wears today&#39;s seasonal colors.</p>
+<h2 id="what-a-theme-changes">What a theme changes</h2>
+<p>Palette (felt, accents, card backs), confetti colors, and two theme-flavored
+emoji slots in the reaction tray (🎃 👻 in October, 🎅 ⛄ in December, …).
+Link previews match too: sharing a room URL renders a social card in the
+room&#39;s theme.</p>
+<p>A theme is a block of <code>--sp-*</code> CSS custom-property overrides — custom
+properties inherit into shadow DOM, so every component follows automatically.</p>
+
+</div>
+<script>
+document.getElementById('copy-md').addEventListener('click', async (e) => {
+	const res = await fetch('/docs/themes.md');
+	await navigator.clipboard.writeText(await res.text());
+	e.target.textContent = '✓ Copied';
+	setTimeout(() => (e.target.textContent = '⧉ Copy as Markdown'), 1500);
+});
+</script>
+</body>
+</html>

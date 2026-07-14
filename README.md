@@ -21,6 +21,17 @@ The same URL works sprint after sprint: your seat, the room's settings, deck,
 theme, and history are all waiting when you come back. Refreshing mid-session
 reclaims your seat automatically.
 
+## Docs & agent discoverability
+
+Human docs live at [/docs/](https://story-points.danielrose7.workers.dev/docs/)
+— Markdown sources in `docs/`, rendered to themed HTML by
+`scripts/build-docs.mjs` (build-time `marked`, Cloudflare-docs-style
+"Copy as Markdown / View as Markdown / Agent setup" toolbar). Every page has
+a raw Markdown twin at the same URL + `.md`, and agents get
+[`/llms.txt`](https://story-points.danielrose7.workers.dev/llms.txt) (curated
+index per [llmstxt.org](https://llmstxt.org/)) plus `/llms-full.txt` (all
+pages in one fetch).
+
 ## Stack
 
 - **Frontend**: [Vite](https://vite.dev) + [Lit](https://lit.dev) web components (no framework lock-in, ~12 KB gzipped)

@@ -1,0 +1,269 @@
+<!-- https://story-points.danielrose7.workers.dev/docs/index.md -->
+
+# Story Points
+
+Realtime pointing poker for agile teams. No accounts, no install — one
+standing URL per room, reusable sprint after sprint.
+
+**App:** [story-points.danielrose7.workers.dev](https://story-points.danielrose7.workers.dev)
+
+## How it works, in one paragraph
+
+Create a room (or claim any URL like `/room/your-team`), share the link,
+and everyone joins with just a name — as a voter or an observer. Votes stay
+hidden until everyone has voted (auto-reveal, configurable), then the spread,
+average, agreement %, and a distribution chart appear. The room keeps its
+settings, deck, theme, and history between sessions; refreshing the page
+reclaims your seat.
+
+## Guides
+
+- [Getting started](/docs/getting-started) — create, invite, vote, reveal
+- [Features](/docs/features) — queue, history, countdown, anonymous voting, away votes, presets, and the toggles for all of them
+- [Themes](/docs/themes) — 17 themes plus seasonal auto-theming
+- [API](/docs/api) — plain-HTTP import/export for scripts, CLIs, and agents
+
+## Principles
+
+- **No accounts.** A room URL is the invitation and the capability.
+- **Zero runtime dependencies beyond Lit.** ~20 KB of gzipped JavaScript.
+- **No tracker integrations in the app.** A small HTTP API is the bridge;
+  anything that can run `curl` can import a backlog and export results.
+- **Free to run.** Cloudflare Workers + one Durable Object per room, within
+  the free plan.
+
+
+---
+
+<!-- https://story-points.danielrose7.workers.dev/docs/getting-started.md -->
+
+# Getting started
+
+## Create a room
+
+Hit **Create a room** on the [home page](https://story-points.danielrose7.workers.dev),
+or just visit any room URL you like — `/room/your-team-name` — and it's yours
+to claim. Room names are lowercase letters, digits, and dashes.
+
+When creating from the home page you can pick a **starting preset**:
+
+- 🏃 **Sprint planning** — Fibonacci deck, all features on (the default)
+- 👕 **T-shirt sizing** — XS–XL deck
+- 🚑 **Triage** — grouped severity tiers (Urgent/High/Medium/Low), no timer
+  chimes or vote stats
+- 🎯 **Minimal** — just cards and a reveal; queue, history, stats, countdown,
+  and chimes all off
+
+Presets only seed the room; everything stays editable in room settings.
+
+## Invite the team
+
+The room URL is the invite — copy it from the "Invite your team" panel.
+Everyone enters a name and joins as a **voter** or an **observer** (observers
+watch and manage, but don't hold up the reveal).
+
+## Vote and reveal
+
+1. Type what you're estimating into the story description (it syncs live).
+2. Voters pick a card. Others see *that* you've voted, never *what*.
+3. When every connected voter has voted, cards flip automatically
+   (auto-reveal is a setting; there's also a **Show votes** button and an
+   optional ⏳ countdown that reveals at zero).
+4. **Next ticket →** records the round to history and pulls the next story
+   from the queue; **Re-vote** re-runs the same story without recording.
+
+## Seats, refreshes, and hosts
+
+- Refreshing the page reclaims your seat — name, role, and current vote.
+- **Leave room** frees your seat so it doesn't block auto-reveal.
+- The first joiner is the **host** (⚙️ room settings, 👑 host transfer). If
+  the host disconnects, the longest-seated member is promoted; the original
+  host reclaims the role on return unless they handed it off explicitly.
+- Rooms keep settings and history for months between sessions, and clean
+  themselves up after ~120 days of no use at all.
+
+
+---
+
+<!-- https://story-points.danielrose7.workers.dev/docs/features.md -->
+
+# Features
+
+Every optional feature has a host toggle in **⚙️ Room settings → Features**,
+so a room only shows what its team actually uses. Presets bundle sensible
+combinations at creation time.
+
+## Ticket queue
+
+An **Up next** list of stories waiting their turn. Add them one-per-line in
+the app, or `POST` them from a script (see [API](/docs/api)). **Next ticket →**
+records the finished round and pulls the front of the queue into the story.
+Toggle off to hide the panel and reject API imports.
+
+## Round history
+
+**Next ticket →** after a reveal records the round — story, vote spread,
+and time-to-reveal — into a collapsible 📜 panel (last 50 rounds). Copy it
+out as Markdown or CSV, or download JSON/CSV from the same panel.
+**Re-vote** deliberately records nothing. The host can clear history in
+settings; switching the feature off stops recording without destroying
+existing entries.
+
+## Voting countdown
+
+A ⏳ button starts an N-second countdown (5–600, default 60); votes reveal
+automatically at zero. Anyone can start or cancel it. The server owns the
+clock, so it fires even if everyone's tab is asleep.
+
+## Vote statistics
+
+On reveal: vote count, average (numeric decks), **agreement %** (share of
+voters on the most common value), and a distribution bar chart when the vote
+spread. One toggle governs the extras.
+
+## Anonymous voting
+
+Votes are never attributed to people — before *or* after reveal — except
+your own. Stats and celebrations still work; revealed seats show a ✓.
+
+## Away votes
+
+Vote, close the tab, still count: your seat stays visible with a 💤 tag and
+your vote joins the reveal. Auto-reveal still keys off connected voters
+only. Toggle off for strict "live connections only" rooms.
+
+## Timer, chimes, and rabbits
+
+Every round has an elapsed timer that freezes at reveal. It turns amber at
+5 minutes and gains a hopping 🐇 at 10 — plus another every 5 minutes
+(they're a rabbit-hole warning, not a countdown). Optional chimes mark the
+escalations; the room can switch them off, and every individual has a local
+mute and volume slider. If everyone leaves mid-round, the clock restarts
+when the first person returns (toggleable).
+
+## Deck editor and groups
+
+Decks are label + value pairs — Fibonacci, T-shirt, powers of 2, or fully
+custom. The **+ Groups** disclosure in the deck editor adds a Group column;
+cards sharing a group render as labeled clusters in the voting hand (e.g.
+severity tiers for triage).
+
+## Reactions and celebrations
+
+An ephemeral reaction tray (🐇 for "we're in a rabbit hole", plus two
+theme-flavored slots), high-five collisions when two people send the same
+emoji, and varied reveal celebrations — confetti, rockets,
+up-and-to-the-right charts — chosen by how the vote landed. Never persisted.
+
+
+---
+
+<!-- https://story-points.danielrose7.workers.dev/docs/themes.md -->
+
+# Themes
+
+17 themes: 🃏 card table, 🚀 outer space, 🏄 surf, 🎂 birthday, 🪩 nightclub,
+and a full seasonal calendar — 🧧 Lunar New Year, 💘 Valentine's,
+🍀 St. Patrick's, 🌸 Easter, 🌷 Mother's Day, ☀️ Summer, 🎆 4th of July,
+📚 Back to School, 🍂 Fall, 🎃 Halloween, 🦃 Thanksgiving, 🎄 Christmas.
+
+## Seasonal (auto)
+
+New rooms default to **🗓 Seasonal (auto)**: the theme follows the calendar,
+resolving to the nearest holiday anchor every time the room is viewed — a
+standing room re-themes itself as holidays approach. The host can pin any
+specific theme in **Room settings → Theme**; picking "Seasonal (auto)" again
+unpins it. The home page always wears today's seasonal colors.
+
+## What a theme changes
+
+Palette (felt, accents, card backs), confetti colors, and two theme-flavored
+emoji slots in the reaction tray (🎃 👻 in October, 🎅 ⛄ in December, …).
+Link previews match too: sharing a room URL renders a social card in the
+room's theme.
+
+A theme is a block of `--sp-*` CSS custom-property overrides — custom
+properties inherit into shadow DOM, so every component follows automatically.
+
+
+---
+
+<!-- https://story-points.danielrose7.workers.dev/docs/api.md -->
+
+# API
+
+Story Points deliberately ships **no tracker-specific integrations**.
+Instead, every room exposes a tiny plain-HTTP surface. The room slug is the
+capability — same trust model as the app itself — so anything that can run
+`curl` can bridge to Jira, Linear, GitHub, or your own tooling.
+
+Base URL: `https://story-points.danielrose7.workers.dev`
+
+## Import tickets into the queue
+
+`POST /api/room/<room>/queue`
+
+Plain text (one story per line) or JSON. Appends by default;
+`?mode=replace` swaps the whole queue. Connected clients see imports live.
+
+```sh
+# Plain text
+printf 'Login flow rework\nRate limiter for API\n' | \
+  curl -X POST --data-binary @- \
+  https://story-points.danielrose7.workers.dev/api/room/<room>/queue
+
+# JSON
+curl -X POST -H 'Content-Type: application/json' \
+  -d '{"items":["Login flow rework","Rate limiter"]}' \
+  'https://story-points.danielrose7.workers.dev/api/room/<room>/queue?mode=replace'
+```
+
+Response: `{"queued": <total items now in queue>}`. Limits: 100 items,
+500 chars each. Returns `403` if the room's host has switched the ticket
+queue off, `400` for unparseable bodies.
+
+## Export the session
+
+`GET /api/room/<room>/export` — JSON: room name, current queue, and round
+history (story, ISO end time, duration in seconds, deck-ordered vote counts).
+
+`GET /api/room/<room>/export?format=csv` — the history as CSV
+(`story,ended_at,duration_seconds,votes`).
+
+```sh
+curl https://story-points.danielrose7.workers.dev/api/room/<room>/export
+```
+
+Returns `404` for rooms that don't exist yet.
+
+## Peek at a room
+
+`GET /api/room/<room>/peek` — `{"exists": bool, "name"?: string, "theme"?: string}`.
+Cheap existence check; doesn't create the room.
+
+## Realtime
+
+The app itself runs over a WebSocket at `/api/room/<room>/ws?u=<user-id>`
+with JSON messages (join, vote, reveal, clear, story, queue, settings, …).
+It's an internal protocol — no compatibility promises — but it's plain JSON
+if you want to script a bot; see `shared/types.ts` in the
+[repo](https://github.com/danielrose7/story-points) for message shapes.
+
+## Agent setup
+
+Point your coding agent or MCP tool at
+[`/llms.txt`](https://story-points.danielrose7.workers.dev/llms.txt) — it
+indexes these docs in Markdown. Every docs page also serves a raw Markdown
+twin at the same URL with `.md` appended (e.g. `/docs/api.md`), and
+[`/llms-full.txt`](https://story-points.danielrose7.workers.dev/llms-full.txt)
+bundles all pages in one fetch. A typical agent workflow:
+
+```sh
+# 1. Learn the surface
+curl https://story-points.danielrose7.workers.dev/llms.txt
+# 2. Import the backlog you were asked to estimate
+your-tracker-cli list --sprint 42 | curl -X POST --data-binary @- \
+  https://story-points.danielrose7.workers.dev/api/room/<room>/queue
+# 3. After the session, collect results and write them back
+curl https://story-points.danielrose7.workers.dev/api/room/<room>/export
+```

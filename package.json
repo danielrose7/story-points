@@ -8,12 +8,14 @@
     "start": "vite dev",
     "test": "echo 'no tests yet'",
     "cf-typegen": "wrangler types",
-    "build": "tsc && vite build",
-    "preview": "npm run build && vite preview"
+    "build": "npm run docs && tsc && vite build",
+    "preview": "npm run build && vite preview",
+    "docs": "node scripts/build-docs.mjs"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.44.0",
     "@types/node": "^26.1.1",
+    "marked": "^18.0.6",
     "typescript": "^5.5.2",
     "vite": "^8.1.4",
     "wrangler": "^4.110.0"

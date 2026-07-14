@@ -1,0 +1,28 @@
+# Story Points
+
+> Realtime pointing poker for agile teams. No accounts — a room URL is the
+> invitation and the capability. Create or claim a room at https://story-points.danielrose7.workers.dev/room/<slug>,
+> vote with hidden cards, auto-reveal, themes, round history, and a plain-HTTP
+> API for importing backlogs and exporting results.
+
+Key facts: rooms persist between sessions (Cloudflare Durable Objects); the
+room slug in the URL is the only credential; the API base is https://story-points.danielrose7.workers.dev.
+
+## Docs
+
+- [Overview](https://story-points.danielrose7.workers.dev/docs/index.md): What Story Points is and where to find everything
+- [Getting started](https://story-points.danielrose7.workers.dev/docs/getting-started.md): Create a room, invite the team, vote, reveal
+- [Features](https://story-points.danielrose7.workers.dev/docs/features.md): Ticket queue, history, countdown, voting modes, stats, and the toggles for all of them
+- [Themes](https://story-points.danielrose7.workers.dev/docs/themes.md): 17 themes and seasonal auto-theming
+- [API](https://story-points.danielrose7.workers.dev/docs/api.md): Plain-HTTP import/export — the integration surface for scripts, CLIs, and agents
+
+## API quick reference
+
+- POST https://story-points.danielrose7.workers.dev/api/room/<room>/queue — import stories (text lines or JSON {"items":[…]}; ?mode=replace)
+- GET https://story-points.danielrose7.workers.dev/api/room/<room>/export — session results as JSON (?format=csv for CSV)
+- GET https://story-points.danielrose7.workers.dev/api/room/<room>/peek — {"exists": bool, "name"?, "theme"?}
+
+## Optional
+
+- [Full docs in one file](https://story-points.danielrose7.workers.dev/llms-full.txt): all pages concatenated
+- [Source repository](https://github.com/danielrose7/story-points): Workers + Durable Objects + Lit

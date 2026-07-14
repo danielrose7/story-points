@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Getting started — Story Points</title>
+<meta name="description" content="Create a room, invite the team, vote, reveal" />
+<meta property="og:title" content="Getting started — Story Points" />
+<meta property="og:description" content="Create a room, invite the team, vote, reveal" />
+<meta property="og:image" content="https://story-points.danielrose7.workers.dev/og/classic.png?v=1" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🃏</text></svg>" />
+<style>
+:root {
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #2e7d5b 0%, #1b5e43 45%, #123f2e 100%);
+	--sp-surface: #ffffff;
+	--sp-surface-text: #1c2b24;
+	--sp-muted: #5f7268;
+	--sp-accent: #ffb300;
+	--sp-accent-text: #3a2b00;
+	--sp-border: #ccd6d0;
+	--sp-divider: #eef2ef;
+	--sp-btn-bg: #f4f7f5;
+	--sp-code-bg: rgba(0, 0, 0, 0.07);
+	--sp-radius: 14px;
+	--sp-font: 'Avenir Next', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; }
+html { background: #123f2e; }
+body {
+	margin: 0;
+	min-height: 100dvh;
+	background: var(--sp-bg);
+	font-family: var(--sp-font);
+	padding: 24px 16px 48px;
+}
+.page {
+	max-width: 760px;
+	margin: 0 auto;
+	background: var(--sp-surface);
+	color: var(--sp-surface-text);
+	border-radius: var(--sp-radius);
+	box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+	padding: 36px 40px 44px;
+}
+@media (max-width: 560px) { .page { padding: 24px 20px 32px; } }
+nav.docs {
+	display: flex;
+	gap: 4px 14px;
+	flex-wrap: wrap;
+	font-size: 0.9rem;
+	font-weight: 600;
+	margin-bottom: 18px;
+	padding-bottom: 14px;
+	border-bottom: 1px solid var(--sp-divider);
+}
+nav.docs a { color: var(--sp-muted); text-decoration: none; }
+nav.docs a:hover { color: var(--sp-surface-text); }
+nav.docs a.active { color: var(--sp-surface-text); border-bottom: 2px solid var(--sp-accent); }
+nav.docs a.app { margin-right: auto; color: var(--sp-surface-text); }
+.toolbar {
+	display: flex;
+	gap: 4px 14px;
+	flex-wrap: wrap;
+	align-items: center;
+	font-size: 0.82rem;
+	color: var(--sp-muted);
+	margin: 0 0 6px;
+}
+.toolbar a, .toolbar button {
+	color: var(--sp-muted);
+	background: none;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	text-decoration: none;
+}
+.toolbar a:hover, .toolbar button:hover { color: var(--sp-surface-text); }
+.toolbar .sep { opacity: 0.5; }
+h1 { margin: 6px 0 12px; font-size: 2rem; }
+h2 { margin: 28px 0 8px; font-size: 1.25rem; }
+p, li { line-height: 1.55; }
+a { color: inherit; }
+code {
+	background: var(--sp-code-bg);
+	padding: 2px 6px;
+	border-radius: 6px;
+	font-size: 0.9em;
+}
+pre {
+	background: var(--sp-code-bg);
+	padding: 14px 16px;
+	border-radius: 10px;
+	overflow-x: auto;
+}
+pre code { background: none; padding: 0; }
+blockquote {
+	margin: 0;
+	padding: 2px 16px;
+	border-left: 3px solid var(--sp-accent);
+	color: var(--sp-muted);
+}
+</style>
+</head>
+<body>
+<div class="page">
+	<nav class="docs">
+		<a class="app" href="/">🃏 Story Points</a>
+		<a href="/docs/">Docs</a>
+		<a href="/docs/getting-started" class="active">Getting started</a>
+		<a href="/docs/features">Features</a>
+		<a href="/docs/themes">Themes</a>
+		<a href="/docs/api">API</a>
+	</nav>
+	<div class="toolbar">
+		<span>🕐 Last updated 2026-07-14</span>
+		<span class="sep">|</span>
+		<button id="copy-md">⧉ Copy as Markdown</button>
+		<span class="sep">|</span>
+		<a href="/docs/getting-started.md">Ⓜ️ View as Markdown</a>
+		<span class="sep">|</span>
+		<a href="/docs/api#agent-setup" title="Point your agent at /llms.txt">🤖 Agent setup</a>
+	</div>
+	<h1 id="getting-started">Getting started</h1>
+<h2 id="create-a-room">Create a room</h2>
+<p>Hit <strong>Create a room</strong> on the <a href="https://story-points.danielrose7.workers.dev">home page</a>,
+or just visit any room URL you like — <code>/room/your-team-name</code> — and it&#39;s yours
+to claim. Room names are lowercase letters, digits, and dashes.</p>
+<p>When creating from the home page you can pick a <strong>starting preset</strong>:</p>
+<ul>
+<li>🏃 <strong>Sprint planning</strong> — Fibonacci deck, all features on (the default)</li>
+<li>👕 <strong>T-shirt sizing</strong> — XS–XL deck</li>
+<li>🚑 <strong>Triage</strong> — grouped severity tiers (Urgent/High/Medium/Low), no timer
+chimes or vote stats</li>
+<li>🎯 <strong>Minimal</strong> — just cards and a reveal; queue, history, stats, countdown,
+and chimes all off</li>
+</ul>
+<p>Presets only seed the room; everything stays editable in room settings.</p>
+<h2 id="invite-the-team">Invite the team</h2>
+<p>The room URL is the invite — copy it from the &quot;Invite your team&quot; panel.
+Everyone enters a name and joins as a <strong>voter</strong> or an <strong>observer</strong> (observers
+watch and manage, but don&#39;t hold up the reveal).</p>
+<h2 id="vote-and-reveal">Vote and reveal</h2>
+<ol>
+<li>Type what you&#39;re estimating into the story description (it syncs live).</li>
+<li>Voters pick a card. Others see <em>that</em> you&#39;ve voted, never <em>what</em>.</li>
+<li>When every connected voter has voted, cards flip automatically
+(auto-reveal is a setting; there&#39;s also a <strong>Show votes</strong> button and an
+optional ⏳ countdown that reveals at zero).</li>
+<li><strong>Next ticket →</strong> records the round to history and pulls the next story
+from the queue; <strong>Re-vote</strong> re-runs the same story without recording.</li>
+</ol>
+<h2 id="seats-refreshes-and-hosts">Seats, refreshes, and hosts</h2>
+<ul>
+<li>Refreshing the page reclaims your seat — name, role, and current vote.</li>
+<li><strong>Leave room</strong> frees your seat so it doesn&#39;t block auto-reveal.</li>
+<li>The first joiner is the <strong>host</strong> (⚙️ room settings, 👑 host transfer). If
+the host disconnects, the longest-seated member is promoted; the original
+host reclaims the role on return unless they handed it off explicitly.</li>
+<li>Rooms keep settings and history for months between sessions, and clean
+themselves up after ~120 days of no use at all.</li>
+</ul>
+
+</div>
+<script>
+document.getElementById('copy-md').addEventListener('click', async (e) => {
+	const res = await fetch('/docs/getting-started.md');
+	await navigator.clipboard.writeText(await res.text());
+	e.target.textContent = '✓ Copied';
+	setTimeout(() => (e.target.textContent = '⧉ Copy as Markdown'), 1500);
+});
+</script>
+</body>
+</html>
