@@ -681,10 +681,72 @@ class RoomPage extends LitElement {
 
 		/* Ticket queue */
 		.queue-row {
-			grid-template-columns: 24px 1fr 30px;
+			grid-template-columns: 24px 1fr 30px 30px 30px;
 			display: grid;
 			align-items: center;
-			gap: 8px;
+			gap: 6px;
+		}
+		.queue-move {
+			border: none;
+			background: none;
+			color: var(--sp-muted);
+			cursor: pointer;
+			border-radius: 6px;
+			padding: 4px 6px;
+		}
+		.queue-move:hover:not(:disabled) {
+			background: var(--sp-highlight);
+			color: var(--sp-surface-text);
+		}
+		.queue-move:disabled {
+			opacity: 0.3;
+			cursor: default;
+		}
+
+		/* Import preview (staging table before Add to queue) */
+		.preview {
+			display: grid;
+			gap: 6px;
+			border: 1px dashed var(--sp-border);
+			border-radius: 10px;
+			padding: 10px 12px;
+		}
+		.preview-head {
+			font-size: 0.78rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+			color: var(--sp-muted);
+		}
+		.preview-row {
+			display: grid;
+			grid-template-columns: 24px 1fr 26px 30px 30px 30px;
+			align-items: center;
+			gap: 6px;
+		}
+		.preview-row input {
+			min-width: 0;
+			padding: 6px 9px;
+			border: 1px solid var(--sp-border-soft);
+			border-radius: 8px;
+			font: inherit;
+			font-size: 0.9rem;
+		}
+		.preview-row button {
+			border: none;
+			background: none;
+			color: var(--sp-muted);
+			cursor: pointer;
+			border-radius: 6px;
+			padding: 4px 6px;
+		}
+		.preview-row button:hover:not(:disabled) {
+			background: var(--sp-highlight);
+			color: var(--sp-surface-text);
+		}
+		.preview-row button:disabled {
+			opacity: 0.3;
+			cursor: default;
 		}
 		.queue-pos {
 			color: var(--sp-muted);
@@ -1201,6 +1263,22 @@ class RoomPage extends LitElement {
 										${url ? html`<a class="ticket-link" href=${url} target="_blank" rel="noopener">↗</a>` : nothing}
 									</span>
 									<button
+										class="queue-move"
+										title="Move up"
+										?disabled=${i === 0}
+										@click=${() => this.moveQueueItem(i, -1)}
+									>
+										⬆︎
+									</button>
+									<button
+										class="queue-move"
+										title="Move down"
+										?disabled=${i === queue.length - 1}
+										@click=${() => this.moveQueueItem(i, 1)}
+									>
+										⬇︎
+									</button>
+									<button
 										class="queue-remove"
 										title="Remove from queue"
 										@click=${() => this.setQueue(queue.filter((_, j) => j !== i))}
@@ -1218,9 +1296,10 @@ class RoomPage extends LitElement {
 							@paste=${this.onQueuePaste}
 							@input=${(e: InputEvent) => (this.queueDraft = (e.target as HTMLTextAreaElement).value)}
 						></textarea>
+						${this.renderDraftPreview()}
 						<div class="toolbar">
-							<button class="btn" ?disabled=${!this.queueDraft.trim()} @click=${this.addToQueue}>
-								Add to queue
+							<button class="btn" ?disabled=${this.draftLines().length === 0} @click=${this.addToQueue}>
+								${this.draftLines().length > 1 ? `Add ${this.draftLines().length} to queue` : 'Add to queue'}
 							</button>
 							<label class="btn csv-import">
 								📎 Import CSV
@@ -1321,6 +1400,81 @@ class RoomPage extends LitElement {
 		const ws = linearWorkspaceFromText(this.trackerScope) ?? getLinearWorkspace();
 		if (ws) setLinearWorkspace(ws);
 		return extractTickets(text, linearLinkFor(ws));
+	}
+
+	/** Draft textarea → one entry per non-empty line (URL split off for display). */
+	private draftLines(): Array<{ text: string; url: string | null }> {
+		return this.queueDraft
+			.split('\n')
+			.map((l) => l.trim())
+			.filter(Boolean)
+			.map((l) => this.ticketParts(l));
+	}
+
+	private writeDraftLines(lines: Array<{ text: string; url: string | null }>): void {
+		this.queueDraft = lines
+			.filter((l) => l.text || l.url)
+			.map((l) => [l.text, l.url].filter(Boolean).join(' '))
+			.join('\n');
+	}
+
+	private patchDraftLine(i: number, text: string): void {
+		const lines = this.draftLines();
+		lines[i] = { ...lines[i], text };
+		this.writeDraftLines(lines);
+	}
+
+	private moveDraftLine(i: number, delta: number): void {
+		const lines = this.draftLines();
+		const j = i + delta;
+		if (j < 0 || j >= lines.length) return;
+		[lines[i], lines[j]] = [lines[j], lines[i]];
+		this.writeDraftLines(lines);
+	}
+
+	private removeDraftLine(i: number): void {
+		this.writeDraftLines(this.draftLines().filter((_, j) => j !== i));
+	}
+
+	/** Staging table for the draft: edit, reorder, and remove before adding. */
+	private renderDraftPreview() {
+		const lines = this.draftLines();
+		if (lines.length < 2) return nothing;
+		return html`
+			<div class="preview">
+				<div class="preview-head">
+					Preview — ${lines.length} ticket${lines.length === 1 ? '' : 's'} ready to add
+				</div>
+				${lines.map(
+					(l, i) => html`
+						<div class="preview-row">
+							<span class="queue-pos">${i + 1}</span>
+							<input
+								type="text"
+								.value=${l.text}
+								@input=${(e: InputEvent) => this.patchDraftLine(i, (e.target as HTMLInputElement).value)}
+							/>
+							${l.url
+								? html`<a class="ticket-link" href=${l.url} target="_blank" rel="noopener">↗</a>`
+								: html`<span></span>`}
+							<button title="Move up" ?disabled=${i === 0} @click=${() => this.moveDraftLine(i, -1)}>⬆︎</button>
+							<button title="Move down" ?disabled=${i === lines.length - 1} @click=${() => this.moveDraftLine(i, 1)}>
+								⬇︎
+							</button>
+							<button title="Remove" @click=${() => this.removeDraftLine(i)}>✕</button>
+						</div>
+					`,
+				)}
+			</div>
+		`;
+	}
+
+	private moveQueueItem(i: number, delta: number): void {
+		const queue = [...(this.state?.queue ?? [])];
+		const j = i + delta;
+		if (j < 0 || j >= queue.length) return;
+		[queue[i], queue[j]] = [queue[j], queue[i]];
+		this.setQueue(queue);
 	}
 
 	private onQueuePaste = (e: ClipboardEvent): void => {
