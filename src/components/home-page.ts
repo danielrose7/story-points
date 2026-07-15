@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { baseStyles } from './base-styles';
+import './site-footer';
 import { generateRoomSlug } from '../slug';
 import { navigate } from '../main';
 import { applyTheme, todaysTheme } from '../theme';
@@ -68,12 +69,22 @@ class HomePage extends LitElement {
 	static styles = [
 		baseStyles,
 		css`
+		/* Standard page flow: hero vertically centered in the remaining
+		   viewport, footer resting at the bottom (pushed further only by
+		   content growth — recents, lost-room panel). */
 		:host {
-			display: grid;
-			place-items: center;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
 			min-height: 100vh;
 			min-height: 100dvh;
-			padding: 24px;
+			padding: 24px 24px 16px;
+		}
+		.stack {
+			margin: auto 0;
+		}
+		points-footer {
+			margin-top: 40px;
 		}
 		.stack {
 			min-width: 0;
@@ -207,15 +218,6 @@ class HomePage extends LitElement {
 			background: var(--sp-btn-bg);
 			color: var(--sp-surface-text);
 		}
-		.foot {
-			text-align: center;
-			font-size: 0.85rem;
-			color: var(--sp-on-bg);
-			opacity: 0.75;
-		}
-		.foot a {
-			color: inherit;
-		}
 		.divider {
 			margin: 24px 0 16px;
 			color: var(--sp-muted);
@@ -277,11 +279,8 @@ class HomePage extends LitElement {
 				</form>
 				</div>
 				${this.recents.length ? this.renderRecents() : ''}
-				<div class="foot">
-					<a href="/docs/">📚 Docs</a> · <a href="/docs/api">API</a> ·
-					<a href="https://github.com/danielrose7/story-points">GitHub</a>
-				</div>
 			</div>
+			<points-footer></points-footer>
 		`;
 	}
 

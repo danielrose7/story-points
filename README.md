@@ -233,3 +233,17 @@ Future ideas (not committed):
 Deliberately skipped: in-app Jira/GitHub/Linear write-back, video-call
 embeds, AI insights, async notifications/per-vote comments — all
 account/API-heavy, against the no-accounts zero-dep grain.
+
+## License, support & credits
+
+Free and open source under the [MIT license](LICENSE) (© Bloom Interactive
+LLC) — fork it, self-host it, or crib from it. Self-hosting is genuinely
+three commands (clone, `wrangler login`, `npm run deploy`) and fits the
+Cloudflare Workers free plan; the one caveat is that Durable Objects are the
+non-portable piece, so "eject" means "to your own Cloudflare account," not
+to an arbitrary box.
+
+Running this costs almost nothing, so there's no paywall and never will be.
+If it saved your sprint, you can [sponsor the project](https://github.com/sponsors/danielrose7).
+
+Built in Silverton, CO by [Daniel Rose](https://gobloom.io).

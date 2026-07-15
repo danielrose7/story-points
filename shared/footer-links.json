@@ -1,0 +1,34 @@
+{
+	"brand": { "title": "🃏 Story Points", "tagline": "Estimate together, in realtime. Free, open source, no accounts." },
+	"groups": [
+		{
+			"title": "Product",
+			"links": [
+				{ "label": "Create a room", "href": "/" },
+				{ "label": "Features", "href": "/docs/features" },
+				{ "label": "Themes", "href": "/docs/themes" },
+				{ "label": "Compare", "href": "/docs/compare" }
+			]
+		},
+		{
+			"title": "Docs",
+			"links": [
+				{ "label": "Getting started", "href": "/docs/getting-started" },
+				{ "label": "API", "href": "/docs/api" },
+				{ "label": "Agent setup", "href": "/docs/agent-setup" },
+				{ "label": "llms.txt", "href": "/llms.txt" }
+			]
+		},
+		{
+			"title": "Project",
+			"links": [
+				{ "label": "GitHub", "href": "https://github.com/danielrose7/story-points" },
+				{ "label": "License (MIT)", "href": "https://github.com/danielrose7/story-points/blob/main/LICENSE" },
+				{ "label": "Sponsor", "href": "https://github.com/sponsors/danielrose7" },
+				{ "label": "gobloom.io", "href": "https://gobloom.io" }
+			]
+		}
+	],
+	"credit": { "label": "Built in Silverton, CO", "href": "https://gobloom.io" },
+	"legal": "© Bloom Interactive LLC · MIT licensed"
+}

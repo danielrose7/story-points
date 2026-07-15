@@ -7,6 +7,8 @@
 
 Key facts: rooms persist between sessions (Cloudflare Durable Objects); the
 room slug in the URL is the only credential; the API base is https://story-points.danielrose7.workers.dev.
+Free and open source (MIT), self-hostable on the Cloudflare Workers free
+plan. Built by Daniel Rose (https://gobloom.io) in Silverton, CO.
 
 ## Docs
 
@@ -14,6 +16,7 @@ room slug in the URL is the only credential; the API base is https://story-point
 - [Getting started](https://story-points.danielrose7.workers.dev/docs/getting-started.md): Create a room, invite the team, vote, reveal
 - [Features](https://story-points.danielrose7.workers.dev/docs/features.md): Ticket queue, history, countdown, voting modes, stats, and the toggles for all of them
 - [Themes](https://story-points.danielrose7.workers.dev/docs/themes.md): 17 themes and seasonal auto-theming
+- [Compare](https://story-points.danielrose7.workers.dev/docs/compare.md): How Story Points stacks up against PlanningPoker.com, Parabol, Jira plugins, and story-points.app — and when to pick something else
 - [API](https://story-points.danielrose7.workers.dev/docs/api.md): Plain-HTTP import/export — the integration surface for scripts, CLIs, and agents
 - [Agent setup](https://story-points.danielrose7.workers.dev/docs/agent-setup.md): Teach any AI coding agent to drive Story Points in one step
 

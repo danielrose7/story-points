@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Story Points docs — Story Points</title>
-<meta name="description" content="What Story Points is and where to find everything" />
-<meta property="og:title" content="Story Points docs — Story Points" />
-<meta property="og:description" content="What Story Points is and where to find everything" />
+<title>Compare — Story Points</title>
+<meta name="description" content="How Story Points stacks up against PlanningPoker.com, Parabol, Jira plugins, and story-points.app — and when to pick something else" />
+<meta property="og:title" content="Compare — Story Points" />
+<meta property="og:description" content="How Story Points stacks up against PlanningPoker.com, Parabol, Jira plugins, and story-points.app — and when to pick something else" />
 <meta property="og:image" content="https://story-points.danielrose7.workers.dev/og/classic.png?v=1" />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🃏</text></svg>" />
@@ -254,11 +254,11 @@ footer.site {
 	<nav class="side">
 		<div class="side-sticky">
 			<div class="side-title">Documentation</div>
-			<a href="/docs/" class="active">Overview</a>
+			<a href="/docs/">Overview</a>
 			<a href="/docs/getting-started">Getting started</a>
 			<a href="/docs/features">Features</a>
 			<a href="/docs/themes">Themes</a>
-			<a href="/docs/compare">Compare</a>
+			<a href="/docs/compare" class="active">Compare</a>
 			<a href="/docs/api">API</a>
 			<a href="/docs/agent-setup">Agent setup</a>
 			<div class="side-title">Agents</div>
@@ -267,41 +267,168 @@ footer.site {
 	</nav>
 	<main>
 		<div class="toolbar">
-			<span>🕐 Last updated 2026-07-14</span>
+			<span>🕐 Last updated 2026-07-15</span>
 			<span class="sep">|</span>
 			<button id="copy-md">⧉ Copy as Markdown</button>
 			<span class="sep">|</span>
-			<a href="/docs/index.md">Ⓜ️ View as Markdown</a>
+			<a href="/docs/compare.md">Ⓜ️ View as Markdown</a>
 			<span class="sep">|</span>
 			<a href="/docs/agent-setup" title="Set up your agent to drive Story Points">🤖 Agent setup</a>
 		</div>
-		<h1 id="story-points">Story Points</h1>
-<p>Realtime pointing poker for agile teams. No accounts, no install — one
-standing URL per room, reusable sprint after sprint.</p>
-<p><strong>App:</strong> <a href="https://story-points.danielrose7.workers.dev">story-points.danielrose7.workers.dev</a></p>
-<h2 id="how-it-works-in-one-paragraph">How it works, in one paragraph</h2>
-<p>Create a room (or claim any URL like <code>/room/your-team</code>), share the link,
-and everyone joins with just a name — as a voter or an observer. Votes stay
-hidden until everyone has voted (auto-reveal, configurable), then the spread,
-average, agreement %, and a distribution chart appear. The room keeps its
-settings, deck, theme, and history between sessions; refreshing the page
-reclaims your seat.</p>
-<h2 id="guides">Guides</h2>
-<ul>
-<li><a href="/docs/getting-started">Getting started</a> — create, invite, vote, reveal</li>
-<li><a href="/docs/features">Features</a> — queue, history, countdown, anonymous voting, away votes, presets, and the toggles for all of them</li>
-<li><a href="/docs/themes">Themes</a> — 17 themes plus seasonal auto-theming</li>
-<li><a href="/docs/api">API</a> — plain-HTTP import/export for scripts, CLIs, and agents</li>
-</ul>
-<h2 id="principles">Principles</h2>
-<ul>
-<li><strong>No accounts.</strong> A room URL is the invitation and the capability.</li>
-<li><strong>Zero runtime dependencies beyond Lit.</strong> ~20 KB of gzipped JavaScript.</li>
-<li><strong>No tracker integrations in the app.</strong> A small HTTP API is the bridge;
-anything that can run <code>curl</code> can import a backlog and export results.</li>
-<li><strong>Free to run.</strong> Cloudflare Workers + one Durable Object per room, within
-the free plan.</li>
-</ul>
+		<h1 id="story-points-vs-the-alternatives">Story Points vs. the alternatives</h1>
+<blockquote>
+<p>The honest version: every tool here can run a planning-poker session.
+Story Points is the one that&#39;s free, open source, needs no accounts, and
+treats your room URL as the entire product. Here&#39;s where the others
+differ, and when they&#39;re genuinely the better pick.</p>
+</blockquote>
+<p><em>Facts checked July 2026 from each product&#39;s public site; pricing and limits
+may have changed since.</em></p>
+<h2 id="at-a-glance">At a glance</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>🃏 Story Points</th>
+<th>PlanningPoker.com</th>
+<th>Parabol</th>
+<th>Jira plugins</th>
+<th>story-points.app</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Price</td>
+<td>Free, no tiers</td>
+<td>Free tier + paid plans</td>
+<td>Free tier + paid plans</td>
+<td>Per-user via Atlassian</td>
+<td>£4.99/mo after trial</td>
+</tr>
+<tr>
+<td>Accounts required</td>
+<td><strong>None</strong></td>
+<td>Facilitator signs up</td>
+<td>Everyone signs up</td>
+<td>Jira login</td>
+<td>Sign-up + billing</td>
+</tr>
+<tr>
+<td>Player limit</td>
+<td>None</td>
+<td>Capped on free tier</td>
+<td>Tier-dependent</td>
+<td>Jira seats</td>
+<td>12</td>
+</tr>
+<tr>
+<td>Persistent rooms</td>
+<td>✔ same URL every sprint</td>
+<td>✔ with account</td>
+<td>✔ with account</td>
+<td>✔ inside Jira</td>
+<td>✔ with account</td>
+</tr>
+<tr>
+<td>Hidden votes + auto-reveal</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td>Custom decks &amp; grouping</td>
+<td>✔</td>
+<td>Partial</td>
+<td>Partial</td>
+<td>Partial</td>
+<td>Scales only</td>
+</tr>
+<tr>
+<td>Ticket queue + CSV import</td>
+<td>✔ Linear/Jira CSV, previewed</td>
+<td>Jira sync (paid)</td>
+<td>✔</td>
+<td>Native</td>
+<td>✘</td>
+</tr>
+<tr>
+<td>Export results</td>
+<td>✔ Markdown, CSV, JSON API</td>
+<td>✔ (paid tiers)</td>
+<td>✔</td>
+<td>Native</td>
+<td>Paid tier</td>
+</tr>
+<tr>
+<td>Plain-HTTP API + llms.txt</td>
+<td>✔</td>
+<td>✘</td>
+<td>API (paid)</td>
+<td>Jira API</td>
+<td>✘</td>
+</tr>
+<tr>
+<td>Open source / self-host</td>
+<td>✔ MIT, 3 commands</td>
+<td>✘</td>
+<td>✔ AGPL</td>
+<td>✘</td>
+<td>✘</td>
+</tr>
+<tr>
+<td>Ads / data monetization</td>
+<td>None</td>
+<td>Ads on free tier</td>
+<td>None</td>
+<td>None</td>
+<td>None claimed</td>
+</tr>
+</tbody></table>
+<h2 id="planningpoker-com">PlanningPoker.com</h2>
+<p>The incumbent — around since 2006, and fine at the core loop. The trade-offs
+are a dated free tier (player caps, ads) and accounts-plus-paid-plans for
+the features that matter to a recurring team: persistent games, Jira sync,
+exports. <strong>Choose it if</strong> your organization already pays for it or you need
+its deep Jira two-way sync. Story Points covers the import/export side with
+tracker CSV import and a plain-HTTP API instead — no integration to
+administer, nothing to grant OAuth to.</p>
+<h2 id="parabol">Parabol</h2>
+<p>The strongest product on this list — but it&#39;s a full agile-meetings suite
+(retrospectives, standups, sprint poker) with accounts, workspaces, and a
+per-user price once you outgrow the free tier. Estimation is one mode of a
+much bigger tool. <strong>Choose it if</strong> you want retros and standups in the same
+place and don&#39;t mind everyone signing up. If you only need estimation,
+you&#39;re carrying the weight of a suite to play cards.</p>
+<h2 id="planning-poker-plugins-for-jira">Planning poker plugins for Jira</h2>
+<p>Estimation that lives inside Jira: native ticket sync, votes written back to
+the story field. The cost is the Jira-ness — an admin has to install it,
+everyone estimating needs a Jira seat, and guests (a contractor, a designer,
+your PM&#39;s PM) can&#39;t just click a link. <strong>Choose one if</strong> every estimator has
+a Jira license and you want write-back with zero copy-paste. Story Points
+deliberately stays outside your tracker: import the CSV, estimate with
+anyone who has the URL, export the results.</p>
+<h2 id="story-points-app-quot-scrum-poker-quot">story-points.app (&quot;Scrum Poker&quot;)</h2>
+<p>No relation, despite the name. It&#39;s a paid product (£4.99/mo after a 14-day
+trial) with required accounts, a 12-player room cap, and history/analytics
+behind the subscription. The core loop — hidden votes, reveal, scales — is
+the same as everything here. <strong>Choose it if</strong> its specific paid analytics
+appeal to you. Otherwise the comparison is short: Story Points has no price,
+no accounts, no player cap, and is open source.</p>
+<h2 id="physical-cards">Physical cards</h2>
+<p>Undefeated for an in-person team in one room. <strong>Choose them if</strong> you&#39;re all
+at the same table. Story Points is for when you&#39;re not — or when you want
+the round recorded without someone typing it up.</p>
+<h2 id="why-free-doesn-39-t-mean-quot-until-we-charge-quot">Why free doesn&#39;t mean &quot;until we charge&quot;</h2>
+<p>Story Points runs on Cloudflare&#39;s free tier and costs approximately nothing
+to operate, so there is no paywall and no plan for one. It&#39;s MIT-licensed —
+if it ever went away or went bad, <code>git clone</code>, <code>wrangler login</code>,
+<code>npm run deploy</code> puts your own copy on your own Cloudflare account in a few
+minutes. That&#39;s the real answer to &quot;what&#39;s the catch&quot;: the license removes
+the ability for there to be one.</p>
+<p><strong><a href="/">Create a room</a></strong> — no signup, you&#39;ll be estimating in ten seconds. Or
+read <a href="/docs/features">how the features work</a> and
+<a href="/docs/api">the API</a>.</p>
 
 	</main>
 </div>
@@ -343,7 +470,7 @@ the free plan.</li>
 </footer>
 <script>
 document.getElementById('copy-md').addEventListener('click', async (e) => {
-	const res = await fetch('/docs/index.md');
+	const res = await fetch('/docs/compare.md');
 	await navigator.clipboard.writeText(await res.text());
 	e.target.textContent = '✓ Copied';
 	setTimeout(() => (e.target.textContent = '⧉ Copy as Markdown'), 1500);

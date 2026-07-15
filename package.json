@@ -2,6 +2,7 @@
   "name": "story-points",
   "version": "0.0.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "deploy": "npm run build && wrangler deploy",
     "dev": "vite dev",
