@@ -251,7 +251,10 @@ instructions at [/docs/self-host](https://story-points.danielrose7.workers.dev/d
 Durable Objects are the non-portable piece, so "eject" means "to your own
 Cloudflare account," not to an arbitrary box.
 
-Running this costs almost nothing, so there's no paywall and never will be.
-If it saved your sprint, you can [sponsor the project](https://github.com/sponsors/danielrose7).
+Running this costs almost nothing at team scale — a few teams' estimation
+sessions are a rounding error on the Workers free tier (world-scale traffic
+would graduate to the ~$5/mo paid plan, which is the kind of problem to
+want). So there's no paywall and never will be. If it saved your sprint,
+you can [sponsor the project](https://github.com/sponsors/danielrose7).
 
 Built in Silverton, CO by [Daniel Rose](https://gobloom.io).

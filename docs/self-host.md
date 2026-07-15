@@ -18,6 +18,12 @@ description: Run your own Story Points on the Cloudflare free plan in three comm
   storage included).
 - Node 20+ and git.
 
+"Free" is honest at the scale self-hosting is for: you and your teams,
+estimating a few sessions a week — that's a rounding error against the
+free-plan quotas. If your copy somehow ends up serving the whole world,
+you'll graduate to the Workers paid plan (~$5/mo) — a good problem, and
+still cheap.
+
 ## The three commands
 
 ```sh

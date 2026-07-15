@@ -25,6 +25,23 @@
 	--sp-font: 'Avenir Next', 'Segoe UI', system-ui, -apple-system, sans-serif;
 	--sp-confetti: #ffb300, #37d67a, #4fa3ff, #ff5c8a, #b980ff, #fff176;
 }
+/* Dark mode follows the system, palette after Sarah Drasner's Night Owl:
+   #011627 ground, #d6deeb ink, moonlit blues/purples for accents. Every
+   rule below reads tokens, so overriding them here re-skins the page. */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--sp-surface: #011627;
+		--sp-surface-text: #d6deeb;
+		--sp-muted: #7e97ac;
+		--sp-accent: #ecc48d;
+		--sp-accent-text: #011627;
+		--sp-border: #1d3b53;
+		--sp-divider: #0b2942;
+		--sp-btn-bg: #0b2942;
+		--sp-code-bg: #0b2942;
+		--sp-confetti: #82aaff, #c792ea, #7fdbca, #ecc48d, #addb67, #ff5874;
+	}
+}
 * { box-sizing: border-box; }
 html { background: var(--sp-surface); }
 body {
