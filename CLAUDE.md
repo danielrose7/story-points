@@ -16,6 +16,26 @@ overriding these tokens, and any hardcoded color silently breaks theming.
   including JS-built elements (read via `getComputedStyle` if needed; see
   confetti in `src/components/fx-layer.ts`).
 
+## Identifiers are capabilities — mask them server-side
+
+Two strings double as credentials, and several kinds of state are hidden by
+design. None of them may ever appear in a payload sent to *other* clients or
+to a public endpoint:
+
+- **`userId`** reclaims a seat (votes, name, host role) in every room via
+  `ws?u=`. Broadcasts use deterministic per-room **aliases** instead — see
+  `aliasFor()`/`idForAlias()` in `worker/room.ts`. Clients treat ids as
+  opaque; messages that reference another player (e.g. `transferHost`)
+  carry the alias and are mapped back server-side.
+- **Room slugs** are the room capability. The stats DO stores them
+  internally but `GET /api/stats` returns aggregate integers only.
+- **Votes** stay server-side until reveal — other players get a `hasVoted`
+  flag, never the value (and never the voter, in anonymous rooms).
+
+When adding a field to `RoomStateView`/`ServerMessage` or any public
+endpoint, ask: *is this someone else's credential, or state that's hidden
+on purpose?* If yes, alias it, aggregate it, or leave it out.
+
 ## Other conventions
 
 - Element tags are `points-*`; no `Pp` class-name prefixes.
