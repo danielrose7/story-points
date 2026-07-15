@@ -27,12 +27,19 @@ reclaims your seat.
 
 ## Principles
 
-- **No accounts.** A room URL is the invitation and the capability.
+- **No accounts — and that includes OAuth and API keys.** A room URL is the
+  invitation and the capability; an optional 6-character room code is the
+  only lock. Auth machinery is accounts by the back door: key issuance,
+  rotation, revocation, a dashboard, a database of who's who — and keys
+  parked in scripts and CI logs leak. Scoping the credential to one room and
+  sharing it the way you share the room keeps all of that out, and it's what
+  makes "point your own agent at the API" a one-click idea instead of a
+  setup ceremony.
 - **Zero runtime dependencies beyond Lit.** ~20 KB of gzipped JavaScript.
 - **No tracker integrations in the app.** A small HTTP API is the bridge;
   anything that can run `curl` can import a backlog and export results.
 - **Free to run.** Cloudflare Workers + one Durable Object per room, within
-  the free plan.
+  the free plan — and [self-hostable](/docs/self-host) on yours.
 
 
 ---
@@ -317,6 +324,14 @@ capability — same trust model as the app itself — so anything that can run
 `curl` can bridge to Jira, Linear, GitHub, or your own tooling.
 
 Base URL: `https://story-points.danielrose7.workers.dev`
+
+**Authentication: there is none, by design.** No OAuth, no API keys, no
+signup — and none are coming. The room slug (plus the optional room code
+below) is the entire credential, scoped to exactly one room and shared the
+same way the room itself is. That's a philosophy, not an omission: key
+machinery is accounts by the back door, tokens parked in scripts and CI
+logs leak, and the zero-ceremony surface is what lets you point your own
+agent at a room with nothing but the URL it was invited with.
 
 **Protected rooms:** a host can require a 6-character room code (off by
 default). When enabled, `queue` and `export` need it — `?code=ABC123` or an

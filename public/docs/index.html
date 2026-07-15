@@ -313,12 +313,19 @@ reclaims your seat.</p>
 </ul>
 <h2 id="principles">Principles</h2>
 <ul>
-<li><strong>No accounts.</strong> A room URL is the invitation and the capability.</li>
+<li><strong>No accounts — and that includes OAuth and API keys.</strong> A room URL is the
+invitation and the capability; an optional 6-character room code is the
+only lock. Auth machinery is accounts by the back door: key issuance,
+rotation, revocation, a dashboard, a database of who&#39;s who — and keys
+parked in scripts and CI logs leak. Scoping the credential to one room and
+sharing it the way you share the room keeps all of that out, and it&#39;s what
+makes &quot;point your own agent at the API&quot; a one-click idea instead of a
+setup ceremony.</li>
 <li><strong>Zero runtime dependencies beyond Lit.</strong> ~20 KB of gzipped JavaScript.</li>
 <li><strong>No tracker integrations in the app.</strong> A small HTTP API is the bridge;
 anything that can run <code>curl</code> can import a backlog and export results.</li>
 <li><strong>Free to run.</strong> Cloudflare Workers + one Durable Object per room, within
-the free plan.</li>
+the free plan — and <a href="/docs/self-host">self-hostable</a> on yours.</li>
 </ul>
 
 	</main>

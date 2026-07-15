@@ -7,6 +7,14 @@ capability — same trust model as the app itself — so anything that can run
 
 Base URL: `https://story-points.danielrose7.workers.dev`
 
+**Authentication: there is none, by design.** No OAuth, no API keys, no
+signup — and none are coming. The room slug (plus the optional room code
+below) is the entire credential, scoped to exactly one room and shared the
+same way the room itself is. That's a philosophy, not an omission: key
+machinery is accounts by the back door, tokens parked in scripts and CI
+logs leak, and the zero-ceremony surface is what lets you point your own
+agent at a room with nothing but the URL it was invited with.
+
 **Protected rooms:** a host can require a 6-character room code (off by
 default). When enabled, `queue` and `export` need it — `?code=ABC123` or an
 `X-Room-Code: ABC123` header — and return `401` without it. Invite links
