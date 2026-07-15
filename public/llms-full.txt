@@ -156,6 +156,15 @@ custom. The **+ Groups** disclosure in the deck editor adds a Group column;
 cards sharing a group render as labeled clusters in the voting hand (e.g.
 severity tiers for triage).
 
+## Room codes (optional)
+
+Rooms are open by default — the URL is the invitation. A host who wants a
+quieter table can flip **🔒 Require a room code** in settings: the server
+generates a 6-character airline-style code (no confusable letters), invite
+links carry it (`?code=ABC123`) so they still just work, and the API requires
+it too. People already in the room stay in when it's enabled; the host can
+regenerate the code at any time. Wrong guesses are rate-limited.
+
 ## Reactions and celebrations
 
 An ephemeral reaction tray (🐇 for "we're in a rabbit hole", plus two
@@ -206,6 +215,12 @@ capability — same trust model as the app itself — so anything that can run
 `curl` can bridge to Jira, Linear, GitHub, or your own tooling.
 
 Base URL: `https://story-points.danielrose7.workers.dev`
+
+**Protected rooms:** a host can require a 6-character room code (off by
+default). When enabled, `queue` and `export` need it — `?code=ABC123` or an
+`X-Room-Code: ABC123` header — and return `401` without it. Invite links
+carry the code (`/room/<room>?code=ABC123`). Code checks are rate-limited:
+ten wrong guesses locks checking for ~15 minutes.
 
 ## Import tickets into the queue
 
@@ -349,6 +364,9 @@ Things an agent (or you) can check when a workflow misbehaves:
   the view's ⋯ menu → **Export issues as CSV** and import the file straight
   into the room's queue (📎 Import CSV — ticket links come along for free).
 
+- **`401` on `queue`/`export`** — the room requires a code. Ask the user for
+  it (it's in their invite link as `?code=`), then send it as an
+  `X-Room-Code` header. Don't guess: checks lock out after ten misses.
 - **`403` on `POST /queue`** — the room's host switched the ticket queue off
   in **Room settings → Features**. Ask them to re-enable it.
 - **`404` on `/export`** — the room doesn't exist yet; rooms are created the

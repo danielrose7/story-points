@@ -35,6 +35,8 @@ interface PersistedRoom {
 	queue?: string[];
 	/** epoch ms when the running countdown auto-reveals; null/undefined = none */
 	countdownEndsAt?: number | null;
+	/** 6-char access code; null/undefined = open room (the default) */
+	accessCode?: string | null;
 	/** current host */
 	ownerId: string | null;
 	/** who reclaims the host role on return (first joiner, or explicit transferee) */
@@ -60,6 +62,30 @@ const FRESH_CLOCK_AFTER_MS = 5 * 60 * 1000;
 const MAX_QUEUE_ITEMS = 100;
 const MAX_QUEUE_ITEM_LEN = 500;
 
+// Access-code brute-force posture: short codes are only safe with hard rate
+// limits (see the Dell service-tag breach). 10 bad guesses locks the room's
+// code checks for 15 minutes. The counter lives in DO memory — hibernation
+// resets it, which only slows an attacker further.
+const CODE_MAX_FAILS = 10;
+const CODE_LOCKOUT_MS = 15 * 60 * 1000;
+// Airline-PNR alphabet: no 0/O/1/I lookalikes. 31^6 ≈ 887M combinations.
+const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+function generateCode(): string {
+	const bytes = crypto.getRandomValues(new Uint8Array(6));
+	return [...bytes].map((b) => CODE_ALPHABET[b % CODE_ALPHABET.length]).join('');
+}
+
+/** Constant-time-ish comparison — no early exit on first mismatch. */
+function codeMatches(expected: string, given: string): boolean {
+	const a = expected.toUpperCase();
+	const b = given.trim().toUpperCase();
+	if (a.length !== b.length) return false;
+	let diff = 0;
+	for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+	return diff === 0;
+}
+
 /** Trim, drop empties, cap counts — shared by the WS message and POST /queue. */
 function sanitizeQueue(items: unknown): string[] {
 	return (Array.isArray(items) ? items : [])
@@ -72,6 +98,31 @@ export class Room extends DurableObject<Env> {
 	private room: PersistedRoom | null = null;
 	/** true until the room's first save — creation presets apply only then */
 	private freshRoom = false;
+	/** shared bad-guess counter for unlock messages and API code checks */
+	private codeFails = 0;
+	private codeLockedUntil = 0;
+
+	/** Rate-limited code check; false = wrong code OR currently locked out. */
+	private checkCode(room: PersistedRoom, given: string): boolean {
+		if (!room.accessCode) return true;
+		if (Date.now() < this.codeLockedUntil) return false;
+		if (codeMatches(room.accessCode, given)) {
+			this.codeFails = 0;
+			return true;
+		}
+		if (++this.codeFails >= CODE_MAX_FAILS) {
+			this.codeFails = 0;
+			this.codeLockedUntil = Date.now() + CODE_LOCKOUT_MS;
+		}
+		return false;
+	}
+
+	/** Is this socket allowed to see the room? Open rooms: always. */
+	private socketUnlocked(ws: WebSocket, room: PersistedRoom): boolean {
+		if (!room.accessCode) return true;
+		const att = ws.deserializeAttachment() as { unlocked?: boolean } | null;
+		return att?.unlocked === true;
+	}
 
 	private async load(): Promise<PersistedRoom> {
 		if (!this.room) {
@@ -134,10 +185,23 @@ export class Room extends DurableObject<Env> {
 		// Plain-HTTP integration surface (the room slug is the capability,
 		// same as the app itself) — see "API" in the README. Anything that
 		// can run curl can import a backlog and export the results.
-		if (url.pathname.endsWith('/export') && request.method === 'GET') {
-			return this.handleExport(slug, url.searchParams.get('format'));
-		}
-		if (url.pathname.endsWith('/queue') && request.method === 'POST') {
+		if (
+			(url.pathname.endsWith('/export') && request.method === 'GET') ||
+			(url.pathname.endsWith('/queue') && request.method === 'POST')
+		) {
+			// Protected rooms require the code on the API too — ?code= or
+			// X-Room-Code header. Same rate-limited counter as the app gate.
+			const stored = await this.ctx.storage.get<PersistedRoom>(ROOM_KEY);
+			if (stored?.accessCode) {
+				const given = url.searchParams.get('code') ?? request.headers.get('X-Room-Code') ?? '';
+				if (!this.checkCode(stored, given)) {
+					return Response.json(
+						{ error: 'this room requires a code — pass ?code= or an X-Room-Code header (ask the room host)' },
+						{ status: 401 },
+					);
+				}
+			}
+			if (url.pathname.endsWith('/export')) return this.handleExport(slug, url.searchParams.get('format'));
 			return this.handleQueueImport(request, url.searchParams.get('mode'));
 		}
 
@@ -146,6 +210,10 @@ export class Room extends DurableObject<Env> {
 			// Reads storage directly (not load()) to avoid materializing the room.
 			const stored = await this.ctx.storage.get<PersistedRoom>(ROOM_KEY);
 			if (!stored) return Response.json({ exists: false });
+			// Locked rooms don't leak their name to unauthenticated peeks.
+			if (stored.accessCode) {
+				return Response.json({ exists: true, locked: true, theme: resolveTheme(stored.settings.theme) });
+			}
 			// Name + theme feed the social-preview meta tags in worker/index.ts.
 			return Response.json({
 				exists: true,
@@ -168,6 +236,12 @@ export class Room extends DurableObject<Env> {
 		server.serializeAttachment({ userId });
 
 		const room = await this.load();
+		// Locked rooms challenge each new socket instead of streaming state;
+		// the client answers with an `unlock` message (auto, if it has the
+		// code stored from a previous visit).
+		if (room.accessCode) {
+			this.send(server, { type: 'locked' });
+		}
 		// Fresh clock: this is the first connection into a room everyone left
 		// mid-round a while ago — restart the timer instead of resuming a
 		// days-old count. Checked before lastSeen updates below.
@@ -266,7 +340,40 @@ export class Room extends DurableObject<Env> {
 		}
 		const room = await this.load();
 
+		// Locked room: nothing gets through until this socket presents the code.
+		if (!this.socketUnlocked(ws, room)) {
+			if (msg.type !== 'unlock') return this.send(ws, { type: 'locked' });
+			if (this.checkCode(room, msg.code ?? '')) {
+				ws.serializeAttachment({ ...(ws.deserializeAttachment() as object), unlocked: true });
+				this.send(ws, { type: 'state', state: this.viewFor(room, userId) });
+			} else {
+				this.sendError(
+					ws,
+					Date.now() < this.codeLockedUntil
+						? 'Too many wrong codes — try again in about 15 minutes'
+						: 'That code isn’t right',
+				);
+			}
+			return;
+		}
+
 		switch (msg.type) {
+			case 'unlock': {
+				// Already unlocked (or an open room) — just refresh their state.
+				this.send(ws, { type: 'state', state: this.viewFor(room, userId) });
+				return;
+			}
+			case 'setCode': {
+				if (room.ownerId !== userId) return this.sendError(ws, 'Only the host can change the room code');
+				room.accessCode = msg.enabled ? generateCode() : null;
+				// Turning protection on never kicks the people already here.
+				if (msg.enabled) {
+					for (const socket of this.ctx.getWebSockets()) {
+						socket.serializeAttachment({ ...(socket.deserializeAttachment() as object), unlocked: true });
+					}
+				}
+				break;
+			}
 			case 'join': {
 				const name = String(msg.name ?? '').trim().slice(0, 40);
 				const role: Role = msg.role === 'observer' ? 'observer' : 'voter';
@@ -556,6 +663,9 @@ export class Room extends DurableObject<Env> {
 			participants,
 			you: userId,
 			youJoined: room.participants[userId] !== undefined && connected.has(userId),
+			// The host sees the code (to share it); nobody else does.
+			accessCode: userId === room.ownerId && room.accessCode ? room.accessCode : undefined,
+			requiresCode: room.accessCode ? true : undefined,
 			history: room.settings.keepHistory === false ? [] : (room.history ?? []),
 			queue: room.settings.ticketQueue === false ? [] : (room.queue ?? []),
 			theme: resolveTheme(room.settings.theme),
@@ -568,6 +678,8 @@ export class Room extends DurableObject<Env> {
 		for (const ws of this.ctx.getWebSockets()) {
 			const att = ws.deserializeAttachment() as { userId?: string } | null;
 			if (!att?.userId) continue;
+			// Sockets that haven't presented the code see nothing.
+			if (!this.socketUnlocked(ws, room)) continue;
 			this.send(ws, { type: 'state', state: this.viewFor(room, att.userId) });
 		}
 	}

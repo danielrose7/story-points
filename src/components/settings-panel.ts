@@ -10,6 +10,7 @@ class SettingsPanel extends LitElement {
 	static properties = {
 		settings: { attribute: false },
 		historyCount: { attribute: false },
+		accessCode: { attribute: false },
 		draft: { state: true },
 		tab: { state: true },
 		showGroups: { state: true },
@@ -18,6 +19,8 @@ class SettingsPanel extends LitElement {
 	settings: RoomSettings | null = null;
 	/** how many recorded rounds exist — drives the "Clear history" button */
 	historyCount = 0;
+	/** current room code ('' = open room); changes apply immediately */
+	accessCode = '';
 	draft: RoomSettings | null = null;
 	tab: Tab = 'general';
 	/** Group column is progressive disclosure: hidden until asked for,
@@ -173,6 +176,25 @@ class SettingsPanel extends LitElement {
 			font-size: 0.85rem;
 			padding: 7px 12px;
 		}
+		.code-row {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin: 8px 0 4px 26px;
+		}
+		.access-code {
+			font-family: ui-monospace, monospace;
+			font-size: 1.15rem;
+			font-weight: 700;
+			letter-spacing: 0.25em;
+			background: var(--sp-highlight-strong);
+			border-radius: 8px;
+			padding: 6px 12px;
+		}
+		.btn.small-btn {
+			font-size: 0.85rem;
+			padding: 7px 12px;
+		}
 		.check.sub {
 			margin: 6px 0 0 26px;
 			color: var(--sp-muted);
@@ -325,6 +347,37 @@ class SettingsPanel extends LitElement {
 	}
 
 	private renderFeatures(d: RoomSettings) {
+		return html`
+			<label class="check">
+				<input
+					type="checkbox"
+					.checked=${!!this.accessCode}
+					@change=${(e: Event) =>
+						this.dispatchEvent(
+							new CustomEvent('set-code', { detail: { enabled: (e.target as HTMLInputElement).checked } }),
+						)}
+				/>
+				🔒 Require a room code (applies immediately; invite links carry it)
+			</label>
+			${this.accessCode
+				? html`
+						<div class="code-row">
+							<code class="access-code">${this.accessCode}</code>
+							<button
+								class="btn small-btn"
+								title="Generate a new code (the old one stops working; people already here stay)"
+								@click=${() => this.dispatchEvent(new CustomEvent('set-code', { detail: { enabled: true } }))}
+							>
+								↻ New code
+							</button>
+						</div>
+					`
+				: ''}
+			${this.renderFeatureToggles(d)}
+		`;
+	}
+
+	private renderFeatureToggles(d: RoomSettings) {
 		return html`
 			<label class="check">
 				<input

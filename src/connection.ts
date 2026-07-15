@@ -17,6 +17,26 @@ export class RoomConnection {
 	onStatus: (status: ConnectionStatus) => void = () => {};
 	onError: (message: string) => void = () => {};
 	onReaction: (emoji: string, from: string, name: string) => void = () => {};
+	/** the room wants a code and we don't have a working one — show the gate */
+	onLocked: () => void = () => {};
+
+	private code: string | null = null;
+	private triedCode = false;
+
+	/** Present a code (now and on every reconnect challenge). */
+	unlock(code: string): void {
+		this.code = code;
+		this.triedCode = true;
+		if (this.ws?.readyState === WebSocket.OPEN) {
+			this.ws.send(JSON.stringify({ type: 'unlock', code }));
+			// The join swallowed while locked needs a replay once we're in.
+			if (this.pendingJoin) this.ws.send(JSON.stringify(this.pendingJoin));
+		}
+	}
+
+	setCode(code: string | null): void {
+		this.code = code;
+	}
 
 	constructor(
 		private roomId: string,
@@ -32,6 +52,7 @@ export class RoomConnection {
 
 		ws.addEventListener('open', () => {
 			this.retryMs = 500;
+			this.triedCode = false; // fresh socket, fresh challenge
 			this.onStatus('open');
 			if (this.pendingJoin) ws.send(JSON.stringify(this.pendingJoin));
 		});
@@ -40,6 +61,12 @@ export class RoomConnection {
 			if (msg.type === 'state') this.onState(msg.state);
 			else if (msg.type === 'reaction') this.onReaction(msg.emoji, msg.from, msg.name);
 			else if (msg.type === 'error') this.onError(msg.message);
+			else if (msg.type === 'locked') {
+				// Auto-answer once with a stored code; otherwise (or if that
+				// code stopped working) hand the problem to the UI.
+				if (this.code && !this.triedCode) this.unlock(this.code);
+				else this.onLocked();
+			}
 		});
 		ws.addEventListener('close', () => {
 			if (this.closedByUs) return;

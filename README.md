@@ -189,6 +189,11 @@ for now; revisit when real usage hits friction):
 
 Future ideas (not committed):
 
+- **Invite QR code** — for screenshares and conference-room TVs: a QR of the
+  invite link in the invite panel (client-side generation, no service).
+  Must auto-include the room code (`?code=…`) when protection is on, so
+  scanning admits you in one step.
+
 - **A real domain** — `workers.dev` reads as a hobby project to humans and
   ranking heuristics alike. A proper domain (storypoints.dev-ish) is the
   cheapest single credibility signal for the agent-era discoverability work

@@ -115,7 +115,7 @@ blockquote {
 		<a href="/docs/agent-setup">Agent setup</a>
 	</nav>
 	<div class="toolbar">
-		<span>🕐 Last updated 2026-07-14</span>
+		<span>🕐 Last updated 2026-07-15</span>
 		<span class="sep">|</span>
 		<button id="copy-md">⧉ Copy as Markdown</button>
 		<span class="sep">|</span>
@@ -172,6 +172,13 @@ when the first person returns (toggleable).</p>
 custom. The <strong>+ Groups</strong> disclosure in the deck editor adds a Group column;
 cards sharing a group render as labeled clusters in the voting hand (e.g.
 severity tiers for triage).</p>
+<h2 id="room-codes-optional">Room codes (optional)</h2>
+<p>Rooms are open by default — the URL is the invitation. A host who wants a
+quieter table can flip <strong>🔒 Require a room code</strong> in settings: the server
+generates a 6-character airline-style code (no confusable letters), invite
+links carry it (<code>?code=ABC123</code>) so they still just work, and the API requires
+it too. People already in the room stay in when it&#39;s enabled; the host can
+regenerate the code at any time. Wrong guesses are rate-limited.</p>
 <h2 id="reactions-and-celebrations">Reactions and celebrations</h2>
 <p>An ephemeral reaction tray (🐇 for &quot;we&#39;re in a rabbit hole&quot;, plus two
 theme-flavored slots), high-five collisions when two people send the same

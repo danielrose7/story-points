@@ -129,6 +129,11 @@ Instead, every room exposes a tiny plain-HTTP surface. The room slug is the
 capability — same trust model as the app itself — so anything that can run
 <code>curl</code> can bridge to Jira, Linear, GitHub, or your own tooling.</p>
 <p>Base URL: <code>https://story-points.danielrose7.workers.dev</code></p>
+<p><strong>Protected rooms:</strong> a host can require a 6-character room code (off by
+default). When enabled, <code>queue</code> and <code>export</code> need it — <code>?code=ABC123</code> or an
+<code>X-Room-Code: ABC123</code> header — and return <code>401</code> without it. Invite links
+carry the code (<code>/room/&lt;room&gt;?code=ABC123</code>). Code checks are rate-limited:
+ten wrong guesses locks checking for ~15 minutes.</p>
 <h2 id="import-tickets-into-the-queue">Import tickets into the queue</h2>
 <p><code>POST /api/room/&lt;room&gt;/queue</code></p>
 <p>Plain text (one story per line) or JSON. Appends by default;

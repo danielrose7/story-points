@@ -176,6 +176,10 @@ point an agent at a view URL; either give it an equivalent filter, or use
 the view&#39;s ⋯ menu → <strong>Export issues as CSV</strong> and import the file straight
 into the room&#39;s queue (📎 Import CSV — ticket links come along for free).</p>
 </li>
+<li><p><strong><code>401</code> on <code>queue</code>/<code>export</code></strong> — the room requires a code. Ask the user for
+it (it&#39;s in their invite link as <code>?code=</code>), then send it as an
+<code>X-Room-Code</code> header. Don&#39;t guess: checks lock out after ten misses.</p>
+</li>
 <li><p><strong><code>403</code> on <code>POST /queue</code></strong> — the room&#39;s host switched the ticket queue off
 in <strong>Room settings → Features</strong>. Ask them to re-enable it.</p>
 </li>

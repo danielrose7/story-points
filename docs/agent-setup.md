@@ -65,6 +65,9 @@ Things an agent (or you) can check when a workflow misbehaves:
   the view's ⋯ menu → **Export issues as CSV** and import the file straight
   into the room's queue (📎 Import CSV — ticket links come along for free).
 
+- **`401` on `queue`/`export`** — the room requires a code. Ask the user for
+  it (it's in their invite link as `?code=`), then send it as an
+  `X-Room-Code` header. Don't guess: checks lock out after ten misses.
 - **`403` on `POST /queue`** — the room's host switched the ticket queue off
   in **Room settings → Features**. Ask them to re-enable it.
 - **`404` on `/export`** — the room doesn't exist yet; rooms are created the

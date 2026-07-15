@@ -7,6 +7,12 @@ capability — same trust model as the app itself — so anything that can run
 
 Base URL: `https://story-points.danielrose7.workers.dev`
 
+**Protected rooms:** a host can require a 6-character room code (off by
+default). When enabled, `queue` and `export` need it — `?code=ABC123` or an
+`X-Room-Code: ABC123` header — and return `401` without it. Invite links
+carry the code (`/room/<room>?code=ABC123`). Code checks are rate-limited:
+ten wrong guesses locks checking for ~15 minutes.
+
 ## Import tickets into the queue
 
 `POST /api/room/<room>/queue`

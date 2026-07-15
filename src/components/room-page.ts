@@ -3,7 +3,16 @@ import { repeat } from 'lit/directives/repeat.js';
 import { baseStyles } from './base-styles';
 import type { DeckCard, Role, RoomStateView } from '../../shared/types';
 import { RoomConnection, type ConnectionStatus } from '../connection';
-import { clearRoomSession, getSavedName, getSavedRole, getUserId, saveName, saveRole } from '../identity';
+import {
+	clearRoomSession,
+	getRoomCode,
+	getSavedName,
+	getSavedRole,
+	getUserId,
+	saveName,
+	saveRole,
+	saveRoomCode,
+} from '../identity';
 import { navigate } from '../main';
 import { REACTION_EMOJI, THEME_REACTIONS } from '../../shared/types';
 import { chime, getVolume, isMuted, setMuted, setVolume } from '../sound';
@@ -38,6 +47,8 @@ class RoomPage extends LitElement {
 		copiedPrompt: { state: true },
 		tracker: { state: true },
 		trackerScope: { state: true },
+		locked: { state: true },
+		codeDraft: { state: true },
 		storyDraft: { state: true },
 		queueDraft: { state: true },
 		muted: { state: true },
@@ -58,6 +69,9 @@ class RoomPage extends LitElement {
 	copiedPrompt: 'import' | 'export' | null = null;
 	tracker = getTracker();
 	trackerScope = getScope(getTracker());
+	/** room challenged us and the stored code (if any) didn't work */
+	locked = false;
+	codeDraft = '';
 	storyDraft = '';
 	queueDraft = '';
 	muted = isMuted();
@@ -88,8 +102,21 @@ class RoomPage extends LitElement {
 		super.connectedCallback();
 		const conn = new RoomConnection(this.roomId, getUserId());
 		this.conn = conn;
+		// A ?code= in an invite link admits this device and is remembered;
+		// strip it from the address bar once captured.
+		const urlCode = new URLSearchParams(location.search).get('code');
+		if (urlCode) {
+			saveRoomCode(this.roomId, urlCode);
+			history.replaceState(null, '', location.pathname);
+		}
+		conn.setCode(getRoomCode(this.roomId));
+		conn.onLocked = () => (this.locked = true);
 		conn.onState = (state) => {
 			const justRevealed = !(this.state?.revealed ?? false) && state.revealed;
+			this.locked = false;
+			// The host learns the code from the server; remember it like
+			// everyone else so their invite links carry it.
+			if (state.accessCode) saveRoomCode(this.roomId, state.accessCode);
 			this.state = state;
 			this.error = '';
 			if (justRevealed) this.celebrateReveal(state);
@@ -679,6 +706,35 @@ class RoomPage extends LitElement {
 			white-space: nowrap;
 		}
 
+		/* Access-code gate & invite chip */
+		.gate-hint {
+			color: var(--sp-muted);
+			margin: 4px 0 14px;
+		}
+		.code-input {
+			font-family: ui-monospace, monospace;
+			font-size: 1.5rem;
+			letter-spacing: 0.35em;
+			text-align: center;
+			text-transform: uppercase;
+			width: 100%;
+			padding: 12px;
+			border: 1px solid var(--sp-border);
+			border-radius: 10px;
+			margin-bottom: 12px;
+		}
+		.code-chip {
+			margin-left: 10px;
+			text-transform: none;
+			letter-spacing: 0.06em;
+			font-family: ui-monospace, monospace;
+			font-weight: 700;
+			color: var(--sp-accent-text);
+			background: var(--sp-highlight-strong);
+			border-radius: 6px;
+			padding: 2px 8px;
+		}
+
 		/* Ticket queue */
 		.queue-row {
 			grid-template-columns: 24px 1fr 30px 30px 30px;
@@ -940,7 +996,7 @@ class RoomPage extends LitElement {
 				</span>
 			</header>
 			${this.error ? html`<div class="error">${this.error}</div>` : nothing}
-			${!s || !s.youJoined ? this.renderGate() : this.renderTable(s)}
+			${this.locked ? this.renderCodeGate() : !s || !s.youJoined ? this.renderGate() : this.renderTable(s)}
 			<points-fx></points-fx>
 		`;
 	}
@@ -956,6 +1012,48 @@ class RoomPage extends LitElement {
 			default:
 				return '';
 		}
+	}
+
+	private renderCodeGate() {
+		return html`
+			<div class="panel gate">
+				<h2>🔒 This room has a code</h2>
+				<p class="gate-hint">Ask the host, or use their invite link — it carries the code.</p>
+				<input
+					class="code-input"
+					placeholder="ABC123"
+					maxlength="6"
+					autocapitalize="characters"
+					autocomplete="off"
+					.value=${this.codeDraft}
+					@input=${(e: InputEvent) => (this.codeDraft = (e.target as HTMLInputElement).value.toUpperCase())}
+					@keydown=${(e: KeyboardEvent) => e.key === 'Enter' && this.submitCode()}
+				/>
+				<button class="join-btn" ?disabled=${this.codeDraft.trim().length < 6} @click=${this.submitCode}>
+					Enter room
+				</button>
+			</div>
+		`;
+	}
+
+	private submitCode = (): void => {
+		const code = this.codeDraft.trim().toUpperCase();
+		if (code.length < 6) return;
+		saveRoomCode(this.roomId, code);
+		this.conn?.unlock(code);
+	};
+
+	/** ?code=/… suffix for API links when the room is protected. */
+	private apiCodeQuery(s: RoomStateView, sep = '?'): string {
+		const code = s.accessCode ?? (s.requiresCode ? getRoomCode(this.roomId) : null);
+		return code ? `${sep}code=${code}` : '';
+	}
+
+	/** Invite URL; carries the code for protected rooms so the link just works. */
+	private inviteUrl(s: RoomStateView | null): string {
+		const base = `${location.origin}/room/${this.roomId}`;
+		const code = s?.accessCode ?? (s?.requiresCode ? getRoomCode(this.roomId) : null);
+		return code ? `${base}?code=${code}` : base;
 	}
 
 	private renderGate() {
@@ -1146,9 +1244,16 @@ class RoomPage extends LitElement {
 			</div>
 
 			<div class="panel">
-				<label class="field">Invite your team</label>
+				<label class="field">
+					Invite your team
+					${s.requiresCode
+						? html`<span class="code-chip" title="This room requires a code; the invite link carries it">
+								🔒 code ${s.accessCode ?? getRoomCode(this.roomId) ?? '••••••'}
+							</span>`
+						: nothing}
+				</label>
 				<div class="invite">
-					<code>${location.href}</code>
+					<code>${this.inviteUrl(s)}</code>
 					<button class="btn ${this.copied ? 'copied' : ''}" @click=${this.copyLink}>
 						${this.copied ? 'Copied ✓' : 'Copy link'}
 					</button>
@@ -1172,6 +1277,8 @@ class RoomPage extends LitElement {
 				? html`<points-settings
 						.settings=${s.settings}
 						.historyCount=${s.history?.length ?? 0}
+						.accessCode=${s.accessCode ?? ''}
+						@set-code=${(e: CustomEvent) => this.conn?.send({ type: 'setCode', enabled: e.detail.enabled })}
 						@save=${(e: CustomEvent) => {
 							this.conn?.send({ type: 'settings', settings: e.detail });
 							this.showSettings = false;
@@ -1322,10 +1429,12 @@ class RoomPage extends LitElement {
 	private renderAgentPrompt(kind: 'import' | 'export') {
 		const t = TRACKERS.find((x) => x.id === this.tracker) ?? TRACKERS[TRACKERS.length - 1];
 		const roomUrl = `${location.origin}/room/${this.roomId}`;
+		const code = this.state?.accessCode ?? (this.state?.requiresCode ? getRoomCode(this.roomId) : null);
+		const codeNote = code ? `\nThe room requires a code: send the header "X-Room-Code: ${code}" on API calls.` : '';
 		const prompt =
-			kind === 'import'
+			(kind === 'import'
 				? importPrompt(this.tracker, roomUrl, this.trackerScope)
-				: writebackPrompt(this.tracker, roomUrl);
+				: writebackPrompt(this.tracker, roomUrl)) + codeNote;
 		return html`
 			<div class="agent-block">
 				<div class="agent-head">
@@ -1525,8 +1634,14 @@ class RoomPage extends LitElement {
 						<button class="btn small" @click=${() => this.copyExport('csv')}>
 							${this.copiedExport === 'csv' ? 'Copied ✓' : 'Copy CSV'}
 						</button>
-						<a class="btn small" href="/api/room/${this.roomId}/export" download>Download JSON</a>
-						<a class="btn small" href="/api/room/${this.roomId}/export?format=csv" download>Download CSV</a>
+						<a class="btn small" href="/api/room/${this.roomId}/export${this.apiCodeQuery(s)}" download>Download JSON</a>
+						<a
+							class="btn small"
+							href="/api/room/${this.roomId}/export?format=csv${this.apiCodeQuery(s, '&')}"
+							download
+						>
+							Download CSV
+						</a>
 					</div>
 					${s.settings.agentPrompts !== false ? this.renderAgentPrompt('export') : nothing}
 					<div class="hist">
@@ -1747,7 +1862,7 @@ class RoomPage extends LitElement {
 	};
 
 	private copyLink = async () => {
-		await navigator.clipboard.writeText(location.href);
+		await navigator.clipboard.writeText(this.inviteUrl(this.state));
 		this.copied = true;
 		setTimeout(() => (this.copied = false), COPIED_RESET_MS);
 	};

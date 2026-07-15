@@ -70,6 +70,15 @@ custom. The **+ Groups** disclosure in the deck editor adds a Group column;
 cards sharing a group render as labeled clusters in the voting hand (e.g.
 severity tiers for triage).
 
+## Room codes (optional)
+
+Rooms are open by default — the URL is the invitation. A host who wants a
+quieter table can flip **🔒 Require a room code** in settings: the server
+generates a 6-character airline-style code (no confusable letters), invite
+links carry it (`?code=ABC123`) so they still just work, and the API requires
+it too. People already in the room stay in when it's enabled; the host can
+regenerate the code at any time. Wrong guesses are rate-limited.
+
 ## Reactions and celebrations
 
 An ephemeral reaction tray (🐇 for "we're in a rabbit hole", plus two

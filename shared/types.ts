@@ -111,11 +111,17 @@ export interface RoomStateView {
 	countdownEndsAt: number | null;
 	/** aggregate vote counts in deck order; populated once revealed */
 	voteCounts: Array<{ label: string; value: string; count: number }>;
+	/** the room's access code — sent to the host only */
+	accessCode?: string;
+	/** true when the room requires a code (recipients have already passed) */
+	requiresCode?: boolean;
 }
 
 /** Response of GET /api/room/<slug>/peek — 404 check + social-preview tags. */
 export interface RoomPeek {
 	exists: boolean;
+	/** room requires a code; name withheld */
+	locked?: boolean;
 	name?: string;
 	theme?: ThemeId;
 }
@@ -202,10 +208,16 @@ export type ClientMessage =
 	| { type: 'transferHost'; to: string }
 	/** host only: wipe the recorded round history */
 	| { type: 'clearHistory' }
+	/** present the room code for a locked room (per connection) */
+	| { type: 'unlock'; code: string }
+	/** host only: turn code protection on (generates a fresh code) or off */
+	| { type: 'setCode'; enabled: boolean }
 	| { type: 'leave' };
 
 export type ServerMessage =
 	| { type: 'state'; state: RoomStateView }
+	/** this room requires a code; send `unlock` before anything else */
+	| { type: 'locked' }
 	/** ephemeral — rendered and forgotten, never stored */
 	| { type: 'reaction'; emoji: string; from: string; name: string }
 	| { type: 'error'; message: string };

@@ -279,6 +279,9 @@ Fetch and read:
   GET ${SITE}/api/room/<slug>/export        (JSON)
   GET ${SITE}/api/room/<slug>/export?format=csv
 - Check whether a room exists: GET ${SITE}/api/room/<slug>/peek
+- Protected rooms return 401 from queue/export: ask the user for the room
+  code (it rides their invite link as ?code=) and send it as an
+  "X-Room-Code" header. Never brute-force it — checks lock after ten misses.
 
 ## 3. Typical workflows
 

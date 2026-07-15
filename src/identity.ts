@@ -32,3 +32,12 @@ export function saveRole(roomId: string, role: Role): void {
 export function clearRoomSession(roomId: string): void {
 	localStorage.removeItem(`pp:role:${roomId}`);
 }
+
+/** Access code for a protected room, remembered per device. */
+export function getRoomCode(roomId: string): string | null {
+	return localStorage.getItem(`sp:code:${roomId}`);
+}
+
+export function saveRoomCode(roomId: string, code: string): void {
+	localStorage.setItem(`sp:code:${roomId}`, code.trim().toUpperCase());
+}
