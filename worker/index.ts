@@ -1,4 +1,5 @@
 export { Room } from './room';
+export { Stats } from './stats';
 import { seasonalTheme, THEMES, type RoomPeek } from '../shared/types';
 
 const ROOM_API_RE = /^\/api\/room\/([a-z0-9-]{1,64})\/(ws|peek|export|queue)$/;
@@ -11,6 +12,15 @@ export default {
 		if (api) {
 			const id = env.ROOM.idFromName(api[1]);
 			return env.ROOM.get(id).fetch(request);
+		}
+
+		// Aggregate usage counters for the home-page stats strip. Public,
+		// integers only. Short browser cache keeps refresh-spam off the DO.
+		if (url.pathname === '/api/stats' && request.method === 'GET') {
+			const stats = await env.STATS.get(env.STATS.idFromName('global')).fetch(request);
+			return new Response(stats.body, {
+				headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=30' },
+			});
 		}
 
 		// "/" and "/room/*" run worker-first (wrangler.jsonc) so the SPA shell

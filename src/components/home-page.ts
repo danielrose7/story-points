@@ -5,7 +5,11 @@ import { generateRoomSlug } from '../slug';
 import { navigate } from '../main';
 import { applyTheme, todaysTheme } from '../theme';
 import { getRecentRooms, type RecentRoom } from '../recents';
-import { ROOM_PRESETS, type RoomPeek } from '../../shared/types';
+import { ROOM_PRESETS, type RoomPeek, type StatsSnapshot } from '../../shared/types';
+
+// The lifetime counter only shows once it's social proof rather than an
+// empty-restaurant sign; live activity is compelling at any size.
+const VOTES_DISPLAY_FLOOR = 2500;
 
 class HomePage extends LitElement {
 	static properties = {
@@ -13,6 +17,7 @@ class HomePage extends LitElement {
 		lostPath: { attribute: false },
 		lostRoomExists: { state: true },
 		recents: { state: true },
+		stats: { state: true },
 	};
 
 	joinCode = '';
@@ -20,6 +25,7 @@ class HomePage extends LitElement {
 	lostPath = '';
 	lostRoomExists: boolean | null = null;
 	recents: RecentRoom[] = getRecentRooms();
+	stats: StatsSnapshot | null = null;
 
 	connectedCallback(): void {
 		super.connectedCallback();
@@ -29,6 +35,10 @@ class HomePage extends LitElement {
 		// `storage`; returning via the back/forward cache fires `pageshow`.
 		window.addEventListener('storage', this.refreshRecents);
 		window.addEventListener('pageshow', this.refreshRecents);
+		fetch('/api/stats')
+			.then((r) => r.json() as Promise<StatsSnapshot>)
+			.then((s) => (this.stats = s))
+			.catch(() => {}); // the strip is a nicety — never an error state
 	}
 
 	disconnectedCallback(): void {
@@ -218,6 +228,27 @@ class HomePage extends LitElement {
 			background: var(--sp-btn-bg);
 			color: var(--sp-surface-text);
 		}
+		.stats {
+			margin-top: 20px;
+			font-size: 0.82rem;
+			color: var(--sp-muted);
+		}
+		.stats-sep {
+			margin: 0 8px;
+			opacity: 0.6;
+		}
+		.live-dot {
+			display: inline-block;
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			background: var(--sp-accent);
+			margin-right: 2px;
+			animation: live-pulse 2s ease-in-out infinite;
+		}
+		@keyframes live-pulse {
+			50% { opacity: 0.4; }
+		}
 		.divider {
 			margin: 24px 0 16px;
 			color: var(--sp-muted);
@@ -277,11 +308,34 @@ class HomePage extends LitElement {
 					/>
 					<button type="submit">Join</button>
 				</form>
+				${this.renderStats()}
 				</div>
 				${this.recents.length ? this.renderRecents() : ''}
 			</div>
 			<points-footer></points-footer>
 		`;
+	}
+
+	/** Social-proof strip: live activity whenever it's non-zero, the lifetime
+	 *  vote counter once it clears the display floor. Nothing → no element. */
+	private renderStats() {
+		const s = this.stats;
+		if (!s) return '';
+		const parts = [];
+		if (s.liveRooms > 0) {
+			parts.push(
+				html`<span class="live-dot"></span> ${s.liveRooms === 1
+					? '1 team'
+					: `${s.liveRooms} teams`} estimating right now`,
+			);
+		}
+		if (s.votes >= VOTES_DISPLAY_FLOOR) {
+			parts.push(html`${s.votes.toLocaleString()} votes cast`);
+		}
+		if (parts.length === 0) return '';
+		return html`<div class="stats">
+			${parts.map((p, i) => html`${i > 0 ? html`<span class="stats-sep">·</span>` : ''}${p}`)}
+		</div>`;
 	}
 
 	private renderRecents() {

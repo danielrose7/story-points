@@ -24,6 +24,8 @@ interface Participant {
 }
 
 interface PersistedRoom {
+	/** the room's URL slug, for presence reports (set on first socket) */
+	slug?: string;
 	settings: RoomSettings;
 	story: string;
 	revealed: boolean;
@@ -146,8 +148,47 @@ export class Room extends DurableObject<Env> {
 		return this.room;
 	}
 
+	/** Fire-and-forget global-counter report — a lost message costs a count,
+	 *  never a session. See worker/stats.ts. */
+	private bumpStats(body: { votes?: number; rounds?: number; rooms?: number }): void {
+		const stub = this.env.STATS.get(this.env.STATS.idFromName('global'));
+		this.ctx.waitUntil(
+			stub.fetch('https://stats/bump', { method: 'POST', body: JSON.stringify(body) }).catch(() => {}),
+		);
+	}
+
+	/** Report how many people are connected right now (0 = room went quiet). */
+	private reportPresence(room: PersistedRoom): void {
+		if (!room.slug) return; // pre-stats room that hasn't seen a socket since
+		const stub = this.env.STATS.get(this.env.STATS.idFromName('global'));
+		this.ctx.waitUntil(
+			stub
+				.fetch('https://stats/presence', {
+					method: 'POST',
+					body: JSON.stringify({ room: room.slug, players: this.connectedIds().size }),
+				})
+				.catch(() => {}),
+		);
+	}
+
+	/** The single place a round flips to revealed — also feeds the counters. */
+	private markRevealed(room: PersistedRoom): void {
+		if (room.revealed) return;
+		room.revealed = true;
+		room.revealedAt ??= Date.now();
+		room.countdownEndsAt = null;
+		this.bumpStats({ rounds: 1, votes: Object.keys(room.votes).length });
+	}
+
+	private statsRoomCounted = false;
+
 	private async save(): Promise<void> {
 		if (!this.room) return;
+		// The save that first materializes the room counts it as created.
+		if (this.freshRoom && !this.statsRoomCounted) {
+			this.statsRoomCounted = true;
+			this.bumpStats({ rooms: 1 });
+		}
 		await this.ctx.storage.put(ROOM_KEY, this.room);
 		// One alarm serves two jobs: a running countdown (seconds away) wins;
 		// otherwise every write pushes the idle self-destruct out.
@@ -160,8 +201,7 @@ export class Room extends DurableObject<Env> {
 		if (room.countdownEndsAt != null) {
 			if (Date.now() >= room.countdownEndsAt - 250) {
 				room.countdownEndsAt = null;
-				room.revealed = true;
-				room.revealedAt ??= Date.now();
+				this.markRevealed(room);
 			}
 			await this.save(); // re-arms: next countdown tick or idle TTL
 			this.broadcast(room);
@@ -246,6 +286,11 @@ export class Room extends DurableObject<Env> {
 		// mid-round a while ago — restart the timer instead of resuming a
 		// days-old count. Checked before lastSeen updates below.
 		let dirty = false;
+		// Remember the slug so presence reports survive hibernation gaps.
+		if (room.slug !== slug) {
+			room.slug = slug;
+			dirty = true;
+		}
 		if (room.settings.freshClock !== false && !room.revealed && this.connectedIds().size <= 1) {
 			const lastActive = Math.max(0, ...Object.values(room.participants).map((p) => p.lastSeen));
 			if (Date.now() - lastActive > FRESH_CLOCK_AFTER_MS) {
@@ -263,6 +308,7 @@ export class Room extends DurableObject<Env> {
 		// after we return, so let hibernation deliver the first state via a
 		// microtask-safe broadcast on the next event. Send eagerly instead:
 		this.broadcast(room);
+		this.reportPresence(room);
 
 		return new Response(null, { status: 101, webSocket: client });
 	}
@@ -413,9 +459,7 @@ export class Room extends DurableObject<Env> {
 			}
 			case 'reveal': {
 				if (!room.participants[userId]) return;
-				room.revealed = true;
-				room.revealedAt ??= Date.now();
-				room.countdownEndsAt = null;
+				this.markRevealed(room);
 				break;
 			}
 			case 'countdown': {
@@ -520,6 +564,8 @@ export class Room extends DurableObject<Env> {
 				await this.save();
 				this.broadcast(room);
 				for (const socket of this.ctx.getWebSockets(userId)) socket.close(1000, 'left');
+				// Server-initiated closes don't fire webSocketClose — report here.
+				this.reportPresence(room);
 				return;
 			}
 			default:
@@ -539,6 +585,7 @@ export class Room extends DurableObject<Env> {
 		this.ensureHost(room);
 		await this.save();
 		this.broadcast(room);
+		this.reportPresence(room);
 	}
 
 	async webSocketError(): Promise<void> {
@@ -614,9 +661,7 @@ export class Room extends DurableObject<Env> {
 			([id, p]) => p.role === 'voter' && connected.has(id),
 		);
 		if (voters.length > 0 && voters.every(([id]) => room.votes[id] !== undefined)) {
-			room.revealed = true;
-			room.revealedAt ??= Date.now();
-			room.countdownEndsAt = null;
+			this.markRevealed(room);
 		}
 	}
 

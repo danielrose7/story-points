@@ -200,7 +200,10 @@ detail in the project-status artifact):
    1440px; story/deck/queue left, players/results right.
 3. **Accessibility pass** — voting hand as a radio group, arrow-key deck
    navigation, ARIA on reveals/chips/disclosures.
-4. Small: empty-room onboarding copy, first-rabbit explainer toast,
+4. **Sticky reaction tray** — the emoji reactions have drifted below the
+   fold as the room grew features; pin the tray to the viewport (sticky or
+   floating) so the joy layer is always one tap away.
+5. Small: empty-room onboarding copy, first-rabbit explainer toast,
    "host changed settings" toast.
 
 Future ideas (not committed):

@@ -16,6 +16,10 @@
 			{
 				"name": "ROOM",
 				"class_name": "Room"
+			},
+			{
+				"name": "STATS",
+				"class_name": "Stats"
 			}
 		]
 	},
@@ -23,6 +27,10 @@
 		{
 			"tag": "v1",
 			"new_sqlite_classes": ["Room"]
+		},
+		{
+			"tag": "v2",
+			"new_sqlite_classes": ["Stats"]
 		}
 	],
 	"observability": {

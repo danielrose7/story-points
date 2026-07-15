@@ -126,6 +126,15 @@ export interface RoomPeek {
 	theme?: ThemeId;
 }
 
+/** GET /api/stats — aggregate usage counters (never room identities). */
+export interface StatsSnapshot {
+	votes: number;
+	rounds: number;
+	rooms: number;
+	liveRooms: number;
+	livePlayers: number;
+}
+
 export const REACTION_EMOJI = ['👍', '🔥', '🤔', '😂', '🎉', '👏', '☕', '🐇'] as const;
 
 /** Two theme-flavored tray slots appended to the core reactions. */
