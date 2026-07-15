@@ -729,7 +729,9 @@ class RoomPage extends LitElement {
 			letter-spacing: 0.06em;
 			font-family: ui-monospace, monospace;
 			font-weight: 700;
-			color: var(--sp-accent-text);
+			/* surface-text, not accent-text: this sits on the pale highlight,
+			   and accent-text is white in several themes */
+			color: var(--sp-surface-text);
 			background: var(--sp-highlight-strong);
 			border-radius: 6px;
 			padding: 2px 8px;
@@ -826,7 +828,7 @@ class RoomPage extends LitElement {
 			color: var(--sp-error-text);
 		}
 		.ticket-link {
-			color: var(--sp-accent-text);
+			color: var(--sp-surface-text);
 			background: var(--sp-highlight-strong);
 			border-radius: 6px;
 			padding: 1px 7px;
@@ -837,6 +839,7 @@ class RoomPage extends LitElement {
 		}
 		.ticket-link:hover {
 			background: var(--sp-accent);
+			color: var(--sp-accent-text);
 		}
 		.story-ticket {
 			margin-left: 10px;
