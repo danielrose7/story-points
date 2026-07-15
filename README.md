@@ -175,7 +175,9 @@ Everything from the July 2026 competitive survey shipped: ticket queue +
 export, deck grouping, voting countdown, agreement %, anonymous voting, away
 votes (async-ish estimation), settings tabs, feature toggles for every
 optional feature, room-creation presets, fresh round clock, docs + llms.txt,
-and the one-step agent setup (`/agent-setup/prompt.md`).
+the one-step agent setup (`/agent-setup/prompt.md`), in-room agent prompts
+with tracker CSV import (preview table, ticket links), and opt-in room codes
+(6-char, invite links carry them, API-enforced, rate-limited).
 
 Remaining (on hold, July 2026 — the one-step agent prompt is the integration
 for now; revisit when real usage hits friction):
@@ -186,6 +188,20 @@ for now; revisit when real usage hits friction):
    endpoint on the Worker (`import_tickets` / `export_session` / `peek_room`
    tools) for claude.ai and Claude Desktop. Lives outside this repo per the
    no-integrations rule either way.
+
+Next up if we do a **UX refresh** (from the July 2026 self-critique — full
+detail in the project-status artifact):
+
+1. **Reveal below the fold** *(the one high-severity finding)* — results,
+   chart, and celebrations render under the players table and are invisible
+   without scrolling at the round's climactic moment. Scroll into view on
+   reveal + an `aria-live` announcement.
+2. **Two-column desktop layout** — the room is a mobile-shaped stack even at
+   1440px; story/deck/queue left, players/results right.
+3. **Accessibility pass** — voting hand as a radio group, arrow-key deck
+   navigation, ARIA on reveals/chips/disclosures.
+4. Small: empty-room onboarding copy, first-rabbit explainer toast,
+   "host changed settings" toast.
 
 Future ideas (not committed):
 
