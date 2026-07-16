@@ -23,7 +23,7 @@ reclaims your seat.
 
 - [Getting started](/docs/getting-started) — create, invite, vote, reveal
 - [Features](/docs/features) — queue, history, countdown, anonymous voting, away votes, presets, and the toggles for all of them
-- [Themes](/docs/themes) — 25 themes plus seasonal auto-theming
+- [Themes](/docs/themes) — 29 themes plus seasonal auto-theming
 - [API](/docs/api) — plain-HTTP import/export for scripts, CLIs, and agents
 
 ## Principles

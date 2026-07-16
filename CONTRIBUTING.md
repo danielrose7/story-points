@@ -57,7 +57,9 @@ repo has:
 4. **Generate its social card**: `scripts/generate-og.sh` (needs
    `brew install librsvg`), commit the PNG in `public/og/`.
 5. Optional: a seasonal anchor in `THEME_ANCHORS` if it belongs to a date
-   (locale-scoped anchors welcome — see the Oktoberfest entry).
+   (locale-scoped anchors welcome — see the Oktoberfest entry). Wishlist:
+   a 🌼 Midsommar theme is waiting for the first Nordic locale file to
+   pair with.
 
 Run `npm run dev`, pick your theme in Room settings → Theme, screenshot it
 for the PR. Merged themes get your name in the README gallery.

@@ -1,7 +1,7 @@
 # Themes
 
-25 themes: five you pick because you like them, a seasonal calendar that
-rolls through the year on its own, and ten regional celebrations that only
+29 themes: five you pick because you like them, a seasonal calendar that
+rolls through the year on its own, and thirteen regional celebrations that only
 enter the rotation for rooms created in their locale. Every theme
 re-dresses the whole room — table felt, card backs, confetti — and invites
 two of its own emoji into the reaction tray.
@@ -31,6 +31,7 @@ calendar (roughly the window between its neighbors):
 
 | Theme | Anchor | The room becomes | Tray guests |
 | --- | --- | --- | --- |
+| 🎊 New Year | Jan 1 | Champagne midnight — gold on black. | 🎊 🕛 |
 | 🧧 Lunar New Year | Feb 1 | Lantern red and gold. | 🧧 🐉 |
 | 💘 Valentine's | Feb 14 | Rose and berry. | 💘 🌹 |
 | 🍀 St. Patrick's | Mar 17 | Shamrock green. | 🍀 🌈 |
@@ -58,9 +59,12 @@ can still pin any of them manually, locale regardless.
 | 🌽 Festa Junina | Jun 24 | pt | Bonfire night, bunting over the arraial. | 🌽 🎪 |
 | 🎆 4th of July | Jul 4 | en | Deep flag blue; red-and-white fireworks. | 🎆 🦅 |
 | 🎋 Tanabata | Jul 7 | ja | The Milky Way between Orihime and Hikoboshi. | 🎋 ⭐ |
+| 🐂 San Fermín | Jul 7 | es | Pamplona whites and red scarves. | 🐂 🧣 |
 | 🥖 Bastille Day | Jul 14 | fr | Bleu-blanc-rouge over a Paris night. | 🥖 🍾 |
+| 🏮 Obon | Aug 13 | ja | Paper lanterns on a warm indigo night. | 🏮 👘 |
 | 🥨 Oktoberfest | Sep 20 | de | Bavarian sky, lozenge tablecloth, beer gold. | 🥨 🍺 |
 | 💀 Día de Muertos | Nov 1 | es | Marigold path through the purple night. | 💀 🌼 |
+| 🥂 Beaujolais Nouveau | Nov 19 | fr | The cellar door opens — burgundy and warm gold. | 🍷 🧀 |
 | 🦃 Thanksgiving | Nov 26 | en | Warm oven browns. | 🦃 🥧 |
 
 Hover any tray emoji for its label — the seasonal guests have opinions
@@ -86,5 +90,5 @@ Seasonal auto-theming has a lineage: it started as a
 [CodePen experiment](https://codepen.io/bloom-dan/pen/RwGNePg) and grew up
 in [Name Draw](https://gobloom.io/posts/name-draw) — a Secret Santa
 name-drawing app with twelve themes that match the current month — before
-landing here as the seventeen-theme calendar. Some ideas just want to
+landing here as today's twenty-nine-theme calendar. Some ideas just want to
 re-decorate.

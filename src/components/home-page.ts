@@ -449,7 +449,7 @@ class HomePage extends LitElement {
 						<div class="more">${t('API docs')} →</div>
 					</a>
 					<a class="feat" href="/docs/themes">
-						<strong>🎨 ${t('25 themes')}</strong>
+						<strong>🎨 ${t('29 themes')}</strong>
 						${t('Card table to spaceship, plus a full seasonal calendar — new rooms dress for the date.')}
 						<div class="more">${t('Browse themes')} →</div>
 					</a>

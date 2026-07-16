@@ -15,7 +15,7 @@ plan. Built by Daniel Rose (https://gobloom.io) in Silverton, CO.
 - [Overview](https://story-points.danielrose7.workers.dev/docs/index.md): What Story Points is and where to find everything
 - [Getting started](https://story-points.danielrose7.workers.dev/docs/getting-started.md): Create a room, invite the team, vote, reveal
 - [Features](https://story-points.danielrose7.workers.dev/docs/features.md): Ticket queue, history, countdown, voting modes, stats, and the toggles for all of them
-- [Themes](https://story-points.danielrose7.workers.dev/docs/themes.md): The 25 themes — year-rounders, the seasonal calendar, and regional celebrations that follow your room's locale
+- [Themes](https://story-points.danielrose7.workers.dev/docs/themes.md): The 29 themes — year-rounders, the seasonal calendar, and regional celebrations that follow your room's locale
 - [Compare](https://story-points.danielrose7.workers.dev/docs/compare.md): How Story Points stacks up against PlanningPoker.com, Parabol, Jira plugins, and story-points.app — and when to pick something else
 - [API](https://story-points.danielrose7.workers.dev/docs/api.md): Plain-HTTP import/export — the integration surface for scripts, CLIs, and agents
 - [Agent setup](https://story-points.danielrose7.workers.dev/docs/agent-setup.md): Teach any AI coding agent to drive Story Points in one step

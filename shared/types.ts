@@ -35,6 +35,10 @@ export const THEMES = [
 	{ id: 'bastille', label: '🥖 Bastille Day', region: 'fr' },
 	{ id: 'oktoberfest', label: '🥨 Oktoberfest', region: 'de' },
 	{ id: 'muertos', label: '💀 Día de Muertos', region: 'es' },
+	{ id: 'nye', label: '🎊 New Year' },
+	{ id: 'sanfermin', label: '🐂 San Fermín', region: 'es' },
+	{ id: 'obon', label: '🏮 Obon', region: 'ja' },
+	{ id: 'beaujolais', label: '🥂 Beaujolais Nouveau', region: 'fr' },
 ] as const;
 
 export type ThemeId = (typeof THEMES)[number]['id'];
@@ -178,6 +182,10 @@ export const THEME_REACTIONS: Record<ThemeId, [string, string]> = {
 	bastille: ['🥖', '🍾'],
 	oktoberfest: ['🥨', '🍺'],
 	muertos: ['💀', '🌼'],
+	nye: ['🎊', '🕛'],
+	sanfermin: ['🐂', '🧣'],
+	obon: ['🏮', '👘'],
+	beaujolais: ['🍷', '🧀'],
 };
 
 /** Tooltip labels for every reaction: plain Unicode names for the core
@@ -240,6 +248,14 @@ export const REACTION_LABELS: Record<string, string> = {
 	'🍺': 'prost!',
 	'💀': 'this ticket has history',
 	'🌼': 'follow the marigolds',
+	'🎊': 'new year, new backlog',
+	'🕛': 'midnight countdown',
+	'🐂': 'running with it',
+	'🧣': 'red scarf ready',
+	'🏮': 'lanterns pointing home',
+	'👘': 'yukata season',
+	'🍷': 'le nouveau est arrivé',
+	'🧀': 'fromage break',
 };
 
 /** Everything the server accepts, regardless of the room's current theme. */
@@ -254,6 +270,7 @@ export const ALL_REACTION_EMOJI: string[] = [
  *  starts). Anchors without `locales` are global. Mirrored in the
  *  index.html pre-paint script — keep in sync. */
 const THEME_ANCHORS: Array<{ id: ThemeId; month: number; day: number; locales?: string[] }> = [
+	{ id: 'nye', month: 1, day: 1 },
 	{ id: 'newyear', month: 2, day: 1 },
 	{ id: 'valentines', month: 2, day: 14 },
 	{ id: 'carnaval', month: 2, day: 17, locales: ['pt'] },
@@ -266,12 +283,15 @@ const THEME_ANCHORS: Array<{ id: ThemeId; month: number; day: number; locales?: 
 	{ id: 'festajunina', month: 6, day: 24, locales: ['pt'] },
 	{ id: 'july4', month: 7, day: 4, locales: ['en'] },
 	{ id: 'tanabata', month: 7, day: 7, locales: ['ja'] },
+	{ id: 'sanfermin', month: 7, day: 7, locales: ['es'] },
 	{ id: 'bastille', month: 7, day: 14, locales: ['fr'] },
+	{ id: 'obon', month: 8, day: 13, locales: ['ja'] },
 	{ id: 'backtoschool', month: 8, day: 25 },
 	{ id: 'oktoberfest', month: 9, day: 20, locales: ['de'] },
 	{ id: 'fall', month: 9, day: 22 },
 	{ id: 'halloween', month: 10, day: 31 },
 	{ id: 'muertos', month: 11, day: 1, locales: ['es'] },
+	{ id: 'beaujolais', month: 11, day: 19, locales: ['fr'] },
 	{ id: 'thanksgiving', month: 11, day: 26, locales: ['en'] },
 	{ id: 'christmas', month: 12, day: 25 },
 ];

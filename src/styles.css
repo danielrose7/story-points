@@ -318,6 +318,54 @@
 	background: #1e0a40;
 }
 
+/* 🎊 New Year (global, Jan 1): champagne midnight */
+:root[data-theme='nye'] {
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #2b2b45 0%, #1a1a2e 45%, #0d0d1a 100%);
+	--sp-accent: #ffd700;
+	--sp-accent-text: #2b1f00;
+	--sp-card-back: repeating-linear-gradient(45deg, #ffd700 0 6px, #1a1a2e 6px 12px);
+	--sp-highlight: #fffbe6;
+	--sp-highlight-strong: #fff3bf;
+	--sp-confetti: #ffd700, #c0c0c0, #fff, #b8a04a;
+	background: #0d0d1a;
+}
+
+/* 🐂 San Fermín (es, Jul 7): Pamplona whites and red scarves */
+:root[data-theme='sanfermin'] {
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #a4161a 0%, #6a0f12 45%, #3d0709 100%);
+	--sp-accent: #f5f3f4;
+	--sp-accent-text: #6a0f12;
+	--sp-card-back: repeating-linear-gradient(to bottom, #f5f3f4 0 6px, #c1121f 6px 12px);
+	--sp-highlight: #fff5f5;
+	--sp-highlight-strong: #ffdede;
+	--sp-confetti: #f5f3f4, #c1121f, #ffb3b8, #7a0c0f;
+	background: #3d0709;
+}
+
+/* 🏮 Obon (ja, mid-Aug): paper lanterns on a warm indigo night */
+:root[data-theme='obon'] {
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #3d3a6b 0%, #2c2a4a 45%, #171530 100%);
+	--sp-accent: #ff9770;
+	--sp-accent-text: #3d1505;
+	--sp-card-back: repeating-linear-gradient(45deg, #ff9770 0 6px, #2c2a4a 6px 12px);
+	--sp-highlight: #fff1ea;
+	--sp-highlight-strong: #ffdccb;
+	--sp-confetti: #ff9770, #ffd670, #e9ff70, #8b86c9;
+	background: #171530;
+}
+
+/* 🥂 Beaujolais Nouveau (fr, 3rd Thu of Nov): the cellar door opens */
+:root[data-theme='beaujolais'] {
+	--sp-bg: radial-gradient(ellipse at 50% -20%, #5e1a33 0%, #401223 45%, #240a13 100%);
+	--sp-accent: #e0a458;
+	--sp-accent-text: #33210a;
+	--sp-card-back: repeating-linear-gradient(45deg, #7b2d43 0 6px, #e0a458 6px 12px);
+	--sp-highlight: #fdf3e7;
+	--sp-highlight-strong: #f8e2c4;
+	--sp-confetti: #e0a458, #a63d5f, #f1d302, #efe6dd;
+	background: #240a13;
+}
+
 /* Twinkling starfield */
 :root[data-theme='space'] body::after {
 	content: '';

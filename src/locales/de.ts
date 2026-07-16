@@ -27,7 +27,7 @@ export default {
 	'Import backlogs and export results over a plain-HTTP API; llms.txt and a one-step setup prompt for AI agents.':
 		'Backlogs importieren und Ergebnisse exportieren über eine schlichte HTTP-API; llms.txt und ein Ein-Schritt-Setup-Prompt für KI-Agenten.',
 	'API docs': 'API-Doku',
-	'25 themes': '25 Themes',
+	'29 themes': '29 Themes',
 	'Card table to spaceship, plus a full seasonal calendar — new rooms dress for the date.':
 		'Vom Kartentisch bis zum Raumschiff, plus ein kompletter Jahreszeiten-Kalender — neue Räume kleiden sich passend zum Datum.',
 	'Browse themes': 'Themes ansehen',

@@ -30,7 +30,7 @@
 				"applicationSubCategory": "Planning poker / agile estimation",
 				"operatingSystem": "Web",
 				"url": "https://story-points.danielrose7.workers.dev/",
-				"description": "Realtime pointing poker for agile teams. No accounts — one standing URL per room, hidden votes with auto-reveal, round history, 17 themes, and a plain-HTTP API plus llms.txt for AI-agent workflows.",
+				"description": "Realtime pointing poker for agile teams. No accounts — one standing URL per room, hidden votes with auto-reveal, round history, 29 themes, and a plain-HTTP API plus llms.txt for AI-agent workflows.",
 				"offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
 				"featureList": "hidden votes, auto-reveal, voting countdown, ticket queue with CSV import, round history export, anonymous voting, seasonal themes, agent-ready HTTP API",
 				"softwareHelp": "https://story-points.danielrose7.workers.dev/docs/",
@@ -52,13 +52,15 @@
 					if (!t) {
 						// third slot = locale-scoped anchor (regional celebration)
 						var anchors = [
-							['newyear', 32], ['valentines', 45], ['carnaval', 48, 'pt'],
+							['nye', 1], ['newyear', 32], ['valentines', 45], ['carnaval', 48, 'pt'],
 							['stpatricks', 76], ['hanami', 91, 'ja'], ['easter', 95],
 							['feria', 105, 'es'], ['mothersday', 130], ['summer', 172],
 							['festajunina', 175, 'pt'], ['july4', 185, 'en'],
-							['tanabata', 188, 'ja'], ['bastille', 195, 'fr'],
+							['tanabata', 188, 'ja'], ['sanfermin', 188, 'es'],
+							['obon', 225, 'ja'], ['bastille', 195, 'fr'],
 							['backtoschool', 237], ['oktoberfest', 263, 'de'],
 							['fall', 265], ['halloween', 304], ['muertos', 305, 'es'],
+							['beaujolais', 323, 'fr'],
 							['thanksgiving', 330, 'en'], ['christmas', 359],
 						];
 						var supported = ['en', 'es', 'de', 'fr', 'pt', 'ja'];

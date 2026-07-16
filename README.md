@@ -108,7 +108,7 @@ npm run deploy     # builds, then `wrangler deploy` (needs `wrangler login` once
 
 ## Themes
 
-25 themes: 🃏 card table, 🚀 space, 🏄 surf, 🎂 birthday, 🪩 nightclub, and a
+29 themes: 🃏 card table, 🚀 space, 🏄 surf, 🎂 birthday, 🪩 nightclub, and a
 full seasonal calendar (🧧 💘 🍀 🌸 🌷 ☀️ 🎆 📚 🍂 🎃 🦃 🎄). New rooms get the
 **seasonal theme** nearest to today (day-of-year anchors) at creation; the host can change it in room settings (synced
 to everyone, persisted with the room). A theme = a block of `--sp-*` token
