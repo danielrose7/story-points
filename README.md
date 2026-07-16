@@ -115,6 +115,13 @@ to everyone, persisted with the room). A theme = a block of `--sp-*` token
 overrides in `src/styles.css` — palette, card backs, confetti colors, plus two
 theme-flavored emoji slots in the reaction tray (`THEME_REACTIONS`).
 
+**Theme gallery & credits** — the full what's-what lives in
+[/docs/themes](https://story-points.danielrose7.workers.dev/docs/themes).
+All themes so far by [@danielrose7](https://github.com/danielrose7); a new
+theme is ~30 lines and the friendliest first PR this repo has —
+[recipe in CONTRIBUTING](CONTRIBUTING.md). Ship one and your name joins
+this list.
+
 ## Social previews
 
 Sharing `/` or a room URL renders a rich card: the Worker rewrites the SPA
@@ -258,7 +265,9 @@ account/API-heavy, against the no-accounts zero-dep grain.
 ## License, support & credits
 
 Free and open source under the [MIT license](LICENSE) (© Bloom Interactive
-LLC) — fork it, self-host it, or crib from it. Self-hosting is genuinely
+LLC) — fork it, self-host it, or crib from it. Want to contribute?
+[CONTRIBUTING.md](CONTRIBUTING.md) has the house rules and the two easiest
+gifts (a theme, a translation). Self-hosting is genuinely
 three commands and fits the Cloudflare Workers free plan — full
 instructions at [/docs/self-host](https://story-points.danielrose7.workers.dev/docs/self-host)
 (also linked as "Self-host (eject)" in the site footer). The one caveat:
