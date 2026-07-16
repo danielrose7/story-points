@@ -188,7 +188,7 @@ stops recording and hides the panel, and the host can wipe entries with
 vote-distribution bar chart in the Results panel.
 
 Rooms clean up after themselves: a Durable Object alarm deletes any room left
-untouched for 120 days (no writes, no live connections), so abandoned rooms
+untouched for 60 days (no writes, no live connections), so abandoned rooms
 cost nothing forever.
 
 ## Roadmap

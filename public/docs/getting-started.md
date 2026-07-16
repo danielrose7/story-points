@@ -41,4 +41,4 @@ watch and manage, but don't hold up the reveal).
   the host disconnects, the longest-seated member is promoted; the original
   host reclaims the role on return unless they handed it off explicitly.
 - Rooms keep settings and history for months between sessions, and clean
-  themselves up after ~120 days of no use at all.
+  themselves up after ~60 days of no use at all.

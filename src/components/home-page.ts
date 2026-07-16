@@ -543,10 +543,10 @@ class HomePage extends LitElement {
 
 	private createRoom = async () => {
 		const q = this.preset && this.preset !== 'sprint' ? `?preset=${this.preset}` : '';
-		// The word lists are small (16³ per locale) and a slug is a capability:
-		// colliding with a live room would drop you into a stranger's session.
-		// Peek before claiming; retry a few times, then bolt on a numeric
-		// suffix if the namespace is somehow that busy.
+		// A slug is a capability: colliding with a live room would drop the
+		// creator into a stranger's session. Peek before claiming (word lists
+		// give ~10k combos per locale); after 4 taken-slugs in a row, stop
+		// gambling and bolt on a 4-digit suffix (~96M effective names).
 		for (let i = 0; i < 4; i++) {
 			const slug = generateRoomSlug();
 			try {
@@ -557,7 +557,7 @@ class HomePage extends LitElement {
 				return navigate(`/room/${slug}${q}`);
 			}
 		}
-		const n = 10 + (crypto.getRandomValues(new Uint32Array(1))[0] % 90);
+		const n = 1000 + (crypto.getRandomValues(new Uint32Array(1))[0] % 9000);
 		navigate(`/room/${generateRoomSlug()}-${n}${q}`);
 	};
 

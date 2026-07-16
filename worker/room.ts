@@ -50,13 +50,15 @@ interface PersistedRoom {
 const ROOM_KEY = 'room';
 // Seats older than this with no live socket are pruned from the persisted map.
 // Generous so a room reused every ~2 weeks keeps everyone's name and role.
-const SEAT_TTL_MS = 90 * 24 * 60 * 60 * 1000;
+// Kept shorter than IDLE_TTL so seats never outlive their room.
+const SEAT_TTL_MS = 45 * 24 * 60 * 60 * 1000;
 // Finished rounds kept per room — plenty for a session or three of lookback.
 const MAX_HISTORY = 50;
 // A room untouched for this long (no writes, no live sockets) deletes itself
 // via the alarm below. Longer than SEAT_TTL so reusable rooms never vanish
-// while anyone's seat is still worth keeping.
-const IDLE_TTL_MS = 120 * 24 * 60 * 60 * 1000;
+// while anyone's seat is still worth keeping — two skipped sprints don't
+// cost a team their room, a forgotten one cleans itself up.
+const IDLE_TTL_MS = 60 * 24 * 60 * 60 * 1000;
 // A room empty this long is "everyone left" (vs a quick refresh); returning
 // to it mid-round restarts the clock when freshClock is on.
 const FRESH_CLOCK_AFTER_MS = 5 * 60 * 1000;
